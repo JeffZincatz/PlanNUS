@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/authenticate/SignIn.dart';
 import 'package:plannus/util/PresetColors.dart';
 
 class Authenticate extends StatefulWidget {
