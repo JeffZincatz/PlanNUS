@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "157576978006",
+    "project_id": "plannus-5a15b",
+    "storage_bucket": "plannus-5a15b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157576978006:android:b97e8f688c809f1437e5f7",
+        "android_client_info": {
+          "package_name": "com.bogoplan.plannus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "157576978006-5g2vgfg3m8buk2ctqsm9du5p3a8jpo9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO6xiaCiTD3ykufZ_0C3dyHG34GaxB6do"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157576978006-5g2vgfg3m8buk2ctqsm9du5p3a8jpo9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
