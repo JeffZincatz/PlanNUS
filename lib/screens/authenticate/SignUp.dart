@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/services/AuthService.dart';
+import 'package:plannus/util/Loading.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/util/Validate.dart';
 
@@ -12,6 +12,9 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
   // text field changes
   String username = "";
   String email = "";
@@ -19,137 +22,141 @@ class _SignUpState extends State<SignUp> {
   String password_2 = "";
 
   String error = "";
-
-  final AuthService _auth = AuthService();
-
-  final _formKey = GlobalKey<FormState>();
+  bool loading = false;
 
   Validate validator = new Validate();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PresetColors.background,
-      body: SafeArea(
-        child: Center(
-          child: FractionallySizedBox(
-            widthFactor: 0.8,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Text(
-                  "Get start with us today and end your procrastination!",
-                  style: TextStyle(
-                    fontSize: 36,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  // display sign up error
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: Center(
-                    child: Text(
-                      error,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
+    return loading
+        ? Loading()
+        : Scaffold(
+            backgroundColor: PresetColors.background,
+            body: SafeArea(
+              child: Center(
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: ListView(
+                    shrinkWrap: true,
                     children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.person),
-                          hintText: 'Enter your username',
-                          labelText: 'Username',
+                      Text(
+                        "Get start with us today and end your procrastination!",
+                        style: TextStyle(
+                          fontSize: 36,
                         ),
-                        validator: validator.validateUsername,
-                        onChanged: (value) {
-                          setState(() => username = value);
-                        },
+                        textAlign: TextAlign.center,
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.email),
-                          hintText: 'Enter your email',
-                          labelText: 'Email',
+                      SizedBox(
+                        // display sign up error
+                        height: MediaQuery.of(context).size.height * 0.1,
+                        child: Center(
+                          child: Text(
+                            error,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
-                        validator: validator.validateEmail,
-                        onChanged: (value) {
-                          setState(() => email = value);
-                        },
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Enter your password',
-                          labelText: 'Password',
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.person),
+                                hintText: 'Enter your username',
+                                labelText: 'Username',
+                              ),
+                              validator: validator.validateUsername,
+                              onChanged: (value) {
+                                setState(() => username = value);
+                              },
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.email),
+                                hintText: 'Enter your email',
+                                labelText: 'Email',
+                              ),
+                              validator: validator.validateEmail,
+                              onChanged: (value) {
+                                setState(() => email = value);
+                              },
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.lock),
+                                hintText: 'Enter your password',
+                                labelText: 'Password',
+                              ),
+                              validator: validator.validatePassword,
+                              obscureText: true,
+                              onChanged: (value) {
+                                setState(() => password_1 = value);
+                              },
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.lock),
+                                hintText: 'Repeat your password',
+                                labelText: 'Re-enter Password',
+                              ),
+                              obscureText: true,
+                              onChanged: (value) {
+                                setState(() => password_2 = value);
+                              },
+                              validator: (value) => value != password_1
+                                  ? "Passwords do not match"
+                                  : null,
+                            ),
+                          ],
                         ),
-                        validator: validator.validatePassword,
-                        obscureText: true,
-                        onChanged: (value) {
-                          setState(() => password_1 = value);
-                        },
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.lock),
-                          hintText: 'Repeat your password',
-                          labelText: 'Re-enter Password',
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: TextButton(
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+                              dynamic result =
+                                  await _auth.signUpWithEmailAndPassword(
+                                      email, password_1);
+                              if (result == null) {
+                                setState(() {
+                                  error =
+                                      "Sign up unsuccessful. Please check that your email is valid.";
+                                  loading = false;
+                                });
+                              } else {
+                                Navigator.pop(context);
+                                setState(() => error = "");
+                              }
+                            }
+                          },
+                          child: Text(
+                            "Get Started!",
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            backgroundColor: PresetColors.blueAccent,
+                            padding: EdgeInsets.all(10),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
                         ),
-                        obscureText: true,
-                        onChanged: (value) {
-                          setState(() => password_2 = value);
-                        },
-                        validator: (value) => value != password_1
-                            ? "Passwords do not match"
-                            : null,
                       ),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: TextButton(
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        dynamic result = await _auth.signUpWithEmailAndPassword(
-                            email, password_1);
-                        if (result == null) {
-                          setState(() => error =
-                              "Sign up unsuccessful. Please check that your email is valid.");
-                        } else {
-                          Navigator.pop(context);
-                          setState(() => error = "");
-                        }
-                      }
-                    },
-                    child: Text(
-                      "Get Started!",
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                    style: TextButton.styleFrom(
-                      backgroundColor: PresetColors.blueAccent,
-                      padding: EdgeInsets.all(10),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
   }
 }
