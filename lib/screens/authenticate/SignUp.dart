@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/PresetColors.dart';
+import 'package:plannus/util/Validate.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
@@ -23,6 +24,8 @@ class _SignUpState extends State<SignUp> {
 
   final _formKey = GlobalKey<FormState>();
 
+  Validate validator = new Validate();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +45,9 @@ class _SignUpState extends State<SignUp> {
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(
+                  // display sign up error
                   height: MediaQuery.of(context).size.height * 0.1,
-                  child: Container(
-                    alignment: Alignment.center,
+                  child: Center(
                     child: Text(
                       error,
                       textAlign: TextAlign.center,
@@ -65,8 +68,7 @@ class _SignUpState extends State<SignUp> {
                           hintText: 'Enter your username',
                           labelText: 'Username',
                         ),
-                        validator: (value) =>
-                            value.isEmpty ? "Username must not be empty" : null,
+                        validator: validator.validateUsername,
                         onChanged: (value) {
                           setState(() => username = value);
                         },
@@ -77,8 +79,7 @@ class _SignUpState extends State<SignUp> {
                           hintText: 'Enter your email',
                           labelText: 'Email',
                         ),
-                        validator: (value) =>
-                            value.isEmpty ? "Email must not be empty" : null,
+                        validator: validator.validateEmail,
                         onChanged: (value) {
                           setState(() => email = value);
                         },
@@ -89,16 +90,7 @@ class _SignUpState extends State<SignUp> {
                           hintText: 'Enter your password',
                           labelText: 'Password',
                         ),
-                        validator: (value) {
-                          Pattern pattern =
-                              r'^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$';
-                          RegExp regex = RegExp(pattern);
-                          if (!regex.hasMatch(value))
-                            return "Password must have at least 8 characters, one uppercase letter, one lowercase letter and one special character. ";
-                          else {
-                            return null;
-                          }
-                        },
+                        validator: validator.validatePassword,
                         obscureText: true,
                         onChanged: (value) {
                           setState(() => password_1 = value);
@@ -114,13 +106,9 @@ class _SignUpState extends State<SignUp> {
                         onChanged: (value) {
                           setState(() => password_2 = value);
                         },
-                        validator: (value) {
-                          if (value != password_1) {
-                            return "Passwords do not match";
-                          } else {
-                            return null;
-                          }
-                        },
+                        validator: (value) => value != password_1
+                            ? "Passwords do not match"
+                            : null,
                       ),
                     ],
                   ),
@@ -129,12 +117,7 @@ class _SignUpState extends State<SignUp> {
                   padding: const EdgeInsets.all(12),
                   child: TextButton(
                     onPressed: () async {
-                      // Navigator.pushNamed(context, '/home');
-
                       if (_formKey.currentState.validate()) {
-                        // print(username);
-                        // print(email);
-                        // print(password_1);
                         dynamic result = await _auth.signUpWithEmailAndPassword(
                             email, password_1);
                         if (result == null) {

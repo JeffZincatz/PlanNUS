@@ -48,7 +48,7 @@ class _AuthenticateState extends State<Authenticate> {
                     ),
                   ),
                   style: TextButton.styleFrom(
-                    backgroundColor: PresetColors.blue,
+                    backgroundColor: PresetColors.blueAccent,
                     minimumSize: Size(200, 50),
                     padding: EdgeInsets.all(5),
                   ),
@@ -58,12 +58,12 @@ class _AuthenticateState extends State<Authenticate> {
                   onPressed: (){Navigator.pushNamed(context, '/signup');},
                   icon: Icon(
                     Icons.account_box,
-                    color: PresetColors.blue,
+                    color: PresetColors.blueAccent,
                   ),
                   label: Text(
                     "Sign Up",
                     style: TextStyle(
-                        color: PresetColors.blue,
+                        color: PresetColors.blueAccent,
                         fontWeight: FontWeight.bold,
                         fontSize: 24
                     ),

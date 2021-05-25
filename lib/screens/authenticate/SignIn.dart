@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/AuthService.dart';
+import 'package:plannus/util/Validate.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);
@@ -10,19 +11,24 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-
   final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
 
   // text field states
   String email = "";
   String password = "";
+
+  String error = "";
+
+  Validate validator = new Validate();
+
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: PresetColors.background,
       body: SafeArea(
-
         child: Center(
           child: FractionallySizedBox(
             widthFactor: 0.8,
@@ -36,35 +42,69 @@ class _SignInState extends State<SignIn> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.2,),
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.email),
-                    hintText: 'Enter your email',
-                    labelText: 'Email',
+                SizedBox(
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * 0.2,
+                  child: Center(
+                    child: Text(
+                      error,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
-                  onChanged: (value) {
-                    setState(() => email = value);
-                  },
                 ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.lock),
-                    hintText: 'Enter your password',
-                    labelText: 'Password',
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.email),
+                          hintText: 'Enter your email',
+                          labelText: 'Email',
+                        ),
+                        onChanged: (value) {
+                          setState(() => email = value);
+                        },
+                        validator: validator.validateEmail,
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.lock),
+                          hintText: 'Enter your password',
+                          labelText: 'Password',
+                        ),
+                        obscureText: true,
+                        onChanged: (value) {
+                          setState(() => password = value);
+                        },
+                        validator: validator.validatePassword,
+                      ),
+                    ],
                   ),
-                  obscureText: true,
-                  onChanged: (value) {
-                    setState(() => password = value);
-                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: TextButton(
                     onPressed: () async {
-                      // Navigator.pushNamed(context, '/home');
-                      // print(email);
-                      // print(password);
+                      if (_formKey.currentState.validate()) {
+                        dynamic result = await _auth.signInWithEmailAndPassword(
+                            email, password);
+                        if (result == null) {
+                          setState(() {
+                            error = "Sign in unsuccessful. Please check that your email and password are correct.";
+                            loading = true;
+                          });
+                        } else {
+                          Navigator.pop(context);
+                          setState(() => error = "");
+                        }
+                      }
                     },
                     child: Text(
                       "Sign In",
@@ -82,40 +122,6 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                 ),
-
-                /*
-                Padding(
-              padding: const EdgeInsets.all(12),
-              child: TextButton(
-                onPressed: () async {
-                  dynamic user = await _auth.signInAnon();
-                  if (user == null) {
-                    print("Error signing in.");
-                  } else {
-                    print("Signed in: " + user.uid);
-                    Navigator.pop(context);
-                  }
-                },
-
-                child: Text(
-                  "Sign In Anonymously",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: PresetColors.blue,
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  elevation: 5,
-                  backgroundColor: Colors.white,
-                  padding: EdgeInsets.all(10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                ),
-              ),
-            ),
-                */
-
               ],
             ),
           ),
