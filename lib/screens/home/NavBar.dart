@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/PresetColors.dart';
+import 'package:plannus/services/DbService.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
+  @override
+  _NavBarState createState() => _NavBarState();
+}
 
-  final AuthService _auth = AuthService();
-
-  //const NavBar({Key key}) : super(key: key);
+class _NavBarState extends State<NavBar> {
+  final AuthService _auth = new AuthService();
+  final DbService _db = new DbService();
 
   @override
   Widget build(BuildContext context) {
@@ -21,27 +25,56 @@ class NavBar extends StatelessWidget {
           backgroundColor: PresetColors.blueAccent,
           title: Row(
             children: [
-              Icon(
-                  Icons.person_pin,
-                size: screenHeight * 0.1,
+              Expanded(
+                flex: 4,
+                child: FutureBuilder(
+                    future: _db.getUserProfilePic(),
+                    builder: (context, snapshot) {
+                      return snapshot.hasData
+                          ? CircleAvatar(
+                        backgroundImage: NetworkImage(snapshot.data),
+                        backgroundColor: Colors.grey,
+                        radius: 40,
+                      )
+                          : Icon(Icons.person);
+                    }),
               ),
-              SizedBox(
-                width: screenWidth * 0.45,
+              Expanded(
+                flex: 1,
+                  child: SizedBox(),
+              ),
+              Expanded(
+                flex: 8,
                 child: ListView(
                   shrinkWrap: true,
                   children: [
-                    Text(
-                        "Xu Jiheng",
-                      style: TextStyle(
-                        fontSize: screenHeight * 0.04,
-                      ),
+                    FutureBuilder(
+                      future: _db.getUsername(),
+                      builder: (context, snapshot) {
+                        return snapshot.hasData
+                            ? Text(
+                                snapshot.data,
+                                style: TextStyle(
+                                  fontSize: screenHeight * 0.04,
+                                ),
+                              )
+                            : Text("");
+                      },
                     ),
-                    Text(
-                        "jeffzincatz@gmail.com",
-                      style: TextStyle(
-                        fontSize: screenHeight * 0.02,
-                        decoration: TextDecoration.underline,
-                      ),
+                    SizedBox(height: 10,),
+                    FutureBuilder(
+                      future: _db.getEmail(),
+                      builder: (context, snapshot) {
+                        return snapshot.hasData
+                            ? Text(
+                                "jeffzincatz@gmail.com",
+                                style: TextStyle(
+                                  fontSize: screenHeight * 0.02,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              )
+                            : Text("");
+                      },
                     ),
                   ],
                 ),
@@ -57,7 +90,8 @@ class NavBar extends StatelessWidget {
               TextButton(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Calendar",
+                  child: Text(
+                    "Calendar",
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.black,
@@ -69,7 +103,8 @@ class NavBar extends StatelessWidget {
               TextButton(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("My Profile",
+                  child: Text(
+                    "My Profile",
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.black,
@@ -81,7 +116,8 @@ class NavBar extends StatelessWidget {
               TextButton(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Settings",
+                  child: Text(
+                    "Settings",
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.black,
@@ -93,7 +129,8 @@ class NavBar extends StatelessWidget {
               TextButton(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Sign Out",
+                  child: Text(
+                    "Sign Out",
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.black,
