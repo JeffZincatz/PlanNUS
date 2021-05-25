@@ -123,7 +123,7 @@ class _SignUpState extends State<SignUp> {
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.signUpWithEmailAndPassword(
-                                      email, password_1);
+                                      username, email, password_1);
                               if (result == null) {
                                 setState(() {
                                   error =
