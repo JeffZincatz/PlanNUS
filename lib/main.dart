@@ -6,6 +6,7 @@ import 'package:plannus/screens/authenticate/SignUp.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/screens/Wrapper.dart';
 import 'package:provider/provider.dart';
+import 'screens/home/Home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/signin': (context) => SignIn(),
           '/signup': (context) => SignUp(),
+          '/home': (context) => Home(),
         }
     );
   }
