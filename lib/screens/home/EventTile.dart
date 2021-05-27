@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/screens/home/EditOrDelete.dart';
 
 class EventTile extends StatelessWidget {
 
@@ -58,7 +59,8 @@ class EventTile extends StatelessWidget {
                     Navigator.pop(context, true);
                   }),
                   IconButton(icon: Icon(Icons.close), onPressed: () {
-
+                    DbService().markUncompleted(event);
+                    Navigator.pop(context, true);
                   }),
                 ],
               ),
@@ -68,49 +70,55 @@ class EventTile extends StatelessWidget {
       );
     }
 
-    return TextButton(
-        onPressed: () {
-          if (event.endTime.compareTo(DateTime.now()) > 0) { // haven't ended
+    void editOrDelete() {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => EditOrDelete(event: event)),
+      );
+    }
 
-          } else {
-            askWhetherCompleted();
-          }
-        },
-        style: ButtonStyle(
-            foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black)
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 2,
-              child: makeIcon(event.category),
+    return OutlinedButton(
+      onPressed: () {
+        if (event.endTime.compareTo(DateTime.now()) > 0) { // haven't ended
+          editOrDelete();
+        } else if (!event.passed) {
+          askWhetherCompleted();
+        }
+      },
+      style: ButtonStyle(
+        foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black),
+      ),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 2,
+            child: makeIcon(event.category),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              event.description,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            Expanded(
-              flex: 1,
-              child: Text(
-                event.description,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                Text(
+                  event.startTime.toString().substring(0, 10),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                children: [
-                  Text(
-                    event.startTime.toString().substring(0, 10),
+                Flexible(
+                  child: Text(
+                    "${DateFormat.Hms().format(event.startTime).substring(0, 5)} - ${DateFormat.Hms().format(event.endTime).substring(0, 5)}",
                   ),
-                  Flexible(
-                    child: Text(
-                      "${DateFormat.Hms().format(event.startTime).substring(0, 5)} - ${DateFormat.Hms().format(event.endTime).substring(0, 5)}",
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        )
+          ),
+        ],
+      )
     );
   }
 }
