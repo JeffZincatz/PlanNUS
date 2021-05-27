@@ -76,4 +76,26 @@ class DbService {
     });
   }
 
+  Future markUncompleted(Event event) async {
+    DocumentReference temp = events.doc(event.id);
+    return await temp.update({
+      "passed": true,
+      "completed": false,
+    });
+  }
+
+  Future editEvent(Event old, Event change) async {
+    return await events.doc(old.id).set({
+      "category": change.category,
+      "description": change.description,
+      "startTime": change.startTime,
+      "endTime": change.endTime,
+      "completed": false,
+      "passed": false,
+    });
+  }
+
+  void delete(Event event) async {
+    return await events.doc(event.id).delete();
+  }
 }
