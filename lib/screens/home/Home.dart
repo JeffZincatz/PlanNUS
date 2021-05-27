@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/util/PresetColors.dart';
+import 'package:plannus/util/MyAppBar.dart';
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
@@ -16,25 +17,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: PresetColors.blueAccent,
-        title: Text(
-          "PlanNUS",
-          style: TextStyle(
-            fontFamily: "Lobster Two",
-            fontWeight: FontWeight.bold,
-            fontStyle: FontStyle.italic,
-            fontSize: 32,
-            shadows: [
-              Shadow(
-                color: Colors.black,
-                offset: Offset(3, 3),
-                blurRadius: 10,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: MyAppBar(),
       body: ListView(
         // Testing content below
         children: [
