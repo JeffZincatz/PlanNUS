@@ -26,8 +26,8 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   String description = "";
   String dropdownValue = "Studies";
-  String startTime = "12:00";
-  String endTime = "12:00";
+  String startTime;
+  String endTime;
 
   List<Widget> buildEditingActions() {
     return [ElevatedButton.icon(
@@ -63,14 +63,25 @@ class _EventEditingPageState extends State<EventEditingPage> {
     )];
   }
 
+  bool sameDay(DateTime first, DateTime second) {
+    return (first.year == second.year
+        && first.month == second.month
+        && first.day == second.day);
+  }
+
   @override
   Widget build(BuildContext context) {
+    startTime = startTime ?? (sameDay(widget.currentDate, DateTime.now())
+      ? DateFormat.Hms().format(DateTime.now()).substring(0, 5)
+      : "12.00"
+    );
+    endTime = endTime ?? startTime;
     return Scaffold(
       appBar: AppBar(
         actions: buildEditingActions(),
         title: Text("Add an activity"),
       ),
-      body: Column(
+      body: ListView(
         children: [
           SizedBox(
             height: 20,
