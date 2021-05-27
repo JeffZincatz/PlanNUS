@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:plannus/screens/home/MaybeFinishedEventList.dart';
 import 'package:plannus/screens/home/CompletedEventList.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:plannus/screens/home/UncompletedPastEventList.dart';
 
 import '../../util/PresetColors.dart';
 
@@ -28,6 +30,15 @@ class _HomeState extends State<Home> {
   }
 
   final DbService _db = new DbService();
+
+  RefreshController _refreshController = RefreshController(initialRefresh: false);
+
+  void _onRefresh() async{
+    // monitor network fetch
+    await Future.delayed(Duration(milliseconds: 1000));
+    // if failed,use refreshFailed()
+    _refreshController.refreshCompleted();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,48 +77,64 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          body: ListView(
-            children: [
-              Calendar2(updateCurrentDate: updateCurrentDate),
-              Divider(
-                height: screenHeight / 20,
-                thickness: 3.0,
-                color: Colors.blue[100],
-              ),
-              Text(
-                "Upcoming Activities",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+          body: SmartRefresher(
+            enablePullDown: true,
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            child: ListView(
+              children: [
+                Calendar2(updateCurrentDate: updateCurrentDate),
+                Divider(
+                  height: screenHeight / 20,
+                  thickness: 3.0,
+                  color: Colors.blue[100],
                 ),
-              ),
-              SizedBox(
-                height: screenHeight / 6,
-                child: UnfinishedEventList(),
-              ),
-              Text(
-                "Have you done this activity?",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  "Upcoming Activities",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: screenHeight / 6,
-                child: MaybeFinishedEventList(),
-              ),
-              Text(
-                "Completed Activities",
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                SizedBox(
+                  height: 140,
+                  child: UnfinishedEventList(),
                 ),
-              ),
-              SizedBox(
-                height: screenHeight / 6,
-                child: CompletedEventList(),
-              ),
-            ],
+                Text(
+                  "Have you done these activities?",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: MaybeFinishedEventList(),
+                ),
+                Text(
+                  "Completed Activities",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: CompletedEventList(),
+                ),
+                Text(
+                  "Uncompleted past activities",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: UncompletedPastEventList(),
+                ),
+              ],
+            ),
           ),
           drawer: NavBar(),
           floatingActionButton: FloatingActionButton(
