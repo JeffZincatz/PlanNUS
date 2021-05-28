@@ -103,11 +103,14 @@ class _NavBarState extends State<NavBar> {
                 ),
 
                 onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => Home(),
-                      ));
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //       builder: (BuildContext context) => Home(),
+                  //     ));
+                  // Navigator.popUntil(context, ModalRoute.withName('/wrapper'));
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pop(context);
                 },
               ),
               TextButton(
@@ -156,6 +159,7 @@ class _NavBarState extends State<NavBar> {
                 ),
                 onPressed: () async {
                   await _auth.signOut();
+                  Navigator.of(context).popUntil((route) => route.isFirst);
                 },
               ),
             ],
