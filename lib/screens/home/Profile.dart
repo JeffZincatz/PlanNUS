@@ -4,6 +4,7 @@ import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/util/MyAppBar.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:plannus/util/PresetColors.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
@@ -103,7 +104,7 @@ class _ProfileState extends State<Profile> {
                                           value: snapshot.data["studies"] * 1.0,
                                           showTitle: true,
                                           radius: 100,
-                                          color: Color(0xFF378AFF),
+                                          color: PresetColors.blue,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
                                         PieChartSectionData(
@@ -111,7 +112,7 @@ class _ProfileState extends State<Profile> {
                                           value: snapshot.data["fitness"] * 1.0,
                                           showTitle: true,
                                           radius: 100,
-                                          color: Color(0xFF9552EA),
+                                          color: PresetColors.purple,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
                                         PieChartSectionData(
@@ -119,7 +120,7 @@ class _ProfileState extends State<Profile> {
                                           value: snapshot.data["arts"] * 1.0,
                                           showTitle: true,
                                           radius: 100,
-                                          color: Color(0xFF45E03B),
+                                          color: PresetColors.lightGreen,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
                                         PieChartSectionData(
@@ -127,7 +128,7 @@ class _ProfileState extends State<Profile> {
                                           value: snapshot.data["social"] * 1.0,
                                           showTitle: true,
                                           radius: 100,
-                                          color: Color(0xFFFFA32F),
+                                          color: PresetColors.orangeAccent,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
                                         PieChartSectionData(
@@ -135,7 +136,7 @@ class _ProfileState extends State<Profile> {
                                           value: snapshot.data["others"] * 1.0,
                                           showTitle: true,
                                           radius: 100,
-                                          color: Color(0xFFF54F52),
+                                          color: PresetColors.red,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
                                       ],
