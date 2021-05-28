@@ -1,10 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plannus/models/Event.dart';
 
 class DbService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final User currentUser = FirebaseAuth.instance.currentUser;
+  final CollectionReference events =
+      FirebaseFirestore.instance.collection("users")
+          .doc(FirebaseAuth.instance.currentUser.uid).collection("events");
 
   Future<String> getUserProfilePic() async {
     try {
@@ -42,6 +46,60 @@ class DbService {
     }
   }
 
+  Future addNewEvent(Event event) async {
+    return await events.add(event.toMap());
+  }
+
+  List<Event> _eventListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return Event(
+        id: doc.id ?? 1,
+        completed: doc.get("completed") ?? false,
+        passed: doc.get("passed") ?? false,
+        category: doc.get("category") ?? '',
+        description: doc.get("description") ?? '',
+        startTime: DateTime.parse(doc.get("startTime").toDate().toString()) ?? DateTime.now(),
+        endTime: DateTime.parse(doc.get("endTime").toDate().toString()) ?? DateTime.now(),
+      );
+    }).toList();
+  }
+
+  Stream<List<Event>> get eventsStream {
+    return events.snapshots().map(_eventListFromSnapshot);
+  }
+
+  Future markCompleted(Event event) async {
+    DocumentReference temp = events.doc(event.id);
+    return await temp.update({
+      "passed": true,
+      "completed": true,
+    });
+  }
+
+  Future markUncompleted(Event event) async {
+    DocumentReference temp = events.doc(event.id);
+    return await temp.update({
+      "passed": true,
+      "completed": false,
+    });
+  }
+
+  Future editEvent(Event old, Event change) async {
+    return await events.doc(old.id).set({
+      "category": change.category,
+      "description": change.description,
+      "startTime": change.startTime,
+      "endTime": change.endTime,
+      "completed": false,
+      "passed": false,
+    });
+  }
+
+  void delete(Event event) async {
+    return await events.doc(event.id).delete();
+  }
+  
+  // TODO: improve querying stats by setting up user stats collection in the future
   Future<int> countAllCompletedEvent() async {
     try {
       User currentUser = _auth.currentUser;
@@ -65,6 +123,7 @@ class DbService {
     }
   }
 
+  // TODO: improve querying stats by setting up user stats collection in the future
   Future<int> countCompletedEventByCategory(String category) async {
     try {
       User currentUser = _auth.currentUser;
@@ -88,6 +147,7 @@ class DbService {
     }
   }
 
+  // TODO: improve querying stats by setting up user stats collection in the future
   Future<Map<String, int>> getAllCompletedEventCount() async {
     return {
       "total": await countAllCompletedEvent(),

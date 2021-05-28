@@ -17,7 +17,6 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
 
     return Drawer(
       child: Scaffold(
@@ -71,7 +70,7 @@ class _NavBarState extends State<NavBar> {
                       builder: (context, snapshot) {
                         return snapshot.hasData
                             ? Text(
-                                "jeffzincatz@gmail.com",
+                                snapshot.data,
                                 style: TextStyle(
                                   fontSize: screenHeight * 0.02,
                                   decoration: TextDecoration.underline,
@@ -102,6 +101,7 @@ class _NavBarState extends State<NavBar> {
                     ),
                   ),
                 ),
+
                 onPressed: () {
                   Navigator.push(
                       context,

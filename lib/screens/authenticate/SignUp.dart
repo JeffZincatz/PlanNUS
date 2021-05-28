@@ -31,6 +31,7 @@ class _SignUpState extends State<SignUp> {
     return loading
         ? Loading()
         : Scaffold(
+            appBar: AppBar(backgroundColor: PresetColors.blueAccent),
             backgroundColor: PresetColors.background,
             body: SafeArea(
               child: Center(
