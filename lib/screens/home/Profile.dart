@@ -164,12 +164,17 @@ class _ProfileState extends State<Profile> {
                                 ),
                               ),
                               Center(
-                                child: TextButton(
-                                  child: Text("Print # tasks completed"),
-                                  onPressed: () async {
-                                    print("All: " +
-                                        (await _db.countAllCompletedEvent())
-                                            .toString());
+                                child: FutureBuilder(
+                                  future: _db.countAllCompletedEvent(),
+                                  builder: (context, snapshot) {
+                                    return snapshot.hasData
+                                        ? Text(
+                                      snapshot.data.toString(),
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    )
+                                        : Text("");
                                   },
                                 ),
                               ),
