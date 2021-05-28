@@ -98,4 +98,64 @@ class DbService {
   void delete(Event event) async {
     return await events.doc(event.id).delete();
   }
+  
+  // TODO: improve querying stats by setting up user stats collection in the future
+  Future<int> countAllCompletedEvent() async {
+    try {
+      User currentUser = _auth.currentUser;
+      QuerySnapshot snapshot =
+      await _db.collection("users").doc(currentUser.uid)
+          .collection("events").get();
+
+      int count = 0;
+      snapshot.docs.forEach((each) {
+        Map data = each.data();
+        if (data["completed"]) {
+          count++;
+        }
+      });
+
+      return count;
+
+    } catch (error) {
+      print(error); // TODO: remove temp debug
+      return null;
+    }
+  }
+
+  // TODO: improve querying stats by setting up user stats collection in the future
+  Future<int> countCompletedEventByCategory(String category) async {
+    try {
+      User currentUser = _auth.currentUser;
+      QuerySnapshot snapshot =
+      await _db.collection("users").doc(currentUser.uid)
+          .collection("events").get();
+
+      int count = 0;
+      snapshot.docs.forEach((each) {
+        Map data = each.data();
+        if (data["category"] == category && data["completed"]) {
+          count++;
+        }
+      });
+
+      return count;
+
+    } catch (error) {
+      print(error); // TODO: remove temp debug
+      return null;
+    }
+  }
+
+  // TODO: improve querying stats by setting up user stats collection in the future
+  Future<Map<String, int>> getAllCompletedEventCount() async {
+    return {
+      "total": await countAllCompletedEvent(),
+      "studies": await countCompletedEventByCategory("Studies"),
+      "fitness": await countCompletedEventByCategory("Fitness"),
+      "arts": await countCompletedEventByCategory("Arts"),
+      "social": await countCompletedEventByCategory("Social"),
+      "others": await countCompletedEventByCategory("Others"),
+    };
+  }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/screens/home/Home.dart';
+import 'package:plannus/screens/home/Profile.dart';
 
 class NavBar extends StatefulWidget {
   @override
@@ -31,16 +33,16 @@ class _NavBarState extends State<NavBar> {
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? CircleAvatar(
-                        backgroundImage: NetworkImage(snapshot.data),
-                        backgroundColor: Colors.grey,
-                        radius: 40,
-                      )
+                              backgroundImage: NetworkImage(snapshot.data),
+                              backgroundColor: Colors.grey,
+                              radius: 40,
+                            )
                           : Icon(Icons.person);
                     }),
               ),
               Expanded(
                 flex: 1,
-                  child: SizedBox(),
+                child: SizedBox(),
               ),
               Expanded(
                 flex: 8,
@@ -60,7 +62,9 @@ class _NavBarState extends State<NavBar> {
                             : Text("");
                       },
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     FutureBuilder(
                       future: _db.getEmail(),
                       builder: (context, snapshot) {
@@ -97,7 +101,14 @@ class _NavBarState extends State<NavBar> {
                     ),
                   ),
                 ),
-                onPressed: () { Navigator.pop(context); },
+
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Home(),
+                      ));
+                },
               ),
               TextButton(
                 child: Align(
@@ -110,7 +121,14 @@ class _NavBarState extends State<NavBar> {
                     ),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Profile(),
+                      ));
+
+                },
               ),
               TextButton(
                 child: Align(

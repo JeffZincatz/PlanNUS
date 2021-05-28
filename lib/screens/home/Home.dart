@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/screens/home/UnfinishedEventList.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/screens/home/Calendar2.dart';
 import 'package:plannus/screens/home/EventEditingPage.dart';
-import 'package:provider/provider.dart';
-import 'package:plannus/models/Event.dart';
 import 'package:plannus/screens/home/MaybeFinishedEventList.dart';
 import 'package:plannus/screens/home/CompletedEventList.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:plannus/screens/home/UncompletedPastEventList.dart';
-
-import '../../util/PresetColors.dart';
+import 'package:plannus/services/DbService.dart';
+import 'package:plannus/util/PresetColors.dart';
+import 'package:plannus/util/MyAppBar.dart';
+import 'package:plannus/util/PresetColors.dart';
+import 'package:plannus/models/Event.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
+    
     bool today(DateTime currentDate) {
       return (currentDate.year == DateTime.now().year
           && currentDate.month == DateTime.now().month
@@ -58,25 +58,7 @@ class _HomeState extends State<Home> {
       value: _db.eventsStream,
       builder: (context, snapshot) {
         return Scaffold(
-          appBar: AppBar(
-            backgroundColor: PresetColors.blueAccent,
-            title: Text(
-              "PlanNUS",
-              style: TextStyle(
-                fontFamily: "Lobster Two",
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.italic,
-                fontSize: 32,
-                shadows: [
-                  Shadow(
-                    color: Colors.black,
-                    offset: Offset(3, 3),
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          appBar: MyAppBar(),
           body: SmartRefresher(
             enablePullDown: true,
             controller: _refreshController,
@@ -154,10 +136,10 @@ class _HomeState extends State<Home> {
                   MaterialPageRoute(builder: (context) => EventEditingPage(currentDate: currentDate)),
                 );
               }
-            },
-          ),
-        );
-      }
-    );
-  }
+            }, // onPressed
+          ), // floatingActionButton
+        ); // Scaffold
+      } // builder
+    ); // StreamProvider
+  } // build
 }
