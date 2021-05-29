@@ -36,6 +36,7 @@ class _HomeState extends State<Home> {
   void _onRefresh() async{
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
+    setState(() {});
     // if failed,use refreshFailed()
     _refreshController.refreshCompleted();
   }
