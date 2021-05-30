@@ -97,13 +97,13 @@ class _ProfileState extends State<Profile> {
                               return snapshot.hasData
                                   ? PieChart(
                                     PieChartData(
-                                      centerSpaceRadius: 50,
+                                      centerSpaceRadius: screenWidth * 0.12,
                                       sections: [
                                         PieChartSectionData(
                                           title: "Studies\n" + snapshot.data["studies"].toString(),
                                           value: snapshot.data["studies"] * 1.0,
                                           showTitle: true,
-                                          radius: 100,
+                                          radius: screenWidth * 0.28,
                                           color: PresetColors.blue,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
@@ -111,7 +111,7 @@ class _ProfileState extends State<Profile> {
                                           title: "Fitness\n" + snapshot.data["fitness"].toString(),
                                           value: snapshot.data["fitness"] * 1.0,
                                           showTitle: true,
-                                          radius: 100,
+                                          radius: screenWidth * 0.28,
                                           color: PresetColors.purple,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
@@ -119,7 +119,7 @@ class _ProfileState extends State<Profile> {
                                           title: "Arts\n" + snapshot.data["arts"].toString(),
                                           value: snapshot.data["arts"] * 1.0,
                                           showTitle: true,
-                                          radius: 100,
+                                          radius: screenWidth * 0.28,
                                           color: PresetColors.lightGreen,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
@@ -127,7 +127,7 @@ class _ProfileState extends State<Profile> {
                                           title: "Social\n" + snapshot.data["social"].toString(),
                                           value: snapshot.data["social"] * 1.0,
                                           showTitle: true,
-                                          radius: 100,
+                                          radius: screenWidth * 0.28,
                                           color: PresetColors.orangeAccent,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
@@ -135,7 +135,7 @@ class _ProfileState extends State<Profile> {
                                           title: "Others\n" + snapshot.data["others"].toString(),
                                           value: snapshot.data["others"] * 1.0,
                                           showTitle: true,
-                                          radius: 100,
+                                          radius: screenWidth * 0.28,
                                           color: PresetColors.red,
                                           titleStyle: TextStyle(fontSize: 18),
                                         ),
