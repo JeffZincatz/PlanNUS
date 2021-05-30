@@ -70,7 +70,7 @@ class _ProfileState extends State<Profile> {
                 builder: (context, snapshot) {
                   return snapshot.hasData
                       ? Text(
-                          "jeffzincatz@gmail.com",
+                          snapshot.data,
                           style: TextStyle(
                             fontFamily: "monospace",
                             fontSize: 16,
