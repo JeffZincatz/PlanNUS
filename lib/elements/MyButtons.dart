@@ -19,6 +19,7 @@ class MyButtons {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
+        elevation: 5,
       ),
     );
   }
@@ -40,6 +41,7 @@ class MyButtons {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
+        elevation: 5,
       ),
     );
   }
