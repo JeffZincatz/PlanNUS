@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:plannus/screens/home/NavBar.dart';
-import 'package:plannus/util/MyAppBar.dart';
+import 'package:plannus/elements/MyAppBar.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:plannus/util/PresetColors.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/Validate.dart';
-import 'package:plannus/util/Loading.dart';
+import 'package:plannus/elements/Loading.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);

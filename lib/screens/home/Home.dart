@@ -9,7 +9,7 @@ import 'package:plannus/screens/home/CompletedEventList.dart';
 import 'package:plannus/screens/home/UncompletedPastEventList.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/util/MyAppBar.dart';
+import 'package:plannus/elements/MyAppBar.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:provider/provider.dart';

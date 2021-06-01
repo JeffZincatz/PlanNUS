@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plannus/services/AuthService.dart';
-import 'package:plannus/util/Loading.dart';
+import 'package:plannus/elements/Loading.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/util/Validate.dart';
 
