@@ -3,6 +3,7 @@ import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/Validate.dart';
 import 'package:plannus/elements/Loading.dart';
+import 'package:plannus/elements/MyButtons.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);
@@ -90,7 +91,8 @@ class _SignInState extends State<SignIn> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
-                    child: TextButton(
+                    child: MyButtons.roundedBlue(
+                      text: "Sign In",
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
                           setState(() => loading = true);
@@ -99,7 +101,7 @@ class _SignInState extends State<SignIn> {
                           if (result == null) {
                             setState(() {
                               error =
-                                  "Sign in unsuccessful. Please check that your email and password are correct.";
+                              "Sign in unsuccessful. Please check that your email and password are correct.";
                               loading = false;
                             });
                           } else {
@@ -108,20 +110,6 @@ class _SignInState extends State<SignIn> {
                           }
                         }
                       },
-                      child: Text(
-                        "Sign In",
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                      style: TextButton.styleFrom(
-                        backgroundColor: PresetColors.blueAccent,
-                        padding: EdgeInsets.all(10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
                     ),
                   ),
                 ],

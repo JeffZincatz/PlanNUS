@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:plannus/elements/MyButtons.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/elements/Loading.dart';
 import 'package:plannus/util/PresetColors.dart';
@@ -119,44 +120,31 @@ class _SignUpState extends State<SignUp> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(12),
-                        child: TextButton(
-                          onPressed: () async {
-                            if (_formKey.currentState.validate()) {
-                              setState(() => loading = true);
-                              dynamic result =
-                                  await _auth.signUpWithEmailAndPassword(
-                                      username, email, password_1).then(
-                                      (_) {
-                                        User user = _auth.getCurrentUser();
-                                        user.sendEmailVerification();
-                                      }
-                                  );
-                              if (result == null) {
-                                setState(() {
-                                  error =
-                                      "Sign up unsuccessful. Please check that your email is valid.";
-                                  loading = false;
-                                });
-                              } else {
-                                Navigator.pop(context);
-                                setState(() => error = "");
+                        child: MyButtons.roundedBlue(
+                            onPressed: () async {
+                              if (_formKey.currentState.validate()) {
+                                setState(() => loading = true);
+                                dynamic result =
+                                await _auth.signUpWithEmailAndPassword(
+                                    username, email, password_1).then(
+                                        (_) {
+                                      User user = _auth.getCurrentUser();
+                                      user.sendEmailVerification();
+                                    }
+                                );
+                                if (result == null) {
+                                  setState(() {
+                                    error =
+                                    "Sign up unsuccessful. Please check that your email is valid.";
+                                    loading = false;
+                                  });
+                                } else {
+                                  Navigator.pop(context);
+                                  setState(() => error = "");
+                                }
                               }
-                            }
-                          },
-                          child: Text(
-                            "Get Started!",
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
-                          ),
-                          style: TextButton.styleFrom(
-                            backgroundColor: PresetColors.blueAccent,
-                            padding: EdgeInsets.all(10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                          ),
+                            },
+                            text: "Get Started!",
                         ),
                       ),
                     ],
