@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plannus/screens/authenticate/SignIn.dart';
 import 'package:plannus/screens/authenticate/SignUp.dart';
+import 'package:plannus/screens/authenticate/Verifying.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/screens/Wrapper.dart';
 import 'package:provider/provider.dart';

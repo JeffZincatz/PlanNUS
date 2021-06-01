@@ -126,12 +126,7 @@ class _SignUpState extends State<SignUp> {
                                 setState(() => loading = true);
                                 dynamic result =
                                 await _auth.signUpWithEmailAndPassword(
-                                    username, email, password_1).then(
-                                        (_) {
-                                      User user = _auth.getCurrentUser();
-                                      user.sendEmailVerification();
-                                    }
-                                );
+                                    username, email, password_1);
                                 if (result == null) {
                                   setState(() {
                                     error =
@@ -139,8 +134,11 @@ class _SignUpState extends State<SignUp> {
                                     loading = false;
                                   });
                                 } else {
-                                  Navigator.pop(context);
-                                  setState(() => error = "");
+                                  User user = _auth.getCurrentUser();
+                                  await user.sendEmailVerification().then((_) {
+                                    Navigator.pop(context);
+                                    setState(() => error = "");
+                                  });
                                 }
                               }
                             },

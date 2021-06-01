@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:plannus/elements/MyButtons.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/AuthService.dart';
+
+import '../Wrapper.dart';
 
 class Verifying extends StatefulWidget {
   const Verifying({Key key}) : super(key: key);
@@ -12,6 +15,8 @@ class Verifying extends StatefulWidget {
 class _VerifyingState extends State<Verifying> {
   final AuthService _auth = new AuthService();
 
+  String error = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +24,7 @@ class _VerifyingState extends State<Verifying> {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
@@ -31,7 +36,7 @@ class _VerifyingState extends State<Verifying> {
               height: 20,
             ),
             Text(
-              "Almost there!\nGo check your email and verify to get started!",
+              "Almost there!\nGo check your email and verify before you log in!",
               style: TextStyle(
                 fontSize: 36,
               ),
@@ -40,24 +45,18 @@ class _VerifyingState extends State<Verifying> {
             SizedBox(
               height: 20,
             ),
-            TextButton(
-              child: Text(
-                "Switch User",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                ),
+            Text(
+              error,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.red,
               ),
-              style: TextButton.styleFrom(
-                backgroundColor: PresetColors.blueAccent,
-                padding: EdgeInsets.all(16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-              ),
-              onPressed: () async {
-                await _auth.signOut();
-              },
+            ),
+            MyButtons.roundedBlue(
+                onPressed: () async {
+                  await _auth.signOut();
+                },
+                text: "Go Back"
             ),
           ],
         ),
