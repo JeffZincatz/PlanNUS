@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:plannus/screens/home/Home.dart';
 import 'package:plannus/screens/authenticate/Authenticate.dart';
 import 'package:provider/provider.dart';
+import 'authenticate/Verifying.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key key}) : super(key: key);
@@ -18,6 +19,9 @@ class Wrapper extends StatelessWidget {
     } else {
       return Home();
     }
+
+    // temp testing
+    // return Verifying();
 
 
   }
