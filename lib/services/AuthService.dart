@@ -66,4 +66,9 @@ class AuthService {
       return null;
     }
   }
+
+  // get current user
+  User getCurrentUser() {
+    return _auth.currentUser;
+  }
 }

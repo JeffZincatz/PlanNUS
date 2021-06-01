@@ -16,13 +16,10 @@ class Wrapper extends StatelessWidget {
     // return either Home or Authenticate widget
     if (user == null) {
       return Authenticate();
-    } else {
+    } else if (user.emailVerified) {
       return Home();
+    } else {
+      return Verifying();
     }
-
-    // temp testing
-    // return Verifying();
-
-
   }
 }

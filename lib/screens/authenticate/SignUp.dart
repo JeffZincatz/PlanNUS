@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/Loading.dart';
 import 'package:plannus/util/PresetColors.dart';
@@ -124,7 +125,12 @@ class _SignUpState extends State<SignUp> {
                               setState(() => loading = true);
                               dynamic result =
                                   await _auth.signUpWithEmailAndPassword(
-                                      username, email, password_1);
+                                      username, email, password_1).then(
+                                      (_) {
+                                        User user = _auth.getCurrentUser();
+                                        user.sendEmailVerification();
+                                      }
+                                  );
                               if (result == null) {
                                 setState(() {
                                   error =
