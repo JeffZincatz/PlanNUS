@@ -58,7 +58,7 @@ class AuthService {
   }
 
   // sign out
-  Future signOut() async {
+  Future<void> signOut() async {
     try {
       return await _auth.signOut();
     } catch (error) {
@@ -70,5 +70,9 @@ class AuthService {
   // get current user
   User getCurrentUser() {
     return _auth.currentUser;
+  }
+
+  Future<void> sendPasswordResetEmail({String email}) async {
+    return await _auth.sendPasswordResetEmail(email: email);
   }
 }

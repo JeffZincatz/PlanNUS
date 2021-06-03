@@ -30,7 +30,7 @@ class _VerifyingState extends State<Verifying> {
             Icon(
               Icons.thumb_up_alt_outlined,
               color: PresetColors.blueAccent,
-              size: 60,
+              size: 72,
             ),
             SizedBox(
               height: 20,

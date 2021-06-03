@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plannus/screens/authenticate/ResetPassword.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/Validate.dart';
@@ -6,6 +7,7 @@ import 'package:plannus/elements/Loading.dart';
 import 'package:plannus/elements/MyButtons.dart';
 
 import 'Verifying.dart';
+import 'ResetPassword.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);
@@ -90,6 +92,17 @@ class _SignInState extends State<SignIn> {
                         ),
                       ],
                     ),
+                  ),
+                  TextButton(
+                    child: Text(
+                      "Forgot password?",
+                      style: TextStyle(
+                        color: PresetColors.blueAccent,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPassword()));
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.all(12),
