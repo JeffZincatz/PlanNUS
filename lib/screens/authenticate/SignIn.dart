@@ -5,6 +5,8 @@ import 'package:plannus/util/Validate.dart';
 import 'package:plannus/elements/Loading.dart';
 import 'package:plannus/elements/MyButtons.dart';
 
+import 'Verifying.dart';
+
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);
 
@@ -107,6 +109,9 @@ class _SignInState extends State<SignIn> {
                           } else {
                             Navigator.pop(context);
                             setState(() => error = "");
+                            if (_auth.getCurrentUser() != null && !_auth.getCurrentUser().emailVerified) {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Verifying()));
+                            }
                           }
                         }
                       },

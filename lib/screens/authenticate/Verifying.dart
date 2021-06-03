@@ -53,8 +53,8 @@ class _VerifyingState extends State<Verifying> {
               ),
             ),
             MyButtons.roundedBlue(
-                onPressed: () async {
-                  await _auth.signOut();
+                onPressed: () {
+                  Navigator.pop(context);
                 },
                 text: "Go Back"
             ),
