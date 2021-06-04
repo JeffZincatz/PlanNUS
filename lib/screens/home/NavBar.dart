@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plannus/screens/home/Achievements.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/DbService.dart';
@@ -103,12 +104,6 @@ class _NavBarState extends State<NavBar> {
                 ),
 
                 onPressed: () {
-                  // Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //       builder: (BuildContext context) => Home(),
-                  //     ));
-                  // Navigator.popUntil(context, ModalRoute.withName('/wrapper'));
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.pop(context);
                 },
@@ -131,6 +126,25 @@ class _NavBarState extends State<NavBar> {
                         builder: (BuildContext context) => Profile(),
                       ));
 
+                },
+              ),
+              TextButton(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Achievements/Badges",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => Achievements(),
+                      ));
                 },
               ),
               TextButton(
