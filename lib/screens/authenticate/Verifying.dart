@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/elements/MyButtons.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/AuthService.dart';
+
 
 import '../Wrapper.dart';
 
@@ -57,6 +59,18 @@ class _VerifyingState extends State<Verifying> {
                   Navigator.pop(context);
                 },
                 text: "Go Back"
+            ),
+            TextButton(
+              child: Text(
+                "Resend verification email"
+              ),
+              onPressed: () async {
+                User user = _auth.getCurrentUser();
+                await user.sendEmailVerification().then((_) {
+                  Navigator.pop(context);
+                  // setState(() => error = "");
+                });
+              },
             ),
           ],
         ),
