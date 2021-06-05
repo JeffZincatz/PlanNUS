@@ -13,7 +13,6 @@ class DbService {
 
   Future<String> getUserProfilePic() async {
     try {
-      User currentUser = _auth.currentUser;
       DocumentSnapshot snapshot =
           await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["profilePic"];
@@ -25,7 +24,6 @@ class DbService {
 
   Future<String> getUsername() async {
     try {
-      User currentUser = _auth.currentUser;
       DocumentSnapshot snapshot =
           await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["username"];
@@ -37,7 +35,6 @@ class DbService {
 
   Future<String> getEmail() async {
     try {
-      User currentUser = _auth.currentUser;
       DocumentSnapshot snapshot =
           await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["email"];
@@ -73,6 +70,16 @@ class DbService {
 
   Future markCompleted(Event event) async {
     DocumentReference temp = events.doc(event.id);
+
+    CollectionReference stats =
+        _db.collection("users").doc(currentUser.uid).collection("stats");
+    stats.doc(event.category).update({
+      "value": FieldValue.increment(1),
+    });
+    stats.doc("total").update({
+      "value": FieldValue.increment(1),
+    });
+
     return await temp.update({
       "passed": true,
       "completed": true,
@@ -98,12 +105,11 @@ class DbService {
     });
   }
 
-  void delete(Event event) async {
+  Future<void> delete(Event event) async {
     return await events.doc(event.id).delete();
   }
 
   Future<int> countCompletedEventByCategory(String category) async {
-    User currentUser = _auth.currentUser;
     DocumentSnapshot snapshot = await _db
         .collection("users")
         .doc(currentUser.uid)
@@ -126,7 +132,6 @@ class DbService {
   }
 
   Future<int> getUserLevel() async {
-    User currentUser = _auth.currentUser;
     DocumentSnapshot snapshot = await _db
         .collection("users")
         .doc(currentUser.uid)
@@ -137,7 +142,6 @@ class DbService {
   }
 
   Future<int> getUserCurrentExp() async {
-    User currentUser = _auth.currentUser;
     DocumentSnapshot snapshot = await _db
         .collection("users")
         .doc(currentUser.uid)
@@ -148,7 +152,6 @@ class DbService {
   }
 
   Future<int> getUserNextExp() async {
-    User currentUser = _auth.currentUser;
     DocumentSnapshot snapshot = await _db
         .collection("users")
         .doc(currentUser.uid)
@@ -159,7 +162,6 @@ class DbService {
   }
 
   Future<bool> isUserStatsEmpty() async {
-    User currentUser = _auth.currentUser;
     QuerySnapshot snapshot = await _db
         .collection("users")
         .doc(currentUser.uid)
@@ -173,7 +175,6 @@ class DbService {
 
   /// Use for initialising new user/existing user stats
   Future<void> initUserStats() async {
-    User currentUser = _auth.currentUser;
     CollectionReference stats =
         _db.collection("users").doc(currentUser.uid).collection("stats");
 
@@ -202,20 +203,75 @@ class DbService {
   }
 
   // TODO: Remove helper method
-  /// Sync user stats from event collection.
+  /// Sync user stats from event collection, iteratively.
   /// This should only be called for existing users
   /// & used for debugging purposes.
   Future<void> syncUserStats() async {
-    Map<String, int> allEventCount = await getAllCompletedEventCount();
+    /// iteratively count from user events collection
+    Function oldCountCompletedEventByCategory = (String category) async {
+      try {
+        QuerySnapshot snapshot = await _db
+            .collection("users")
+            .doc(currentUser.uid)
+            .collection("events")
+            .get();
+
+        int count = 0;
+        snapshot.docs.forEach((each) {
+          Map data = each.data();
+          if (data["category"] == category && data["completed"]) {
+            count++;
+          }
+        });
+        return count;
+      } catch (error) {
+        return null;
+      }
+    };
+
+    /// iteratively count from user events collection
+    Function oldCountTotal = () async {
+      try {
+        QuerySnapshot snapshot = await _db
+            .collection("users")
+            .doc(currentUser.uid)
+            .collection("events")
+            .get();
+
+        int count = 0;
+        snapshot.docs.forEach((each) {
+          Map data = each.data();
+          if (data["completed"]) {
+            count++;
+          }
+        });
+        return count;
+      } catch (error) {
+        return null;
+      }
+    };
+
     CollectionReference stats =
         _db.collection("users").doc(currentUser.uid).collection("stats");
-    allEventCount.forEach((key, value) {
-      stats.doc(key).update({
-        "category": key,
-        "value": value,
-      }).then((_) {
-        print(key + ": " + value.toString()); // TODO: remove temp debugging
+
+    List<String> categories = [
+      "Studies",
+      "Fitness",
+      "Arts",
+      "Social",
+      "Others"
+    ];
+
+    categories.forEach((element) async {
+      stats.doc(element).update({
+        "category": element,
+        "value": await oldCountCompletedEventByCategory(element),
       });
+    });
+
+    stats.doc("total").update({
+      "category": "total",
+      "value": await oldCountTotal(),
     });
   }
 }
