@@ -152,15 +152,16 @@ class DbService {
     }
   }
 
+  // @deprecated
   // TODO: improve querying stats by setting up user stats collection in the future
   Future<Map<String, int>> getAllCompletedEventCount() async {
     return {
       "total": await countAllCompletedEvent(),
-      "studies": await countCompletedEventByCategory("Studies"),
-      "fitness": await countCompletedEventByCategory("Fitness"),
-      "arts": await countCompletedEventByCategory("Arts"),
-      "social": await countCompletedEventByCategory("Social"),
-      "others": await countCompletedEventByCategory("Others"),
+      "Studies": await countCompletedEventByCategory("Studies"),
+      "Fitness": await countCompletedEventByCategory("Fitness"),
+      "Arts": await countCompletedEventByCategory("Arts"),
+      "Social": await countCompletedEventByCategory("Social"),
+      "Others": await countCompletedEventByCategory("Others"),
     };
   }
 
@@ -204,6 +205,22 @@ class DbService {
       stats.doc(element).set({
         "category": element,
         "value": 0,
+      });
+    });
+  }
+
+  /// Sync user stats from event collection.
+  /// This should only be called for exisiting users
+  /// & used for debugging purposes
+  Future<void> syncUserStats() async {
+    Map<String, int> allEventCount = await getAllCompletedEventCount();
+    CollectionReference stats = _db.collection("users").doc(currentUser.uid).collection("stats");
+    allEventCount.forEach((key, value) {
+      stats.doc(key).update({
+        "category": key,
+        "value": value,
+      }).then((_) {
+        print(key + ": " + value.toString());
       });
     });
   }
