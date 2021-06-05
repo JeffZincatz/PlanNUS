@@ -46,7 +46,6 @@ class AuthService {
           "username": username,
           "email": email,
           "profilePic": "https://firebasestorage.googleapis.com/v0/b/plannus-5a15b.appspot.com/o/images%2Fdefault_cat.jpg?alt=media&token=b382e580-2822-46f8-a5e5-0157c6257449",
-          "stats": null,
         });
         return cred;
       });
