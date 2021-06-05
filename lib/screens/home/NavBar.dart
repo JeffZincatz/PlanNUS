@@ -224,6 +224,21 @@ class _NavBarState extends State<NavBar> {
                   await _db.syncUserStats();
                 },
               ),
+              TextButton(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Debug - getTotal",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  await _db.countCompletedEventByCategory("total");
+                },
+              ),
             ],
           ),
         ),

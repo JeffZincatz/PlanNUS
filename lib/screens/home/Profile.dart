@@ -174,7 +174,7 @@ class _ProfileState extends State<Profile> {
                               ),
                               Center(
                                 child: FutureBuilder(
-                                  future: _db.countAllCompletedEvent(),
+                                  future: _db.countCompletedEventByCategory("total"),
                                   builder: (context, snapshot) {
                                     return snapshot.hasData
                                         ? Text(
@@ -203,7 +203,7 @@ class _ProfileState extends State<Profile> {
                               ),
                               Center(
                                 child: FutureBuilder(
-                                  future: _db.countAllCompletedEvent(),
+                                  future: _db.countCompletedEventByCategory("total"),
                                   builder: (context, snapshot) {
                                     return snapshot.hasData
                                         ? Text(
