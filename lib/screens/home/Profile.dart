@@ -46,35 +46,47 @@ class _ProfileState extends State<Profile> {
                   fontSize: 24,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder(
-                    future: _db.getUserProfilePic(),
-                    builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? CircleAvatar(
+              FutureBuilder(
+                  future: _db.getUserProfilePic(),
+                  builder: (context, snapshot) {
+                    return snapshot.hasData
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
                               backgroundImage: NetworkImage(snapshot.data),
                               backgroundColor: Colors.grey,
                               radius: 60,
-                            )
-                          : Icon(Icons.person);
-                    }),
+                            ),
+                          )
+                        : Icon(Icons.person);
+                  }),
+              FutureBuilder(
+                future: _db.getUserLevel(),
+                builder: (context, snapshot) {
+                  return Text(
+                    "Level " + snapshot.data.toString(),
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder(
-                  future: _db.getUsername(),
-                  builder: (context, snapshot) {
-                    return snapshot.hasData
-                        ? Text(
+              FutureBuilder(
+                future: _db.getUsername(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
                             snapshot.data,
                             style: TextStyle(
                               fontSize: 30,
+                              fontWeight: FontWeight.bold,
                             ),
-                          )
-                        : Text("");
-                  },
-                ),
+                          ),
+                        )
+                      : Text("");
+                },
               ),
               FutureBuilder(
                 future: _db.getEmail(),
@@ -89,6 +101,60 @@ class _ProfileState extends State<Profile> {
                           ),
                         )
                       : Text("");
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FutureBuilder(
+                      future: _db.getUserCurrentExp(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          "Current EXP: " + snapshot.data.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        );
+                      },
+                    ),
+                    FutureBuilder(
+                      future: _db.getUserNextExp(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          "EXP to next lvl: " + snapshot.data.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              FutureBuilder(
+                future: (() async {
+                  return {
+                    "current": await _db.getUserCurrentExp(),
+                    "next": await _db.getUserNextExp(),
+                  };
+                })(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.grey[400],
+                            valueColor:
+                                AlwaysStoppedAnimation(PresetColors.blue),
+                            value: snapshot.data["current"] *
+                                1.0 /
+                                snapshot.data["next"],
+                            minHeight: 15,
+                          ),
+                        )
+                      : Container();
                 },
               ),
               Padding(
@@ -177,96 +243,6 @@ class _ProfileState extends State<Profile> {
                         defaultVerticalAlignment:
                             TableCellVerticalAlignment.middle,
                         children: [
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Level:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                    _db.getUserLevel(),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                          snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        )
-                                      : Text("");
-                                },
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Current EXP:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                _db.getUserCurrentExp(),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  )
-                                      : Text("");
-                                },
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "EXP to next level:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                _db.getUserNextExp(),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  )
-                                      : Text("");
-                                },
-                              ),
-                            ],
-                          ),
                           TableRow(
                             children: [
                               Padding(
