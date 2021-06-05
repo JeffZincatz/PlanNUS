@@ -125,6 +125,39 @@ class DbService {
     };
   }
 
+  Future<int> getUserLevel() async {
+    User currentUser = _auth.currentUser;
+    DocumentSnapshot snapshot = await _db
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("stats")
+        .doc("level")
+        .get();
+    return snapshot.get("value");
+  }
+
+  Future<int> getUserCurrentExp() async {
+    User currentUser = _auth.currentUser;
+    DocumentSnapshot snapshot = await _db
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("stats")
+        .doc("level")
+        .get();
+    return snapshot.get("exp");
+  }
+
+  Future<int> getUserNextExp() async {
+    User currentUser = _auth.currentUser;
+    DocumentSnapshot snapshot = await _db
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("stats")
+        .doc("level")
+        .get();
+    return snapshot.get("next");
+  }
+
   Future<bool> isUserStatsEmpty() async {
     User currentUser = _auth.currentUser;
     QuerySnapshot snapshot = await _db

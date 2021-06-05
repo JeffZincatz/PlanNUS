@@ -192,7 +192,7 @@ class _ProfileState extends State<Profile> {
                               ),
                               FutureBuilder(
                                 future:
-                                    _db.countCompletedEventByCategory("total"),
+                                    _db.getUserLevel(),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
@@ -202,6 +202,66 @@ class _ProfileState extends State<Profile> {
                                           ),
                                           textAlign: TextAlign.center,
                                         )
+                                      : Text("");
+                                },
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 0),
+                                child: Text(
+                                  "Current EXP:",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              FutureBuilder(
+                                future:
+                                _db.getUserCurrentExp(),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                    snapshot.data.toString(),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
+                                      : Text("");
+                                },
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 0),
+                                child: Text(
+                                  "EXP to next level:",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              FutureBuilder(
+                                future:
+                                _db.getUserNextExp(),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                    snapshot.data.toString(),
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
