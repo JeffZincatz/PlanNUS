@@ -6,9 +6,10 @@ class DbService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final User currentUser = FirebaseAuth.instance.currentUser;
-  final CollectionReference events =
-      FirebaseFirestore.instance.collection("users")
-          .doc(FirebaseAuth.instance.currentUser.uid).collection("events");
+  final CollectionReference events = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection("events");
 
   Future<String> getUserProfilePic() async {
     try {
@@ -38,7 +39,7 @@ class DbService {
     try {
       User currentUser = _auth.currentUser;
       DocumentSnapshot snapshot =
-      await _db.collection("users").doc(currentUser.uid).get();
+          await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["email"];
     } catch (error) {
       print(error); // TODO: remove temp debug
@@ -58,8 +59,10 @@ class DbService {
         passed: doc.get("passed") ?? false,
         category: doc.get("category") ?? '',
         description: doc.get("description") ?? '',
-        startTime: DateTime.parse(doc.get("startTime").toDate().toString()) ?? DateTime.now(),
-        endTime: DateTime.parse(doc.get("endTime").toDate().toString()) ?? DateTime.now(),
+        startTime: DateTime.parse(doc.get("startTime").toDate().toString()) ??
+            DateTime.now(),
+        endTime: DateTime.parse(doc.get("endTime").toDate().toString()) ??
+            DateTime.now(),
       );
     }).toList();
   }
@@ -98,14 +101,16 @@ class DbService {
   void delete(Event event) async {
     return await events.doc(event.id).delete();
   }
-  
+
   // TODO: improve querying stats by setting up user stats collection in the future
   Future<int> countAllCompletedEvent() async {
     try {
       User currentUser = _auth.currentUser;
-      QuerySnapshot snapshot =
-      await _db.collection("users").doc(currentUser.uid)
-          .collection("events").get();
+      QuerySnapshot snapshot = await _db
+          .collection("users")
+          .doc(currentUser.uid)
+          .collection("events")
+          .get();
 
       int count = 0;
       snapshot.docs.forEach((each) {
@@ -116,7 +121,6 @@ class DbService {
       });
 
       return count;
-
     } catch (error) {
       print(error); // TODO: remove temp debug
       return null;
@@ -127,9 +131,11 @@ class DbService {
   Future<int> countCompletedEventByCategory(String category) async {
     try {
       User currentUser = _auth.currentUser;
-      QuerySnapshot snapshot =
-      await _db.collection("users").doc(currentUser.uid)
-          .collection("events").get();
+      QuerySnapshot snapshot = await _db
+          .collection("users")
+          .doc(currentUser.uid)
+          .collection("events")
+          .get();
 
       int count = 0;
       snapshot.docs.forEach((each) {
@@ -140,7 +146,6 @@ class DbService {
       });
 
       return count;
-
     } catch (error) {
       print(error); // TODO: remove temp debug
       return null;
@@ -157,5 +162,49 @@ class DbService {
       "social": await countCompletedEventByCategory("Social"),
       "others": await countCompletedEventByCategory("Others"),
     };
+  }
+
+  Future<bool> isUserStatsEmpty() async {
+    User currentUser = _auth.currentUser;
+    QuerySnapshot snapshot = await _db
+        .collection("users")
+        .doc(currentUser.uid)
+        .collection("stats")
+        .get();
+
+    List docs = snapshot.docs;
+    // print(docs.isEmpty);
+
+    return docs.isEmpty;
+  }
+
+  /// Use for initialising new user/old user stats
+  Future<void> initUserStats() async {
+    User currentUser = _auth.currentUser;
+    CollectionReference stats =
+        _db.collection("users").doc(currentUser.uid).collection("stats");
+
+    stats.doc("level").set({
+      "category": "level",
+      "value": 0,
+      "exp": 0,
+      "next": 100, // exp required for level 1. can be adjusted.
+    });
+
+    List<String> categories = [
+      "total",
+      "Studies",
+      "Fitness",
+      "Arts",
+      "Social",
+      "Others"
+    ];
+
+    categories.forEach((element) {
+      stats.doc(element).set({
+        "category": element,
+        "value": 0,
+      });
+    });
   }
 }

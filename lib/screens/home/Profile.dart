@@ -14,7 +14,16 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  DbService _db = new DbService();
+  static DbService _db = new DbService();
+
+  // initialise user stats on opening profile if stats docs is empty
+  static void initStats() async {
+    bool isUserStatsEmpty = await _db.isUserStatsEmpty();
+    if (isUserStatsEmpty) {
+      _db.initUserStats();
+    }
+  }
+  var i = initStats();
 
   @override
   Widget build(BuildContext context) {
