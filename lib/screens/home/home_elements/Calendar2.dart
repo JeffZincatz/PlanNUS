@@ -3,7 +3,7 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:plannus/models/EventDataSource.dart';
-import 'package:plannus/screens/home/TaskWidget.dart';
+import 'package:plannus/screens/home/home_elements/TaskWidget.dart';
 
 class Calendar2 extends StatefulWidget {
 

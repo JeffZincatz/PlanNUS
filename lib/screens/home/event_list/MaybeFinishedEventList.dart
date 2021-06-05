@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:plannus/models/Event.dart';
-import 'package:plannus/screens/home/EventTile.dart';
-import 'package:plannus/screens/home/EmptyCardWithText.dart';
+import 'package:plannus/screens/home/home_elements/EventTile.dart';
+import 'package:plannus/screens/home/home_elements/EmptyCardWithText.dart';
 
-class UncompletedPastEventList extends StatefulWidget {
-  const UncompletedPastEventList({Key key}) : super(key: key);
+class MaybeFinishedEventList extends StatefulWidget {
+  const MaybeFinishedEventList({Key key}) : super(key: key);
 
   @override
-  _UncompletedPastEventList createState() => _UncompletedPastEventList();
+  _MaybeFinishedEventListState createState() => _MaybeFinishedEventListState();
 }
 
-class _UncompletedPastEventList extends State<UncompletedPastEventList> {
+class _MaybeFinishedEventListState extends State<MaybeFinishedEventList> {
   @override
   Widget build(BuildContext context) {
     int comparator(Event b, Event a) {
@@ -22,7 +22,7 @@ class _UncompletedPastEventList extends State<UncompletedPastEventList> {
     }
 
     List<Event> events = Provider.of<List<Event>>(context) ?? [];
-    events = events.where((Event e) => e.passed && !e.completed).toList();
+    events = events.where((Event e) => e.endTime.compareTo(DateTime.now()) <= 0 && !e.passed).toList();
     if (events.length == 0) {
       return EmptyCardWithText(text: "No activities to show.");
     }

@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/screens/home/NavBar.dart';
-import 'package:plannus/screens/home/UnfinishedEventList.dart';
-import 'package:plannus/screens/home/Calendar2.dart';
+import 'package:plannus/screens/home/event_list/UnfinishedEventList.dart';
+import 'package:plannus/screens/home/home_elements/Calendar2.dart';
 import 'package:plannus/screens/home/EventEditingPage.dart';
-import 'package:plannus/screens/home/MaybeFinishedEventList.dart';
-import 'package:plannus/screens/home/CompletedEventList.dart';
-import 'package:plannus/screens/home/UncompletedPastEventList.dart';
+import 'package:plannus/screens/home/event_list/MaybeFinishedEventList.dart';
+import 'package:plannus/screens/home/event_list/CompletedEventList.dart';
+import 'package:plannus/screens/home/event_list/UncompletedPastEventList.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/elements/MyAppBar.dart';

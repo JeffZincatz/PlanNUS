@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:plannus/models/Event.dart';
-import 'package:plannus/screens/home/EventTile.dart';
-import 'package:plannus/screens/home/EmptyCardWithText.dart';
+import 'package:plannus/screens/home/home_elements/EventTile.dart';
+import 'package:plannus/screens/home/home_elements/EmptyCardWithText.dart';
 
 class CompletedEventList extends StatefulWidget {
   const CompletedEventList({Key key}) : super(key: key);
