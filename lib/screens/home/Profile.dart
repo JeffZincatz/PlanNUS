@@ -16,13 +16,15 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   static DbService _db = new DbService();
 
-  // initialise user stats on opening profile if stats docs is empty
+  /// initialise user stats on opening profile if stats docs is empty.
+  /// should be ok to move functionality to sign up after old accounts are synced.
   static void initStats() async {
     bool isUserStatsEmpty = await _db.isUserStatsEmpty();
     if (isUserStatsEmpty) {
       _db.initUserStats();
     }
   }
+
   var i = initStats();
 
   @override
@@ -98,59 +100,74 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Center(
                         widthFactor: 0.7,
-                        child: AspectRatio( // need to wrap this around Chart for sizing
+                        child: AspectRatio(
+                          // need to wrap this around Chart for sizing
                           aspectRatio: 1,
                           child: FutureBuilder(
                             future: _db.getAllCompletedEventCount(),
                             builder: (context, snapshot) {
                               return snapshot.hasData
                                   ? PieChart(
-                                    PieChartData(
-                                      centerSpaceRadius: screenWidth * 0.12,
-                                      sections: [
-                                        PieChartSectionData(
-                                          title: "Studies\n" + snapshot.data["Studies"].toString(),
-                                          value: snapshot.data["Studies"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.blue,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Fitness\n" + snapshot.data["Fitness"].toString(),
-                                          value: snapshot.data["Fitness"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.purple,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Arts\n" + snapshot.data["Arts"].toString(),
-                                          value: snapshot.data["Arts"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.lightGreen,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Social\n" + snapshot.data["Social"].toString(),
-                                          value: snapshot.data["Social"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.orangeAccent,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Others\n" + snapshot.data["Others"].toString(),
-                                          value: snapshot.data["Others"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.red,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                      PieChartData(
+                                        centerSpaceRadius: screenWidth * 0.12,
+                                        sections: [
+                                          PieChartSectionData(
+                                            title: "Studies\n" +
+                                                snapshot.data["Studies"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Studies"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.blue,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Fitness\n" +
+                                                snapshot.data["Fitness"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Fitness"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.purple,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Arts\n" +
+                                                snapshot.data["Arts"]
+                                                    .toString(),
+                                            value: snapshot.data["Arts"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.lightGreen,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Social\n" +
+                                                snapshot.data["Social"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Social"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.orangeAccent,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Others\n" +
+                                                snapshot.data["Others"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Others"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.red,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : Container();
                             },
                           ),
@@ -170,22 +187,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db.countCompletedEventByCategory("total"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                      snapshot.data.toString(),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("total"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -199,22 +217,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db.countCompletedEventByCategory("total"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("total"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -228,23 +247,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Studies"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future: _db
+                                    .countCompletedEventByCategory("Studies"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -258,23 +277,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Fitness"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future: _db
+                                    .countCompletedEventByCategory("Fitness"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -288,23 +307,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future:
-                                      _db.countCompletedEventByCategory("Arts"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("Arts"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -318,23 +337,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Social"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("Social"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -348,23 +367,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Others"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("Others"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),

@@ -102,29 +102,6 @@ class DbService {
     return await events.doc(event.id).delete();
   }
 
-  // Future<int> countAllCompletedEvent() async {
-  //   try {
-  //     User currentUser = _auth.currentUser;
-  //     QuerySnapshot snapshot = await _db
-  //         .collection("users")
-  //         .doc(currentUser.uid)
-  //         .collection("events")
-  //         .get();
-  //
-  //     int count = 0;
-  //     snapshot.docs.forEach((each) {
-  //       Map data = each.data();
-  //       if (data["completed"]) {
-  //         count++;
-  //       }
-  //     });
-  //
-  //     return count;
-  //   } catch (error) {
-  //     return null;
-  //   }
-  // }
-
   Future<int> countCompletedEventByCategory(String category) async {
     User currentUser = _auth.currentUser;
     DocumentSnapshot snapshot = await _db
@@ -137,31 +114,6 @@ class DbService {
     return snapshot.get("value");
   }
 
-  // Future<int> countCompletedEventByCategory(String category) async {
-  //   try {
-  //     User currentUser = _auth.currentUser;
-  //     QuerySnapshot snapshot = await _db
-  //         .collection("users")
-  //         .doc(currentUser.uid)
-  //         .collection("events")
-  //         .get();
-  //
-  //     int count = 0;
-  //     snapshot.docs.forEach((each) {
-  //       Map data = each.data();
-  //       if (data["category"] == category && data["completed"]) {
-  //         count++;
-  //       }
-  //     });
-  //
-  //     return count;
-  //   } catch (error) {
-  //     return null;
-  //   }
-  // }
-
-  // @deprecated
-  // TODO: improve querying stats by setting up user stats collection in the future
   Future<Map<String, int>> getAllCompletedEventCount() async {
     return {
       "total": await countCompletedEventByCategory("total"),
@@ -182,12 +134,11 @@ class DbService {
         .get();
 
     List docs = snapshot.docs;
-    // print(docs.isEmpty);
 
     return docs.isEmpty;
   }
 
-  /// Use for initialising new user/old user stats
+  /// Use for initialising new user/existing user stats
   Future<void> initUserStats() async {
     User currentUser = _auth.currentUser;
     CollectionReference stats =
@@ -217,9 +168,10 @@ class DbService {
     });
   }
 
+  // TODO: Remove helper method
   /// Sync user stats from event collection.
-  /// This should only be called for exisiting users
-  /// & used for debugging purposes
+  /// This should only be called for existing users
+  /// & used for debugging purposes.
   Future<void> syncUserStats() async {
     Map<String, int> allEventCount = await getAllCompletedEventCount();
     CollectionReference stats =
@@ -229,7 +181,7 @@ class DbService {
         "category": key,
         "value": value,
       }).then((_) {
-        print(key + ": " + value.toString());
+        print(key + ": " + value.toString()); // TODO: remove temp debugging
       });
     });
   }
