@@ -6,8 +6,9 @@ class Event {
   String id;
   bool completed;
   bool passed;
+  int difficulty;
 
-  Event({this.category, this.description, this.startTime, this.endTime, this.id, this.completed, this.passed});
+  Event({this.category, this.description, this.startTime, this.endTime, this.id, this.completed, this.passed, this.difficulty});
 
   String toString() {
     return this.category + "\n" + this.description + "\n" + this.startTime.toString() + "\n" + this.endTime.toString();
@@ -21,6 +22,7 @@ class Event {
       "endTime": endTime,
       "completed": completed,
       "passed": passed,
+      "difficulty": difficulty,
     };
   }
 }
