@@ -43,7 +43,7 @@ class _TotalActivitiesBadgesState extends State<TotalActivitiesBadges> {
             itemCount: widget.no.length,
             itemBuilder: (context, index) {
               return FutureBuilder(
-                future: _db.countAllCompletedEvent(),
+                future: _db.countCompletedEventByCategory("total"),
                 builder: (context, snapshot) {
                   return !snapshot.hasData
                       ? Container()

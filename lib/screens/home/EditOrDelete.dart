@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/util/PresetColors.dart';
 
 class EditOrDelete extends StatefulWidget {
 
@@ -62,6 +63,9 @@ class _EditOrDelete extends State<EditOrDelete> {
       },
       icon: Icon(Icons.done),
       label: Text("EDIT"),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(PresetColors.blueAccent),
+      ),
     ),
       ElevatedButton.icon(
         onPressed: () async {
@@ -70,6 +74,9 @@ class _EditOrDelete extends State<EditOrDelete> {
         },
         icon: Icon(Icons.close),
         label: Text("DELETE"),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(PresetColors.blueAccent),
+        ),
       ),
     ];
   }
@@ -86,6 +93,7 @@ class _EditOrDelete extends State<EditOrDelete> {
       appBar: AppBar(
         actions: buildEditingActions(),
         title: Text("Edit or delete"),
+        backgroundColor: PresetColors.blueAccent,
       ),
       body: ListView(
         children: [

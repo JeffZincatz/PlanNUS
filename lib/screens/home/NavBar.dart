@@ -104,7 +104,6 @@ class _NavBarState extends State<NavBar> {
                     ),
                   ),
                 ),
-
                 onPressed: () {
                   Navigator.of(context).popUntil((route) => route.isFirst);
                   Navigator.pop(context);
@@ -127,7 +126,6 @@ class _NavBarState extends State<NavBar> {
                       MaterialPageRoute(
                         builder: (BuildContext context) => Profile(),
                       ));
-
                 },
               ),
               TextButton(
@@ -208,6 +206,56 @@ class _NavBarState extends State<NavBar> {
                     },
                   );
                 }
+              ),
+              TextButton(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Debug - isUserStatsEmpty",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  print(await _db.isUserStatsEmpty());
+                },
+              ),
+              TextButton(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Debug - initUserStats",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  if (await _db.isUserStatsEmpty()) {
+                    await _db.initUserStats();
+                    print("User stats initialised.");
+                  } else {
+                    print("User stats already exists.");
+                  }
+                },
+              ),
+              TextButton(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Debug - syncUserStats",
+                    style: TextStyle(
+                      fontSize: 25,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                onPressed: () async {
+                  await _db.syncUserStats();
+                },
               ),
             ],
           ),

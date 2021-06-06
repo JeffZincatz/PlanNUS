@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/util/PresetColors.dart';
 
 class EventEditingPage extends StatefulWidget {
 
@@ -62,6 +63,9 @@ class _EventEditingPageState extends State<EventEditingPage> {
       },
       icon: Icon(Icons.done),
       label: Text("SAVE"),
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(PresetColors.blueAccent),
+      ),
     )];
   }
 
@@ -82,6 +86,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
       appBar: AppBar(
         actions: buildEditingActions(),
         title: Text("Add an activity"),
+        backgroundColor: PresetColors.blueAccent,
       ),
       body: ListView(
         children: [

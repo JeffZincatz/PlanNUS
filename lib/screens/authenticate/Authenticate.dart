@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/util/PresetColors.dart';
 
@@ -23,11 +24,17 @@ class _AuthenticateState extends State<Authenticate> {
               children: [
                 Image.asset(
                   "assets/images/notebook-logo.png",
-                  scale: 20,
+                  scale: 16,
                 ),
-                Image.asset(
-                  "assets/images/PlanNUS.png",
-                  scale: 2,
+                Text(
+                  "PlanNUS",
+                  style: TextStyle(
+                    fontFamily: "Lobster Two",
+                    fontSize: 60,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1,
+                  ),
                 ),
               ],
             ),

@@ -14,7 +14,18 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  DbService _db = new DbService();
+  static DbService _db = new DbService();
+
+  /// initialise user stats on opening profile if stats docs is empty.
+  /// should be ok to move functionality to sign up after old accounts are synced.
+  static void initStats() async {
+    bool isUserStatsEmpty = await _db.isUserStatsEmpty();
+    if (isUserStatsEmpty) {
+      _db.initUserStats();
+    }
+  }
+
+  var i = initStats();
 
   @override
   Widget build(BuildContext context) {
@@ -35,35 +46,47 @@ class _ProfileState extends State<Profile> {
                   fontSize: 24,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder(
-                    future: _db.getUserProfilePic(),
-                    builder: (context, snapshot) {
-                      return snapshot.hasData
-                          ? CircleAvatar(
+              FutureBuilder(
+                  future: _db.getUserProfilePic(),
+                  builder: (context, snapshot) {
+                    return snapshot.hasData
+                        ? Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
                               backgroundImage: NetworkImage(snapshot.data),
                               backgroundColor: Colors.grey,
                               radius: 60,
-                            )
-                          : Icon(Icons.person);
-                    }),
+                            ),
+                          )
+                        : Icon(Icons.person);
+                  }),
+              FutureBuilder(
+                future: _db.getUserLevel(),
+                builder: (context, snapshot) {
+                  return Text(
+                    "Level " + snapshot.data.toString(),
+                    style: TextStyle(
+                      fontSize: 30,
+                    ),
+                  );
+                },
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FutureBuilder(
-                  future: _db.getUsername(),
-                  builder: (context, snapshot) {
-                    return snapshot.hasData
-                        ? Text(
+              FutureBuilder(
+                future: _db.getUsername(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
                             snapshot.data,
                             style: TextStyle(
                               fontSize: 30,
+                              fontWeight: FontWeight.bold,
                             ),
-                          )
-                        : Text("");
-                  },
-                ),
+                          ),
+                        )
+                      : Text("");
+                },
               ),
               FutureBuilder(
                 future: _db.getEmail(),
@@ -81,6 +104,60 @@ class _ProfileState extends State<Profile> {
                 },
               ),
               Padding(
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FutureBuilder(
+                      future: _db.getUserCurrentExp(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          "Current EXP: " + snapshot.data.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        );
+                      },
+                    ),
+                    FutureBuilder(
+                      future: _db.getUserNextExp(),
+                      builder: (context, snapshot) {
+                        return Text(
+                          "EXP to next lvl: " + snapshot.data.toString(),
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              FutureBuilder(
+                future: (() async {
+                  return {
+                    "current": await _db.getUserCurrentExp(),
+                    "next": await _db.getUserNextExp(),
+                  };
+                })(),
+                builder: (context, snapshot) {
+                  return snapshot.hasData
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: LinearProgressIndicator(
+                            backgroundColor: Colors.grey[400],
+                            valueColor:
+                                AlwaysStoppedAnimation(PresetColors.blue),
+                            value: snapshot.data["current"] *
+                                1.0 /
+                                snapshot.data["next"],
+                            minHeight: 15,
+                          ),
+                        )
+                      : Container();
+                },
+              ),
+              Padding(
                 padding: const EdgeInsets.fromLTRB(12, 20, 12, 0),
                 child: SizedBox(
                   width: screenWidth * 0.8,
@@ -89,59 +166,74 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Center(
                         widthFactor: 0.7,
-                        child: AspectRatio( // need to wrap this around Chart for sizing
+                        child: AspectRatio(
+                          // need to wrap this around Chart for sizing
                           aspectRatio: 1,
                           child: FutureBuilder(
                             future: _db.getAllCompletedEventCount(),
                             builder: (context, snapshot) {
                               return snapshot.hasData
                                   ? PieChart(
-                                    PieChartData(
-                                      centerSpaceRadius: screenWidth * 0.12,
-                                      sections: [
-                                        PieChartSectionData(
-                                          title: "Studies\n" + snapshot.data["studies"].toString(),
-                                          value: snapshot.data["studies"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.blue,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Fitness\n" + snapshot.data["fitness"].toString(),
-                                          value: snapshot.data["fitness"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.purple,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Arts\n" + snapshot.data["arts"].toString(),
-                                          value: snapshot.data["arts"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.lightGreen,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Social\n" + snapshot.data["social"].toString(),
-                                          value: snapshot.data["social"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.orangeAccent,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                        PieChartSectionData(
-                                          title: "Others\n" + snapshot.data["others"].toString(),
-                                          value: snapshot.data["others"] * 1.0,
-                                          showTitle: true,
-                                          radius: screenWidth * 0.28,
-                                          color: PresetColors.red,
-                                          titleStyle: TextStyle(fontSize: 18),
-                                        ),
-                                      ],
-                                    ),
-                                  )
+                                      PieChartData(
+                                        centerSpaceRadius: screenWidth * 0.12,
+                                        sections: [
+                                          PieChartSectionData(
+                                            title: "Studies\n" +
+                                                snapshot.data["Studies"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Studies"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.blue,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Fitness\n" +
+                                                snapshot.data["Fitness"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Fitness"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.purple,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Arts\n" +
+                                                snapshot.data["Arts"]
+                                                    .toString(),
+                                            value: snapshot.data["Arts"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.lightGreen,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Social\n" +
+                                                snapshot.data["Social"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Social"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.orangeAccent,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                          PieChartSectionData(
+                                            title: "Others\n" +
+                                                snapshot.data["Others"]
+                                                    .toString(),
+                                            value:
+                                                snapshot.data["Others"] * 1.0,
+                                            showTitle: true,
+                                            radius: screenWidth * 0.28,
+                                            color: PresetColors.red,
+                                            titleStyle: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : Container();
                             },
                           ),
@@ -157,55 +249,27 @@ class _ProfileState extends State<Profile> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: 8, horizontal: 0),
                                 child: Text(
-                                  "Level:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db.countAllCompletedEvent(),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                      snapshot.data.toString(),
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    )
-                                        : Text("");
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
                                   "Total activities completed:",
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db.countAllCompletedEvent(),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("total"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -219,23 +283,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Studies"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future: _db
+                                    .countCompletedEventByCategory("Studies"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -249,23 +313,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Fitness"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future: _db
+                                    .countCompletedEventByCategory("Fitness"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -279,23 +343,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future:
-                                      _db.countCompletedEventByCategory("Arts"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("Arts"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -309,23 +373,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Social"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("Social"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
@@ -339,23 +403,23 @@ class _ProfileState extends State<Profile> {
                                   style: TextStyle(
                                     fontSize: 20,
                                   ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                              Center(
-                                child: FutureBuilder(
-                                  future: _db
-                                      .countCompletedEventByCategory("Others"),
-                                  builder: (context, snapshot) {
-                                    return snapshot.hasData
-                                        ? Text(
-                                            snapshot.data.toString(),
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                            ),
-                                          )
-                                        : Text("");
-                                  },
-                                ),
+                              FutureBuilder(
+                                future:
+                                    _db.countCompletedEventByCategory("Others"),
+                                builder: (context, snapshot) {
+                                  return snapshot.hasData
+                                      ? Text(
+                                          snapshot.data.toString(),
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        )
+                                      : Text("");
+                                },
                               ),
                             ],
                           ),
