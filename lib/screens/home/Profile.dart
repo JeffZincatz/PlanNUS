@@ -78,7 +78,10 @@ class _ProfileState extends State<Profile> {
                                         size: 20,
                                       ),
                                       onPressed: () {
-
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: ((builder) => bottomSheet()),
+                                        );
                                       },
                                     ),
                                   )),
@@ -458,6 +461,56 @@ class _ProfileState extends State<Profile> {
             ],
           ),
         ]),
+      ),
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 20,
+      ),
+      child: Column(
+        children: <Widget>[
+          Text(
+            "Choose Profile photo",
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(Icons.camera),
+                      Text("Camera", style: TextStyle(fontSize: 20),),
+                    ],
+                  ),
+                  onPressed: () {
+                    // takePhoto(ImageSource.camera);
+                  },
+                ),
+                TextButton(
+                  child: Row(
+                    children: [
+                      Icon(Icons.image),
+                      Text("Gallery", style: TextStyle(fontSize: 20),),
+                    ],
+                  ),
+                  onPressed: () {
+                    // takePhoto(ImageSource.gallery);
+                  },
+                ),
+              ])
+        ],
       ),
     );
   }
