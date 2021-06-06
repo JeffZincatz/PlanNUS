@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:plannus/models/Event.dart';
 import 'package:plannus/screens/home/Achievements.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/screens/home/Home.dart';
 import 'package:plannus/screens/home/Profile.dart';
+import 'dart:math';
 
 class NavBar extends StatefulWidget {
   @override
@@ -175,6 +177,37 @@ class _NavBarState extends State<NavBar> {
                   await _auth.signOut();
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 },
+              ),
+              StreamBuilder<List<Event>>(
+                stream: _db.eventsStream,
+                builder: (context, snapshot) {
+                  return TextButton(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "DEBUG - ADD DIFFICULTIES",
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    onPressed: () async {
+                      for (Event x in snapshot.data) {
+                        Event submitted = Event(
+                          completed: x.completed,
+                          passed: x.passed,
+                          category: x.category,
+                          description: x.description,
+                          startTime: x.startTime,
+                          endTime: x.endTime,
+                          difficulty: (new Random()).nextInt(8) + 1,
+                        );
+                        _db.editEvent(x, submitted);
+                      }
+                    },
+                  );
+                }
               ),
             ],
           ),
