@@ -25,6 +25,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
   String errorMessage = "";
 
   String description = "";
+  int difficulty = 5;
   String dropdownValue = "Studies";
   String startTime;
   String endTime;
@@ -42,6 +43,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
                 int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
           endTime: DateTime(widget.currentDate.year, widget.currentDate.month, widget.currentDate.day,
               int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
+          difficulty: difficulty,
         );
 
         if (submitted.description == "") {
@@ -130,6 +132,30 @@ class _EventEditingPageState extends State<EventEditingPage> {
             },
           ),
           SizedBox(height: 20.0,),
+          Text(
+            "Perceived Difficulty",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 13,
+                child: Slider(
+                  value: difficulty.toDouble(),
+                  activeColor: Colors.blue[difficulty * 100],
+                  inactiveColor: Colors.blue[difficulty * 100],
+                  min: 1,
+                  max: 9,
+                  divisions: 8,
+                  onChanged: (val) => setState(() => difficulty = val.round()),
+                ),
+              ),
+              Expanded(flex: 1, child: Text(difficulty.toString())),
+            ],
+          ),
           Text(
             "Start Time",
             style: TextStyle(
