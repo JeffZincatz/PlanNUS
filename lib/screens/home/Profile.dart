@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:plannus/elements/ProfilePic.dart';
 import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/elements/MyAppBar.dart';
 import 'package:plannus/services/DbService.dart';
@@ -52,11 +53,36 @@ class _ProfileState extends State<Profile> {
                     return snapshot.hasData
                         ? Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
-                              backgroundImage: NetworkImage(snapshot.data),
-                              backgroundColor: Colors.grey,
-                              radius: 60,
-                            ),
+                            child: Stack(children: [
+                              ProfilePic(
+                                image: snapshot.data,
+                                radius: 60,
+                              ),
+                              Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 4,
+                                          color: PresetColors.background,
+                                        ),
+                                        color: PresetColors.blue),
+                                    child: IconButton(
+                                      icon:
+                                      Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+
+                                      },
+                                    ),
+                                  )),
+                            ]),
                           )
                         : Icon(Icons.person);
                   }),

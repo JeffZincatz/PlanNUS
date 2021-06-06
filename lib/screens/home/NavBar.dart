@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plannus/elements/ProfilePic.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:plannus/screens/home/Achievements.dart';
 import 'package:plannus/services/AuthService.dart';
@@ -35,11 +36,10 @@ class _NavBarState extends State<NavBar> {
                     future: _db.getUserProfilePic(),
                     builder: (context, snapshot) {
                       return snapshot.hasData
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(snapshot.data),
-                              backgroundColor: Colors.grey,
-                              radius: 40,
-                            )
+                          ? ProfilePic(
+                        image: snapshot.data,
+                        radius: 40,
+                      )
                           : Icon(Icons.person);
                     }),
               ),
