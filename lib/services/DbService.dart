@@ -60,6 +60,7 @@ class DbService {
             DateTime.now(),
         endTime: DateTime.parse(doc.get("endTime").toDate().toString()) ??
             DateTime.now(),
+        difficulty: doc.get("difficulty") ?? 5,
       );
     }).toList();
   }
@@ -100,8 +101,9 @@ class DbService {
       "description": change.description,
       "startTime": change.startTime,
       "endTime": change.endTime,
-      "completed": false,
-      "passed": false,
+      "completed": old.completed,
+      "passed": old.passed,
+      "difficulty": change.difficulty,
     });
   }
 

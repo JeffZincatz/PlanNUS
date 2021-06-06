@@ -29,6 +29,7 @@ class _EditOrDelete extends State<EditOrDelete> {
   String dropdownValue;
   String startTime;
   String endTime;
+  int difficulty;
 
   List<Widget> buildEditingActions() {
     return [ElevatedButton.icon(
@@ -43,6 +44,7 @@ class _EditOrDelete extends State<EditOrDelete> {
               int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
           endTime: DateTime(widget.event.startTime.year, widget.event.startTime.month, widget.event.startTime.day,
               int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
+          difficulty: difficulty,
         );
 
         if (submitted.description == "") {
@@ -85,6 +87,8 @@ class _EditOrDelete extends State<EditOrDelete> {
     dropdownValue = dropdownValue ?? widget.event.category;
     startTime = startTime ?? DateFormat.Hms().format(widget.event.startTime).substring(0, 5);
     endTime = endTime ?? DateFormat.Hms().format(widget.event.endTime).substring(0, 5);
+    difficulty = difficulty ?? widget.event.difficulty;
+    print(widget.event.difficulty);
     return Scaffold(
       appBar: AppBar(
         actions: buildEditingActions(),
@@ -141,6 +145,31 @@ class _EditOrDelete extends State<EditOrDelete> {
             },
           ),
           SizedBox(height: 20.0,),
+          Text(
+            "Perceived Difficulty",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          Row(
+            children: [
+              Expanded(
+                flex: 13,
+                child: Slider(
+                  value: difficulty.toDouble(),
+                  // value: difficulty ?? 5,
+                  activeColor: Colors.blue[difficulty * 100],
+                  inactiveColor: Colors.blue[difficulty * 100],
+                  min: 1,
+                  max: 9,
+                  divisions: 8,
+                  onChanged: (val) => setState(() => difficulty = val.round()),
+                ),
+              ),
+              Expanded(flex: 1, child: Text(difficulty.toString())),
+            ],
+          ),
           Text(
             "Start Time",
             style: TextStyle(
