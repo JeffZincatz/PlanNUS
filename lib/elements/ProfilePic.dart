@@ -13,6 +13,7 @@ class ProfilePic extends StatelessWidget {
       width: radius * 2,
       height: radius * 2,
       decoration: BoxDecoration(
+        color: Colors.white,
         border: Border.all(
           width: 4,
           color: PresetColors.background,

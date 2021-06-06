@@ -1,11 +1,15 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:plannus/elements/ProfilePic.dart';
 import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/elements/MyAppBar.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/services/AuthService.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:plannus/util/PresetColors.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
@@ -16,6 +20,12 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   static DbService _db = new DbService();
+  static AuthService _auth = new AuthService();
+  static FirebaseStorage _storage = FirebaseStorage.instance;
+
+  // change profile
+  PickedFile _imageFile;
+  final ImagePicker _picker = ImagePicker();
 
   /// initialise user stats on opening profile if stats docs is empty.
   /// should be ok to move functionality to sign up after old accounts are synced.
@@ -495,7 +505,7 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                   onPressed: () {
-                    // takePhoto(ImageSource.camera);
+                    takePhoto(ImageSource.camera);
                   },
                 ),
                 TextButton(
@@ -506,12 +516,37 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                   onPressed: () {
-                    // takePhoto(ImageSource.gallery);
+                    takePhoto(ImageSource.gallery);
                   },
                 ),
               ])
         ],
       ),
     );
+  }
+
+  void takePhoto(ImageSource source) async {
+    print("takePhoto()");
+    final pickedFile = await _picker.getImage(
+      source: source,
+    );
+    setState(() {
+      _imageFile = pickedFile;
+      print(_imageFile.toString());
+    });
+
+    String path = _imageFile.path;
+    print("Path: " + path);
+
+    File image = File(path);
+    try {
+      await _storage
+          .ref("profilePics/" + _auth.getCurrentUser().uid + ".jpg")
+          .putFile(image);
+    } catch (error) {
+      // e.g, e.code == 'canceled'
+    }
+
+    Navigator.pop(context);
   }
 }
