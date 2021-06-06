@@ -14,8 +14,20 @@ class DbService {
   Future<String> getUserProfilePic() async {
     try {
       DocumentSnapshot snapshot =
-          await _db.collection("users").doc(currentUser.uid).get();
+      await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["profilePic"];
+    } catch (error) {
+      print(error); // TODO: remove temp debug
+      return null;
+    }
+  }
+
+  Future<void> updateUserProfilePic(String url) async {
+    try {
+      await _db.collection("users").doc(
+          currentUser.uid).update({
+        "profilePic": url,
+      });
     } catch (error) {
       print(error); // TODO: remove temp debug
       return null;
@@ -25,7 +37,7 @@ class DbService {
   Future<String> getUsername() async {
     try {
       DocumentSnapshot snapshot =
-          await _db.collection("users").doc(currentUser.uid).get();
+      await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["username"];
     } catch (error) {
       print(error); // TODO: remove temp debug
@@ -36,7 +48,7 @@ class DbService {
   Future<String> getEmail() async {
     try {
       DocumentSnapshot snapshot =
-          await _db.collection("users").doc(currentUser.uid).get();
+      await _db.collection("users").doc(currentUser.uid).get();
       return snapshot["email"];
     } catch (error) {
       print(error); // TODO: remove temp debug
@@ -73,7 +85,7 @@ class DbService {
     DocumentReference temp = events.doc(event.id);
 
     CollectionReference stats =
-        _db.collection("users").doc(currentUser.uid).collection("stats");
+    _db.collection("users").doc(currentUser.uid).collection("stats");
     stats.doc(event.category).update({
       "value": FieldValue.increment(1),
     });
@@ -178,7 +190,7 @@ class DbService {
   /// Use for initialising new user/existing user stats
   Future<void> initUserStats() async {
     CollectionReference stats =
-        _db.collection("users").doc(currentUser.uid).collection("stats");
+    _db.collection("users").doc(currentUser.uid).collection("stats");
 
     stats.doc("level").set({
       "category": "level",
@@ -254,7 +266,7 @@ class DbService {
     };
 
     CollectionReference stats =
-        _db.collection("users").doc(currentUser.uid).collection("stats");
+    _db.collection("users").doc(currentUser.uid).collection("stats");
 
     List<String> categories = [
       "Studies",
