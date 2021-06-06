@@ -81,8 +81,7 @@ class _ProfileState extends State<Profile> {
                                         ),
                                         color: PresetColors.blue),
                                     child: IconButton(
-                                      icon:
-                                      Icon(
+                                      icon: Icon(
                                         Icons.edit,
                                         color: Colors.white,
                                         size: 20,
@@ -501,7 +500,10 @@ class _ProfileState extends State<Profile> {
                   child: Row(
                     children: [
                       Icon(Icons.camera),
-                      Text("Camera", style: TextStyle(fontSize: 20),),
+                      Text(
+                        "Camera",
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ],
                   ),
                   onPressed: () {
@@ -512,7 +514,10 @@ class _ProfileState extends State<Profile> {
                   child: Row(
                     children: [
                       Icon(Icons.image),
-                      Text("Gallery", style: TextStyle(fontSize: 20),),
+                      Text(
+                        "Gallery",
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ],
                   ),
                   onPressed: () {
@@ -526,27 +531,30 @@ class _ProfileState extends State<Profile> {
   }
 
   void takePhoto(ImageSource source) async {
-    print("takePhoto()");
-    final pickedFile = await _picker.getImage(
-      source: source,
-    );
-    setState(() {
-      _imageFile = pickedFile;
-      print(_imageFile.toString());
-    });
-
-    String path = _imageFile.path;
-    print("Path: " + path);
-
-    File image = File(path);
     try {
-      await _storage
-          .ref("profilePics/" + _auth.getCurrentUser().uid + ".jpg")
-          .putFile(image);
-    } catch (error) {
-      // e.g, e.code == 'canceled'
-    }
+      final pickedFile = await _picker.getImage(
+        source: source,
+        maxHeight: 200, // limit pic size to 200*200
+        maxWidth: 200,
+      );
+      setState(() {
+        _imageFile = pickedFile;
+      });
 
-    Navigator.pop(context);
+      // save image to storage
+      File image = File(_imageFile.path);
+      String imagePath = "profilePics/" + _auth.getCurrentUser().uid + ".jpg";
+      await _storage.ref(imagePath).putFile(image);
+
+      // update db users profilePic
+      String url = await _storage.ref(imagePath).getDownloadURL();
+      _db.updateUserProfilePic(url);
+
+      setState(() {}); // refresh profile page
+      Navigator.pop(context); // close bottom sheet
+    } catch (error) {
+      print(error); // TODO: remove temp debug
+      return null;
+    }
   }
 }
