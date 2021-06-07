@@ -17,6 +17,18 @@ class EditOrDelete extends StatefulWidget {
 
 class _EditOrDelete extends State<EditOrDelete> {
 
+  Widget makeIcon(String category) {
+    return category == "Studies"
+        ? Icon(Icons.book)
+        : category == "Fitness"
+        ? Icon(Icons.sports_baseball)
+        : category == "Arts"
+        ? Icon(Icons.music_note)
+        : category == "Social"
+        ? Icon(Icons.phone_in_talk)
+        : Icon(Icons.thumb_up);
+  }
+
   bool today(DateTime currentDate) {
     return (currentDate.year == DateTime.now().year
         && currentDate.month == DateTime.now().month
@@ -30,6 +42,7 @@ class _EditOrDelete extends State<EditOrDelete> {
   String startTime;
   String endTime;
   int difficulty;
+  String date;
 
   List<Widget> buildEditingActions() {
     return [ElevatedButton.icon(
@@ -40,18 +53,19 @@ class _EditOrDelete extends State<EditOrDelete> {
           passed: false,
           category: dropdownValue,
           description: description,
-          startTime: DateTime(widget.event.startTime.year, widget.event.startTime.month, widget.event.startTime.day,
+          startTime: DateTime(int.parse(date.substring(date.lastIndexOf('/') + 1, date.length)),
+              int.parse(date.substring(date.indexOf('/') + 1, date.lastIndexOf('/'))),
+              int.parse(date.substring(0, date.indexOf('/'))),
               int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-          endTime: DateTime(widget.event.startTime.year, widget.event.startTime.month, widget.event.startTime.day,
+          endTime: DateTime(int.parse(date.substring(date.lastIndexOf('/') + 1, date.length)),
+              int.parse(date.substring(date.indexOf('/') + 1, date.lastIndexOf('/'))),
+              int.parse(date.substring(0, date.indexOf('/'))),
               int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
           difficulty: difficulty,
         );
 
         if (submitted.description == "") {
           errorMessage = "Please add a description";
-          setState(() {});
-        } else if (today(submitted.startTime) && submitted.startTime.compareTo(DateTime.now()) < 0) {
-          errorMessage = "Start Time cannot be in the past!";
           setState(() {});
         } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
           errorMessage = "End Time has to be after Start Time";
@@ -69,8 +83,48 @@ class _EditOrDelete extends State<EditOrDelete> {
     ),
       ElevatedButton.icon(
         onPressed: () async {
-          await DbService().delete(widget.event);
-          Navigator.pop(context);
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return SimpleDialog(
+                title: Text("Are you sure you want to delete?"),
+                children: [
+                  makeIcon(widget.event.category),
+                  SizedBox(height: 10,),
+                  Text(
+                    widget.event.description,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  Column(
+                    children: [
+                      Text(
+                        widget.event.startTime.toString().substring(0, 10),
+                      ),
+                      Text(
+                        "${DateFormat.Hms().format(widget.event.startTime).substring(0, 5)} - ${DateFormat.Hms().format(widget.event.endTime).substring(0, 5)}",
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(icon: Icon(Icons.done), onPressed: () async {
+                        await DbService().delete(widget.event);
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                      }),
+                      IconButton(icon: Icon(Icons.close), onPressed: () {
+                        Navigator.pop(context);
+                      }),
+                    ],
+                  ),
+                ],
+              );
+            },
+          );
         },
         icon: Icon(Icons.close),
         label: Text("DELETE"),
@@ -88,7 +142,12 @@ class _EditOrDelete extends State<EditOrDelete> {
     startTime = startTime ?? DateFormat.Hms().format(widget.event.startTime).substring(0, 5);
     endTime = endTime ?? DateFormat.Hms().format(widget.event.endTime).substring(0, 5);
     difficulty = difficulty ?? widget.event.difficulty;
-    print(widget.event.difficulty);
+    date = date ?? DateFormat.d().format(widget.event.startTime)
+      + "/"
+      + DateFormat.M().format(widget.event.startTime)
+      + "/"
+      + DateFormat.y().format(widget.event.startTime);
+
     return Scaffold(
       appBar: AppBar(
         actions: buildEditingActions(),
@@ -170,6 +229,42 @@ class _EditOrDelete extends State<EditOrDelete> {
               Expanded(flex: 1, child: Text(difficulty.toString())),
             ],
           ),
+          SizedBox(height: 20.0,),
+          Text(
+            "Date",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return OutlinedButton(
+                  onPressed: () {
+                    DatePicker.showDatePicker(
+                      context,
+                      currentTime: DateTime(
+                        int.parse(date.substring(date.lastIndexOf('/') + 1, date.length)),
+                        int.parse(date.substring(date.indexOf('/') + 1, date.lastIndexOf('/'))),
+                        int.parse(date.substring(0, date.indexOf('/'))),
+                      ),
+                      onConfirm: (val) {
+                        date = DateFormat.d().format(val)
+                            + "/"
+                            + DateFormat.M().format(val)
+                            + "/"
+                            + DateFormat.y().format(val);
+                        setState((){});
+                      }
+                    );
+                  },
+                  child: Text(
+                    date,
+                  ),
+                );
+              }
+          ),
+          SizedBox(height: 20.0,),
           Text(
             "Start Time",
             style: TextStyle(

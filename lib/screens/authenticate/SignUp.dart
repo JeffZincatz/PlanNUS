@@ -94,6 +94,7 @@ class _SignUpState extends State<SignUp> {
                                 icon: Icon(Icons.lock),
                                 hintText: 'Enter your password',
                                 labelText: 'Password',
+                                errorMaxLines: 3,
                               ),
                               validator: validator.validatePassword,
                               obscureText: true,
