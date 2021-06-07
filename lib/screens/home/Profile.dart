@@ -39,6 +39,10 @@ class _ProfileState extends State<Profile> {
 
   var i = initStats();
 
+  // edit username button
+  bool isEditing = false;
+  String newName = "";
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -115,22 +119,80 @@ class _ProfileState extends State<Profile> {
                       : Text("");
                 },
               ),
-              FutureBuilder(
-                future: _db.getUsername(),
-                builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            snapshot.data,
-                            style: TextStyle(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: isEditing ? 0 : screenWidth * 0.11,
+                  ),
+                  isEditing
+                  ? Container(
+                    height: 50,
+                    width: screenWidth * 0.65,
+                    // color: Colors.red,
+                    child: TextField(
+                        style: TextStyle(
+                          fontSize: 30,
+                        ),
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: isEditing
+                              ? UnderlineInputBorder()
+                              : InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                        ),
+                        onChanged: (String value) {
+                          setState(() {
+                            newName = value;
+                          });
+                        }),
+                  )
+                  : FutureBuilder(
+                      future: _db.getUsername(),
+                      builder: (context, snapshot) {
+                        return snapshot.hasData
+                            ? Text(
+                          snapshot.data,
+                          style: TextStyle(
                               fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
                         )
-                      : Text("");
-                },
+                            : Text("");
+                      }),
+                  isEditing
+                      ? Row(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.check),
+                              onPressed: () async {
+                                await _db.updateUsername(newName);
+                                setState(() {
+                                  isEditing = false;
+                                });
+
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: () {
+                                setState(() {
+                                  isEditing = false;
+                                  newName = "";
+                                });
+                              },
+                            ),
+                          ],
+                        )
+                      : IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          setState(() {
+                            isEditing = true;
+                          });
+                        },
+                      ),
+                ],
               ),
               FutureBuilder(
                 future: _db.getEmail(),

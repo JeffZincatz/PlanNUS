@@ -44,6 +44,17 @@ class DbService {
     }
   }
 
+  Future<void> updateUsername(String newName) async {
+    try {
+      await _db.collection("users").doc(currentUser.uid).update({
+        "username": newName,
+      });
+    } catch (error) {
+      print(error); // TODO: remove temp debug
+      return null;
+    }
+  }
+
   Future<String> getEmail() async {
     try {
       DocumentSnapshot snapshot =
