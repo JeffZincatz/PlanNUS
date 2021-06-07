@@ -4,6 +4,7 @@ import 'package:plannus/screens/home/Home.dart';
 import 'package:plannus/screens/authenticate/Authenticate.dart';
 import 'package:provider/provider.dart';
 import 'authenticate/Verifying.dart';
+import 'home/Navigation.dart';
 
 class Wrapper extends StatelessWidget {
   const Wrapper({Key key}) : super(key: key);
@@ -13,11 +14,12 @@ class Wrapper extends StatelessWidget {
 
     final user = Provider.of<User>(context);
 
-    // return either Home or Authenticate widget
+    // return either Navigation or Authenticate widget
     if (user == null || !user.emailVerified) {
       return Authenticate();
     } else {
-      return Home();
+      return Navigation();
     }
+
   }
 }
