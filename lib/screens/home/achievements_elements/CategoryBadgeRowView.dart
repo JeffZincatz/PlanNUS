@@ -25,11 +25,11 @@ class CategoryBadgeRowView extends StatefulWidget {
 
   final List<String> ifArts = [
     "Baby artist",
-    "Every artist was first an amateur",
+    "New hobby?",
     "Artist in the making",
     "Creative genius",
     "My first masterpiece",
-    "Picasso"
+    "Van Gogh"
   ];
 
   final List<String> ifSocial = [
