@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plannus/elements/MyButtons.dart';
 import 'package:plannus/elements/ProfilePic.dart';
 import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/elements/MyAppBar.dart';
@@ -470,6 +471,16 @@ class _ProfileState extends State<Profile> {
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+            child: MyButtons.roundedRed(
+              text: "Sign Out",
+              onPressed: () async {
+                await _auth.signOut();
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
           ),
         ]),
       ),
