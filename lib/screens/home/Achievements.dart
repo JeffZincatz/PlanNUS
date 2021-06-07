@@ -20,7 +20,7 @@ class _AchievementsState extends State<Achievements> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: MyAppBar(context),
       drawer: NavBar(),
       body: ListView(
         children: [

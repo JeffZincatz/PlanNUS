@@ -59,7 +59,7 @@ class _HomeState extends State<Home> {
       value: _db.eventsStream,
       builder: (context, snapshot) {
         return Scaffold(
-          appBar: MyAppBar(),
+          appBar: MyAppBar(context),
           body: SmartRefresher(
             enablePullDown: true,
             controller: _refreshController,

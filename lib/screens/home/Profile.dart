@@ -44,7 +44,7 @@ class _ProfileState extends State<Profile> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: MyAppBar(),
+      appBar: MyAppBar(context),
       drawer: NavBar(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
@@ -101,12 +101,14 @@ class _ProfileState extends State<Profile> {
               FutureBuilder(
                 future: _db.getUserLevel(),
                 builder: (context, snapshot) {
-                  return Text(
-                    "Level " + snapshot.data.toString(),
-                    style: TextStyle(
-                      fontSize: 30,
-                    ),
-                  );
+                  return snapshot.hasData
+                      ? Text(
+                          "Level " + snapshot.data.toString(),
+                          style: TextStyle(
+                            fontSize: 30,
+                          ),
+                        )
+                      : Text("");
                 },
               ),
               FutureBuilder(

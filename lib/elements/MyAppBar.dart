@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:plannus/screens/home/Debug.dart';
 import 'package:plannus/util/PresetColors.dart';
 
 class MyAppBar extends AppBar {
 
-  MyAppBar() : super(
+  MyAppBar(context) : super(
     backgroundColor: PresetColors.blueAccent,
+    actions: [
+      TextButton(
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            builder: ((builder) => Debug()),
+          );
+        },
+        child: Row(
+          children: [
+            Icon(Icons.bug_report_outlined),
+            Text("Debug"),
+          ],
+        ),
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(Colors.white),
+        ),
+      ),
+    ],
     title: Text(
       "PlanNUS",
       style: TextStyle(
