@@ -36,24 +36,37 @@ class _NavigationState extends State<Navigation> {
       body: Center(
         child:  _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'My Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.stars),
-            label: 'Achievements',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: PresetColors.blue,
-        onTap: _onItemTapped,
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.black54,
+                blurRadius: 10.0,
+                offset: Offset(0.0, 0.75)
+            )
+          ],
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: PresetColors.background,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'My Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.stars),
+              label: 'Achievements',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: PresetColors.blue,
+          onTap: _onItemTapped,
+          iconSize: 30,
+        ),
       ),
     );
   }

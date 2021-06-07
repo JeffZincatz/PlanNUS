@@ -6,6 +6,7 @@ class MyAppBar extends AppBar {
 
   MyAppBar(context) : super(
     backgroundColor: PresetColors.blueAccent,
+    elevation: 10,
     actions: [
       TextButton(
         onPressed: () {

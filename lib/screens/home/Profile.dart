@@ -48,14 +48,17 @@ class _ProfileState extends State<Profile> {
       appBar: MyAppBar(context),
       drawer: NavBar(),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         child: ListView(shrinkWrap: true, children: [
           Column(
             children: [
-              Text(
-                "My Profile",
-                style: TextStyle(
-                  fontSize: 24,
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Text(
+                  "My Profile",
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
                 ),
               ),
               FutureBuilder(
