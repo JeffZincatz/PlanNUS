@@ -41,7 +41,8 @@ class _ProfileState extends State<Profile> {
 
   // edit username button
   bool isEditing = false;
-  String newName = "";
+  static String username = "";
+  static String newName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -126,40 +127,45 @@ class _ProfileState extends State<Profile> {
                     width: isEditing ? 0 : screenWidth * 0.11,
                   ),
                   isEditing
-                  ? Container(
-                    height: 50,
-                    width: screenWidth * 0.65,
-                    // color: Colors.red,
-                    child: TextField(
-                        style: TextStyle(
-                          fontSize: 30,
-                        ),
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          border: isEditing
-                              ? UnderlineInputBorder()
-                              : InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
-                        ),
-                        onChanged: (String value) {
-                          setState(() {
-                            newName = value;
-                          });
-                        }),
-                  )
-                  : FutureBuilder(
-                      future: _db.getUsername(),
-                      builder: (context, snapshot) {
-                        return snapshot.hasData
-                            ? Text(
-                          snapshot.data,
-                          style: TextStyle(
+                      ? Container(
+                          height: 50,
+                          width: screenWidth * 0.65,
+                          // color: Colors.red,
+                          child: TextFormField(
+                            initialValue: username,
+                            style: TextStyle(
                               fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
+                            ),
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              border: isEditing
+                                  ? UnderlineInputBorder()
+                                  : InputBorder.none,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                            onChanged: (String value) {
+                              setState(() {
+                                newName = value;
+                              });
+                            },
+                          ),
                         )
-                            : Text("");
-                      }),
+                      : FutureBuilder(
+                          future: _db.getUsername(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              username = snapshot.data;
+                              return Text(
+                                snapshot.data,
+                                style: TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              );
+                            } else {
+                              return Text("");
+                            }
+                          }),
                   isEditing
                       ? Row(
                           children: [
@@ -170,7 +176,6 @@ class _ProfileState extends State<Profile> {
                                 setState(() {
                                   isEditing = false;
                                 });
-
                               },
                             ),
                             IconButton(
@@ -185,13 +190,13 @@ class _ProfileState extends State<Profile> {
                           ],
                         )
                       : IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          setState(() {
-                            isEditing = true;
-                          });
-                        },
-                      ),
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            setState(() {
+                              isEditing = true;
+                            });
+                          },
+                        ),
                 ],
               ),
               FutureBuilder(
