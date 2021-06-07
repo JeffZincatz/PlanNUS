@@ -42,7 +42,7 @@ class _IndividualBadgeState extends State<IndividualBadge> {
                       Expanded(
                         flex: 2,
                         child: Image.asset(
-                          "assets/badges/${widget.cat}.png",
+                          "assets/badges/${widget.cat}${widget.no}.png",
                         ),
                       ),
                       Expanded(
@@ -71,7 +71,7 @@ class _IndividualBadgeState extends State<IndividualBadge> {
                           Expanded(
                             flex: 2,
                             child: Image.asset(
-                              "assets/badges/${widget.cat}.png",
+                              "assets/badges/${widget.cat}${widget.no}.png",
                             ),
                           ),
                           Expanded(
