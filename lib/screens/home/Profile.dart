@@ -52,17 +52,17 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       appBar: MyAppBar(context),
       drawer: NavBar(),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: ListView(shrinkWrap: true, children: [
-          Column(
+      body: ListView(shrinkWrap: true, children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 16),
                 child: Text(
                   "My Profile",
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                   ),
                 ),
               ),
@@ -105,19 +105,18 @@ class _ProfileState extends State<Profile> {
                                   )),
                             ]),
                           )
-                        : Icon(Icons.person);
+                        : Icon(Icons.person, size: 135,);
                   }),
               FutureBuilder(
                 future: _db.getUserLevel(),
                 builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Text(
-                          "Level " + snapshot.data.toString(),
-                          style: TextStyle(
-                            fontSize: 30,
-                          ),
-                        )
-                      : Text("");
+                  String lvl = snapshot.hasData ? snapshot.data.toString() : " ";
+                  return Text(
+                    "Level " + lvl,
+                    style: TextStyle(
+                      fontSize: 24,
+                    ),
+                  );
                 },
               ),
               Row(
@@ -134,7 +133,7 @@ class _ProfileState extends State<Profile> {
                           child: TextFormField(
                             initialValue: username,
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 24,
                             ),
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
@@ -153,18 +152,14 @@ class _ProfileState extends State<Profile> {
                       : FutureBuilder(
                           future: _db.getUsername(),
                           builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              username = snapshot.data;
-                              return Text(
-                                snapshot.data,
-                                style: TextStyle(
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              );
-                            } else {
-                              return Text("");
-                            }
+                            username =
+                                snapshot.hasData ? snapshot.data : username;
+                            return Text(
+                              username,
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            );
                           }),
                   isEditing
                       ? Row(
@@ -222,22 +217,26 @@ class _ProfileState extends State<Profile> {
                     FutureBuilder(
                       future: _db.getUserCurrentExp(),
                       builder: (context, snapshot) {
+                        String currExp =
+                            snapshot.hasData ? snapshot.data.toString() : "";
                         return Text(
-                          "Current EXP: " + snapshot.data.toString(),
+                          "Current EXP: " + currExp,
                           style: TextStyle(
-                            fontSize: 18,
-                          ),
+                              // fontSize: 12,
+                              ),
                         );
                       },
                     ),
                     FutureBuilder(
                       future: _db.getUserNextExp(),
                       builder: (context, snapshot) {
+                        String nextExp =
+                            snapshot.hasData ? snapshot.data.toString() : "";
                         return Text(
-                          "EXP to next lvl: " + snapshot.data.toString(),
+                          "EXP to next lvl: " + nextExp,
                           style: TextStyle(
-                            fontSize: 18,
-                          ),
+                              // fontSize: 12,
+                              ),
                         );
                       },
                     ),
@@ -252,20 +251,22 @@ class _ProfileState extends State<Profile> {
                   };
                 })(),
                 builder: (context, snapshot) {
-                  return snapshot.hasData
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: LinearProgressIndicator(
-                            backgroundColor: Colors.grey[400],
-                            valueColor:
-                                AlwaysStoppedAnimation(PresetColors.blue),
-                            value: snapshot.data["current"] *
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: LinearProgressIndicator(
+                        backgroundColor: Colors.grey[400],
+                        valueColor: AlwaysStoppedAnimation(PresetColors.blue),
+                        value: snapshot.hasData
+                            ? snapshot.data["current"] *
                                 1.0 /
-                                snapshot.data["next"],
-                            minHeight: 15,
-                          ),
-                        )
-                      : Container();
+                                snapshot.data["next"]
+                            : 0,
+                        minHeight: 15,
+                      ),
+                    ),
+                  );
                 },
               ),
               Padding(
@@ -283,69 +284,76 @@ class _ProfileState extends State<Profile> {
                           child: FutureBuilder(
                             future: _db.getAllCompletedEventCount(),
                             builder: (context, snapshot) {
-                              return snapshot.hasData
-                                  ? PieChart(
-                                      PieChartData(
-                                        centerSpaceRadius: screenWidth * 0.12,
-                                        sections: [
-                                          PieChartSectionData(
-                                            title: "Studies\n" +
-                                                snapshot.data["Studies"]
-                                                    .toString(),
-                                            value:
-                                                snapshot.data["Studies"] * 1.0,
-                                            showTitle: true,
-                                            radius: screenWidth * 0.28,
-                                            color: PresetColors.blue,
-                                            titleStyle: TextStyle(fontSize: 18),
-                                          ),
-                                          PieChartSectionData(
-                                            title: "Fitness\n" +
-                                                snapshot.data["Fitness"]
-                                                    .toString(),
-                                            value:
-                                                snapshot.data["Fitness"] * 1.0,
-                                            showTitle: true,
-                                            radius: screenWidth * 0.28,
-                                            color: PresetColors.purple,
-                                            titleStyle: TextStyle(fontSize: 18),
-                                          ),
-                                          PieChartSectionData(
-                                            title: "Arts\n" +
-                                                snapshot.data["Arts"]
-                                                    .toString(),
-                                            value: snapshot.data["Arts"] * 1.0,
-                                            showTitle: true,
-                                            radius: screenWidth * 0.28,
-                                            color: PresetColors.lightGreen,
-                                            titleStyle: TextStyle(fontSize: 18),
-                                          ),
-                                          PieChartSectionData(
-                                            title: "Social\n" +
-                                                snapshot.data["Social"]
-                                                    .toString(),
-                                            value:
-                                                snapshot.data["Social"] * 1.0,
-                                            showTitle: true,
-                                            radius: screenWidth * 0.28,
-                                            color: PresetColors.orangeAccent,
-                                            titleStyle: TextStyle(fontSize: 18),
-                                          ),
-                                          PieChartSectionData(
-                                            title: "Others\n" +
-                                                snapshot.data["Others"]
-                                                    .toString(),
-                                            value:
-                                                snapshot.data["Others"] * 1.0,
-                                            showTitle: true,
-                                            radius: screenWidth * 0.28,
-                                            color: PresetColors.red,
-                                            titleStyle: TextStyle(fontSize: 18),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : Container();
+                              int studies = 0;
+                              int fitness = 0;
+                              int arts = 0;
+                              int social = 0;
+                              int others = 0;
+                              int placeholder = 1;
+                              if (snapshot.hasData) {
+                                studies = snapshot.data["Studies"];
+                                fitness = snapshot.data["Fitness"];
+                                arts = snapshot.data["Arts"];
+                                social = snapshot.data["Social"];
+                                others = snapshot.data["Others"];
+                                placeholder = 0;
+                              }
+                              return PieChart(
+                                PieChartData(
+                                  centerSpaceRadius: screenWidth * 0.12,
+                                  sections: [
+                                    PieChartSectionData(
+                                      // placeholder, loaded before other fields
+                                      // such that non-blank pie chart is displayed
+                                      title: "",
+                                      value: placeholder * 1.0,
+                                      showTitle: false,
+                                      radius: screenWidth * 0.28,
+                                      color: Colors.grey[400],
+                                    ),
+                                    PieChartSectionData(
+                                      title: "Studies\n" + studies.toString(),
+                                      value: studies * 1.0,
+                                      showTitle: true,
+                                      radius: screenWidth * 0.28,
+                                      color: PresetColors.blue,
+                                      titleStyle: TextStyle(fontSize: 15),
+                                    ),
+                                    PieChartSectionData(
+                                      title: "Fitness\n" + fitness.toString(),
+                                      value: fitness * 1.0,
+                                      showTitle: true,
+                                      radius: screenWidth * 0.28,
+                                      color: PresetColors.purple,
+                                      titleStyle: TextStyle(fontSize: 15),
+                                    ),
+                                    PieChartSectionData(
+                                      title: "Arts\n" + arts.toString(),
+                                      value: arts * 1.0,
+                                      showTitle: true,
+                                      radius: screenWidth * 0.28,
+                                      color: PresetColors.lightGreen,
+                                      titleStyle: TextStyle(fontSize: 15),
+                                    ),
+                                    PieChartSectionData(
+                                      title: "Social\n" + social.toString(),
+                                      value: social * 1.0,
+                                      showTitle: true,
+                                      radius: screenWidth * 0.28,
+                                      color: PresetColors.orangeAccent,
+                                      titleStyle: TextStyle(fontSize: 15),
+                                    ),
+                                    PieChartSectionData(
+                                      title: "Others\n" + others.toString(),
+                                      value: others * 1.0,
+                                      showTitle: true,
+                                      radius: screenWidth * 0.28,
+                                      color: PresetColors.red,
+                                      titleStyle: TextStyle(fontSize: 15),
+                                    ),
+                                  ],
+                                ),
+                              );
                             },
                           ),
                         ),
@@ -361,9 +369,6 @@ class _ProfileState extends State<Profile> {
                                     vertical: 8, horizontal: 0),
                                 child: Text(
                                   "Total activities completed:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -374,9 +379,6 @@ class _ProfileState extends State<Profile> {
                                   return snapshot.hasData
                                       ? Text(
                                           snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           textAlign: TextAlign.center,
                                         )
                                       : Text("");
@@ -391,9 +393,6 @@ class _ProfileState extends State<Profile> {
                                     vertical: 8, horizontal: 0),
                                 child: Text(
                                   "Studies:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -404,9 +403,6 @@ class _ProfileState extends State<Profile> {
                                   return snapshot.hasData
                                       ? Text(
                                           snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           textAlign: TextAlign.center,
                                         )
                                       : Text("");
@@ -421,9 +417,6 @@ class _ProfileState extends State<Profile> {
                                     vertical: 8, horizontal: 0),
                                 child: Text(
                                   "Fitness:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -434,9 +427,6 @@ class _ProfileState extends State<Profile> {
                                   return snapshot.hasData
                                       ? Text(
                                           snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           textAlign: TextAlign.center,
                                         )
                                       : Text("");
@@ -451,9 +441,6 @@ class _ProfileState extends State<Profile> {
                                     vertical: 8, horizontal: 0),
                                 child: Text(
                                   "Arts:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -464,9 +451,6 @@ class _ProfileState extends State<Profile> {
                                   return snapshot.hasData
                                       ? Text(
                                           snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           textAlign: TextAlign.center,
                                         )
                                       : Text("");
@@ -481,9 +465,6 @@ class _ProfileState extends State<Profile> {
                                     vertical: 8, horizontal: 0),
                                 child: Text(
                                   "Social:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -494,9 +475,6 @@ class _ProfileState extends State<Profile> {
                                   return snapshot.hasData
                                       ? Text(
                                           snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           textAlign: TextAlign.center,
                                         )
                                       : Text("");
@@ -511,9 +489,6 @@ class _ProfileState extends State<Profile> {
                                     vertical: 8, horizontal: 0),
                                 child: Text(
                                   "Others:",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -524,9 +499,6 @@ class _ProfileState extends State<Profile> {
                                   return snapshot.hasData
                                       ? Text(
                                           snapshot.data.toString(),
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
                                           textAlign: TextAlign.center,
                                         )
                                       : Text("");
@@ -542,18 +514,18 @@ class _ProfileState extends State<Profile> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-            child: MyButtons.roundedRed(
-              text: "Sign Out",
-              onPressed: () async {
-                await _auth.signOut();
-                Navigator.of(context).popUntil((route) => route.isFirst);
-              },
-            ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: MyButtons.roundedRed(
+            text: "Sign Out",
+            onPressed: () async {
+              await _auth.signOut();
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            },
           ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 

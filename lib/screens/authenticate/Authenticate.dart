@@ -15,28 +15,31 @@ class _AuthenticateState extends State<Authenticate> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: PresetColors.background,
-      body: SafeArea(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  "assets/images/notebook-logo.png",
-                  scale: 16,
-                ),
-                Text(
-                  "PlanNUS",
-                  style: TextStyle(
-                    fontFamily: "Lobster Two",
-                    fontSize: 60,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    "assets/images/notebook-logo.png",
+                    scale: 16,
                   ),
-                ),
-              ],
+                  Text(
+                    "PlanNUS",
+                    style: TextStyle(
+                      fontFamily: "Lobster Two",
+                      fontSize: 54,
+                      fontStyle: FontStyle.italic,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
+              ),
             ),
             Column(
               children: [
@@ -51,7 +54,7 @@ class _AuthenticateState extends State<Authenticate> {
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24
+                        fontSize: 20
                     ),
                   ),
                   style: TextButton.styleFrom(
@@ -72,7 +75,7 @@ class _AuthenticateState extends State<Authenticate> {
                     style: TextStyle(
                         color: PresetColors.blueAccent,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24
+                        fontSize: 20
                     ),
                   ),
                   style: TextButton.styleFrom(

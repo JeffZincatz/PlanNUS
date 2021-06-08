@@ -9,7 +9,7 @@ class MyButtons {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           color: Colors.white,
         ),
       ),
@@ -31,7 +31,7 @@ class MyButtons {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           color: PresetColors.blue,
         ),
       ),
@@ -52,7 +52,7 @@ class MyButtons {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 24,
+          fontSize: 20,
           color: Colors.white,
         ),
       ),
