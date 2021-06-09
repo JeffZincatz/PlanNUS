@@ -28,7 +28,9 @@ class MyAppBar extends AppBar {
     ],
     title: Center(
       child: Text(
-        "PlanNUS",
+        // manually added spacing before title to center, due to debug button
+        // TODO: remove temp spacing after removing debug button
+        "          " + "PlanNUS",
         style: TextStyle(
           fontFamily: "Lobster Two",
           fontWeight: FontWeight.bold,

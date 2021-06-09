@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/elements/MyAppBar.dart';
-import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/screens/home/achievements_elements/BadgesView.dart';
 import 'package:plannus/screens/home/achievements_elements/TotalActivitiesBadges.dart';
 
@@ -20,8 +18,6 @@ class _AchievementsState extends State<Achievements> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: MyAppBar(context),
-      drawer: NavBar(),
       body: ListView(
         children: [
           Text(

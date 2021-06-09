@@ -4,8 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:plannus/elements/MyButtons.dart';
 import 'package:plannus/elements/ProfilePic.dart';
-import 'package:plannus/screens/home/NavBar.dart';
-import 'package:plannus/elements/MyAppBar.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -39,8 +37,6 @@ class _ProfileState extends State<Profile> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      appBar: MyAppBar(context),
-      drawer: NavBar(),
       body: ListView(shrinkWrap: true, children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),

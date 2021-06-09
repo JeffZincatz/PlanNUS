@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/home/NavBar.dart';
 import 'package:plannus/screens/home/event_list/UnfinishedEventList.dart';
 import 'package:plannus/screens/home/home_elements/Calendar2.dart';
 import 'package:plannus/screens/home/EventEditingPage.dart';
@@ -8,8 +7,6 @@ import 'package:plannus/screens/home/event_list/MaybeFinishedEventList.dart';
 import 'package:plannus/screens/home/event_list/CompletedEventList.dart';
 import 'package:plannus/screens/home/event_list/UncompletedPastEventList.dart';
 import 'package:plannus/services/DbService.dart';
-import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/elements/MyAppBar.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +56,6 @@ class _HomeState extends State<Home> {
       value: _db.eventsStream,
       builder: (context, snapshot) {
         return Scaffold(
-          appBar: MyAppBar(context),
           body: SmartRefresher(
             enablePullDown: true,
             controller: _refreshController,
@@ -119,7 +115,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          drawer: NavBar(),
           floatingActionButton: FloatingActionButton(
             child: Icon(Icons.add, color: PresetColors.blue),
             backgroundColor: Colors.blue[100],
