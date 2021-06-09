@@ -9,7 +9,6 @@ class Debug extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final DbService _db = DbService();
 
     return Scaffold(
@@ -45,8 +44,7 @@ class Debug extends StatelessWidget {
                       _db.editEvent(x, submitted);
                     }
                   });
-                }
-            ),
+                }),
             debugButton("check userLevelExits", () async {
               print(await _db.userLevelExists());
             }),
@@ -61,8 +59,13 @@ class Debug extends StatelessWidget {
             debugButton("syncUserStats - New data structure", () async {
               await _db.syncUserStats();
             }),
-            debugButton("initWeekly (only once per user!)", StatsUtil.initWeekly),
-            debugButton("addToWeekly - Arts", () => StatsUtil.addToWeekly("Arts")),
+            debugButton("initWeekly (reset to 0)", _db.initWeekly),
+            debugButton("addToWeekly - Arts", () => _db.addToWeekly("Arts")),
+            debugButton("getWeekly", () async {
+              var res = await _db.getWeekly();
+              print(res.runtimeType);
+              print(res);
+            }),
           ],
         ),
       ),

@@ -11,7 +11,7 @@ class StatsUtil {
 
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static String uuid = _auth.getCurrentUser().uid;
+  static String _uuid = _auth.getCurrentUser().uid;
 
   // Event EXP calculation
   // roundToNearest5(duration(hours) * difficulty * 3*e)
@@ -69,37 +69,5 @@ class StatsUtil {
         "Resolve": -points ~/ 2,
       };
     }
-  }
-
-  /// only use to initialise weekly db document
-  static void initWeekly() async {
-    _firestore
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("weekly")
-        .set({
-      "lastDeduction": DateTime.now(),
-      "data": {
-        "Studies": 1,
-        "Fitness": 2,
-        "Arts": 3,
-        "Social": 4,
-        "Others": 5,
-      }
-    });
-  }
-
-  static Future<void> addToWeekly(String category) async {
-    await _firestore
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("weekly")
-        .set({
-      "data": {
-        category: FieldValue.increment(1),
-      }
-    }, SetOptions(merge: true));
   }
 }

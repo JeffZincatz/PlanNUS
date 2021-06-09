@@ -4,18 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:plannus/models/Event.dart';
 
 class DbService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final User currentUser = FirebaseAuth.instance.currentUser;
   final CollectionReference events = FirebaseFirestore.instance
       .collection("users")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .collection("events");
 
+  String uuid = FirebaseAuth.instance.currentUser.uid;
+
   Future<String> getUserProfilePic() async {
     try {
-      DocumentSnapshot snapshot =
-          await _db.collection("users").doc(currentUser.uid).get();
+      DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["profilePic"];
     } catch (error) {
       print(error); // TODO: remove temp debug
@@ -25,7 +24,7 @@ class DbService {
 
   Future<void> updateUserProfilePic(String url) async {
     try {
-      await _db.collection("users").doc(currentUser.uid).update({
+      await _db.collection("users").doc(uuid).update({
         "profilePic": url,
       });
     } catch (error) {
@@ -36,8 +35,7 @@ class DbService {
 
   Future<String> getUsername() async {
     try {
-      DocumentSnapshot snapshot =
-          await _db.collection("users").doc(currentUser.uid).get();
+      DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["username"];
     } catch (error) {
       print(error); // TODO: remove temp debug
@@ -47,7 +45,7 @@ class DbService {
 
   Future<void> updateUsername(String newName) async {
     try {
-      await _db.collection("users").doc(currentUser.uid).update({
+      await _db.collection("users").doc(uuid).update({
         "username": newName,
       });
     } catch (error) {
@@ -58,8 +56,7 @@ class DbService {
 
   Future<String> getEmail() async {
     try {
-      DocumentSnapshot snapshot =
-          await _db.collection("users").doc(currentUser.uid).get();
+      DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["email"];
     } catch (error) {
       print(error); // TODO: remove temp debug
@@ -96,7 +93,7 @@ class DbService {
     DocumentReference temp = events.doc(event.id);
 
     CollectionReference stats =
-        _db.collection("users").doc(currentUser.uid).collection("stats");
+        _db.collection("users").doc(uuid).collection("stats");
     stats.doc(event.category).update({
       "value": FieldValue.increment(1),
     });
@@ -137,12 +134,16 @@ class DbService {
   Future<int> countCompletedEventByCategory(String category) async {
     DocumentSnapshot snapshot = await _db
         .collection("users")
-        .doc(currentUser.uid)
+        .doc(uuid)
         .collection("stats")
-        .doc(category)
+        .doc("counts")
         .get();
 
-    return snapshot.get("value");
+    if (category == "total") {
+      return snapshot.get("total");
+    } else {
+      return snapshot.get("data")[category];
+    }
   }
 
   Future<Map<String, int>> getAllCompletedEventCount() async {
@@ -159,7 +160,7 @@ class DbService {
   Future<int> getUserLevel() async {
     DocumentSnapshot snapshot = await _db
         .collection("users")
-        .doc(currentUser.uid)
+        .doc(uuid)
         .collection("stats")
         .doc("level")
         .get();
@@ -169,7 +170,7 @@ class DbService {
   Future<int> getUserCurrentExp() async {
     DocumentSnapshot snapshot = await _db
         .collection("users")
-        .doc(currentUser.uid)
+        .doc(uuid)
         .collection("stats")
         .doc("level")
         .get();
@@ -179,35 +180,79 @@ class DbService {
   Future<int> getUserNextExp() async {
     DocumentSnapshot snapshot = await _db
         .collection("users")
-        .doc(currentUser.uid)
+        .doc(uuid)
         .collection("stats")
         .doc("level")
         .get();
     return snapshot.get("next");
   }
 
-  Future<bool> userLevelExists() async {
-    DocumentSnapshot snapshot = await _db
-        .collection("users")
-        .doc(currentUser.uid)
-        .collection("stats")
-        .doc("level")
-        .get();
-
-    return snapshot.exists;
-  }
-
-  /// Use for initialising new user/existing user stats
+  /// Reset user level info
+  /// Use for initialising new/existing user level info
   Future<void> initUserLevel() async {
     CollectionReference stats =
-        _db.collection("users").doc(currentUser.uid).collection("stats");
+        _db.collection("users").doc(uuid).collection("stats");
 
     stats.doc("level").set({
       "category": "level",
       "value": 0,
       "exp": 0,
-      "next": 100, // exp required for level 1. can be adjusted.
+      "next": 100, // exp required for level 1.
     });
+  }
+
+  /// Reset user weekly stats.
+  /// Only use to initialise weekly db document.
+  void initWeekly() async {
+    _db.collection("users").doc(uuid).collection("stats").doc("weekly").set({
+      "lastDeduction": DateTime.now(),
+      "data": {
+        "Studies": 0,
+        "Fitness": 0,
+        "Arts": 0,
+        "Social": 0,
+        "Others": 0,
+      }
+    });
+  }
+
+  Future<void> addToWeekly(String category) async {
+    await _db
+        .collection("users")
+        .doc(uuid)
+        .collection("stats")
+        .doc("weekly")
+        .set({
+      "data": {
+        category: FieldValue.increment(1),
+      }
+    }, SetOptions(merge: true));
+  }
+
+  Future getWeekly() async {
+    DocumentSnapshot weekly = await _db
+        .collection("users")
+        .doc(uuid)
+        .collection("stats")
+        .doc("weekly")
+        .get();
+    return weekly["data"];
+  }
+
+  /*
+  Below are some debugging functions. They should not be used in any feature implementations.
+  They should be okay to be removed in the end.
+   */
+
+  Future<bool> userLevelExists() async {
+    DocumentSnapshot snapshot = await _db
+        .collection("users")
+        .doc(uuid)
+        .collection("stats")
+        .doc("level")
+        .get();
+
+    return snapshot.exists;
   }
 
   // TODO: Remove helper method
@@ -220,7 +265,7 @@ class DbService {
         try {
           QuerySnapshot snapshot = await _db
               .collection("users")
-              .doc(currentUser.uid)
+              .doc(uuid)
               .collection("events")
               .get();
 
@@ -242,7 +287,7 @@ class DbService {
         try {
           QuerySnapshot snapshot = await _db
               .collection("users")
-              .doc(currentUser.uid)
+              .doc(uuid)
               .collection("events")
               .get();
 
@@ -260,7 +305,7 @@ class DbService {
       };
 
       CollectionReference stats =
-          _db.collection("users").doc(currentUser.uid).collection("stats");
+          _db.collection("users").doc(uuid).collection("stats");
 
       List<String> categories = [
         "Studies",
