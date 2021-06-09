@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:plannus/models/Event.dart';
 
 class DbService {
@@ -185,20 +186,19 @@ class DbService {
     return snapshot.get("next");
   }
 
-  Future<bool> isUserStatsEmpty() async {
-    QuerySnapshot snapshot = await _db
+  Future<bool> userLevelExists() async {
+    DocumentSnapshot snapshot = await _db
         .collection("users")
         .doc(currentUser.uid)
         .collection("stats")
+        .doc("level")
         .get();
 
-    List docs = snapshot.docs;
-
-    return docs.isEmpty;
+    return snapshot.exists;
   }
 
   /// Use for initialising new user/existing user stats
-  Future<void> initUserStats() async {
+  Future<void> initUserLevel() async {
     CollectionReference stats =
         _db.collection("users").doc(currentUser.uid).collection("stats");
 
@@ -208,28 +208,11 @@ class DbService {
       "exp": 0,
       "next": 100, // exp required for level 1. can be adjusted.
     });
-
-    List<String> categories = [
-      "total",
-      "Studies",
-      "Fitness",
-      "Arts",
-      "Social",
-      "Others"
-    ];
-
-    categories.forEach((element) {
-      stats.doc(element).set({
-        "category": element,
-        "value": 0,
-      });
-    });
   }
 
   // TODO: Remove helper method
   /// Sync user stats from event collection, iteratively.
-  /// This should only be called for existing users
-  /// & used for debugging purposes.
+  /// This should only be called for existing users & used for debugging purposes.
   Future<void> syncUserStats() async {
     try {
       /// iteratively count from user events collection
@@ -287,17 +270,17 @@ class DbService {
         "Others"
       ];
 
+      // writes into the new data structure
       categories.forEach((element) async {
-        stats.doc(element).update({
-          "category": element,
-          "value": await oldCountCompletedEventByCategory(element),
-        });
+        stats.doc("counts").set({
+          "data": {
+            element: await oldCountCompletedEventByCategory(element),
+          }
+        }, SetOptions(merge: true));
       });
-
-      await stats.doc("total").update({
-        "category": "total",
-        "value": await oldCountTotal(),
-      });
+      stats.doc("counts").set({
+        "total": await oldCountTotal(),
+      }, SetOptions(merge: true));
 
       print("sync finished");
     } catch (error) {

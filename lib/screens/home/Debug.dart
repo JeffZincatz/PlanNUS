@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/models/Event.dart';
 import 'dart:math';
+import 'package:plannus/util/StatsUtil.dart';
 
 class Debug extends StatelessWidget {
   const Debug({Key key}) : super(key: key);
@@ -18,98 +19,69 @@ class Debug extends StatelessWidget {
           horizontal: 20,
           vertical: 20,
         ),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             Text(
               "Debugging functions",
               style: TextStyle(
-                fontSize: 20.0,
+                fontSize: 20,
               ),
+              textAlign: TextAlign.center,
             ),
             StreamBuilder<List<Event>>(
                 stream: _db.eventsStream,
                 builder: (context, snapshot) {
-                  return TextButton(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Debug - add difficulties",
-                        style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      for (Event x in snapshot.data) {
-                        Event submitted = Event(
-                          completed: x.completed,
-                          passed: x.passed,
-                          category: x.category,
-                          description: x.description,
-                          startTime: x.startTime,
-                          endTime: x.endTime,
-                          difficulty: (new Random()).nextInt(8) + 1,
-                        );
-                        _db.editEvent(x, submitted);
-                      }
-                    },
-                  );
+                  return debugButton("add difficulties", () async {
+                    for (Event x in snapshot.data) {
+                      Event submitted = Event(
+                        completed: x.completed,
+                        passed: x.passed,
+                        category: x.category,
+                        description: x.description,
+                        startTime: x.startTime,
+                        endTime: x.endTime,
+                        difficulty: (new Random()).nextInt(8) + 1,
+                      );
+                      _db.editEvent(x, submitted);
+                    }
+                  });
                 }
             ),
-            TextButton(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Debug - isUserStatsEmpty",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              onPressed: () async {
-                print(await _db.isUserStatsEmpty());
-              },
-            ),
-            TextButton(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Debug - initUserStats",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              onPressed: () async {
-                if (await _db.isUserStatsEmpty()) {
-                  await _db.initUserStats();
-                  print("User stats initialised.");
-                } else {
-                  print("User stats already exists.");
-                }
-              },
-            ),
-            TextButton(
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Debug - syncUserStats",
-                  style: TextStyle(
-                    fontSize: 25,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              onPressed: () async {
-                await _db.syncUserStats();
-              },
-            ),
+            debugButton("check userLevelExits", () async {
+              print(await _db.userLevelExists());
+            }),
+            debugButton("initUserLevel", () async {
+              if (await _db.userLevelExists()) {
+                print("User level info already exists.");
+              } else {
+                await _db.initUserLevel();
+                print("User level info initialised.");
+              }
+            }),
+            debugButton("syncUserStats - New data structure", () async {
+              await _db.syncUserStats();
+            }),
+            debugButton("initWeekly (only once per user!)", StatsUtil.initWeekly),
+            debugButton("addToWeekly - Arts", () => StatsUtil.addToWeekly("Arts")),
           ],
         ),
       ),
+    );
+  }
+
+  Widget debugButton(String name, Function function) {
+    return TextButton(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          name,
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+        ),
+      ),
+      onPressed: function,
     );
   }
 }

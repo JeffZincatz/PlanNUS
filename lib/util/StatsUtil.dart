@@ -22,8 +22,8 @@ class StatsUtil {
 
   // EXP required for the next level
   // round(10 sqrt(1.5 x) - 2.5) * 10
-  static int expToNextLevel(int current) {
-    return (10 * sqrt(1.5 * current + 1) - 2.5).round() * 10;
+  static int expToNextLevel(int currentLvl) {
+    return (10 * sqrt(1.5 * currentLvl + 1) - 2.5).round() * 10;
   }
 
   // Attribute points added to each category for an event
@@ -71,6 +71,7 @@ class StatsUtil {
     }
   }
 
+  /// only use to initialise weekly db document
   static void initWeekly() async {
     _firestore
         .collection("users")
@@ -101,9 +102,4 @@ class StatsUtil {
       }
     }, SetOptions(merge: true));
   }
-
-  /// update user stats Data structure.
-// static Future<void> updateStatsDS() async {
-//
-// }
 }

@@ -28,17 +28,6 @@ class _ProfileState extends State<Profile> {
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
-  /// initialise user stats on opening profile if stats docs is empty.
-  /// should be ok to move functionality to sign up after old accounts are synced.
-  static void initStats() async {
-    bool isUserStatsEmpty = await _db.isUserStatsEmpty();
-    if (isUserStatsEmpty) {
-      _db.initUserStats();
-    }
-  }
-
-  var i = initStats();
-
   // edit username button
   bool isEditing = false;
   static String username = "";
