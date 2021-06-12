@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:plannus/models/Event.dart';
+import 'package:plannus/screens/home/ActivityCompleted.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/screens/home/EditOrDelete.dart';
 
@@ -57,6 +58,8 @@ class EventTile extends StatelessWidget {
                   IconButton(icon: Icon(Icons.done), onPressed: () {
                     DbService().markCompleted(event);
                     Navigator.pop(context, true);
+                    // I'm not sure why this throws some error but it still works fine somehow
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityCompleted(event: event)));
                   }),
                   IconButton(icon: Icon(Icons.close), onPressed: () {
                     DbService().markUncompleted(event);
@@ -76,12 +79,18 @@ class EventTile extends StatelessWidget {
       );
     }
 
+    void showActivityCompleted(Event event) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityCompleted(event: event)));
+    }
+
     return OutlinedButton(
       onPressed: () {
         if (event.endTime.compareTo(DateTime.now()) > 0) { // haven't ended
           editOrDelete();
         } else if (!event.passed) {
           askWhetherCompleted();
+        } else if (event.completed){
+          showActivityCompleted(event);
         }
       },
       style: ButtonStyle(
