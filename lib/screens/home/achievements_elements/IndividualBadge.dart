@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/util/PresetColors.dart';
+import 'package:plannus/screens/home/BadgeShare.dart';
 
 class IndividualBadge extends StatefulWidget {
 
@@ -37,25 +38,31 @@ class _IndividualBadgeState extends State<IndividualBadge> {
                   decoration: BoxDecoration(
                     border: Border.all(),
                   ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Image.asset(
-                          "assets/badges/${widget.cat}${widget.no}.png",
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          widget.desc,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 10,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => BadgeShare(cat: widget.cat, no: widget.no, desc: widget.desc,)));
+                    },
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Image.asset(
+                            "assets/badges/${widget.cat}${widget.no}.png",
                           ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            widget.desc,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 9,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
               )
               : Stack(
