@@ -35,14 +35,8 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     // update weekly fields
     Function updateWeekly = () async {
@@ -51,7 +45,7 @@ class _ProfileState extends State<Profile> {
         setState(() {});
       }
     };
-     updateWeekly();
+    updateWeekly();
 
     return Scaffold(
       body: ListView(shrinkWrap: true, children: [
@@ -73,50 +67,50 @@ class _ProfileState extends State<Profile> {
                   builder: (context, snapshot) {
                     return snapshot.hasData
                         ? Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Stack(children: [
-                        ProfilePic(
-                          image: snapshot.data,
-                          radius: 60,
-                        ),
-                        Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    width: 4,
-                                    color: PresetColors.background,
-                                  ),
-                                  color: PresetColors.blue),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                                onPressed: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: ((builder) => bottomSheet()),
-                                  );
-                                },
+                            padding: const EdgeInsets.all(8.0),
+                            child: Stack(children: [
+                              ProfilePic(
+                                image: snapshot.data,
+                                radius: 60,
                               ),
-                            )),
-                      ]),
-                    )
+                              Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          width: 4,
+                                          color: PresetColors.background,
+                                        ),
+                                        color: PresetColors.blue),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: ((builder) => bottomSheet()),
+                                        );
+                                      },
+                                    ),
+                                  )),
+                            ]),
+                          )
                         : Icon(
-                      Icons.person,
-                      size: 135,
-                    );
+                            Icons.person,
+                            size: 135,
+                          );
                   }),
               FutureBuilder(
                 future: _db.getUserLevel(),
                 builder: (context, snapshot) {
                   String lvl =
-                  snapshot.hasData ? snapshot.data.toString() : " ";
+                      snapshot.hasData ? snapshot.data.toString() : " ";
                   return Text(
                     "Level " + lvl,
                     style: TextStyle(
@@ -133,71 +127,71 @@ class _ProfileState extends State<Profile> {
                   ),
                   isEditing
                       ? Container(
-                    height: 50,
-                    width: screenWidth * 0.65,
-                    // color: Colors.red,
-                    child: TextFormField(
-                      initialValue: username,
-                      style: TextStyle(
-                        fontSize: 24,
-                      ),
-                      textAlign: TextAlign.center,
-                      decoration: InputDecoration(
-                        border: isEditing
-                            ? UnderlineInputBorder()
-                            : InputBorder.none,
-                        contentPadding: EdgeInsets.zero,
-                      ),
-                      onChanged: (String value) {
-                        setState(() {
-                          newName = value;
-                        });
-                      },
-                    ),
-                  )
+                          height: 50,
+                          width: screenWidth * 0.65,
+                          // color: Colors.red,
+                          child: TextFormField(
+                            initialValue: username,
+                            style: TextStyle(
+                              fontSize: 24,
+                            ),
+                            textAlign: TextAlign.center,
+                            decoration: InputDecoration(
+                              border: isEditing
+                                  ? UnderlineInputBorder()
+                                  : InputBorder.none,
+                              contentPadding: EdgeInsets.zero,
+                            ),
+                            onChanged: (String value) {
+                              setState(() {
+                                newName = value;
+                              });
+                            },
+                          ),
+                        )
                       : FutureBuilder(
-                      future: _db.getUsername(),
-                      builder: (context, snapshot) {
-                        username =
-                        snapshot.hasData ? snapshot.data : username;
-                        return Text(
-                          username,
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        );
-                      }),
+                          future: _db.getUsername(),
+                          builder: (context, snapshot) {
+                            username =
+                                snapshot.hasData ? snapshot.data : username;
+                            return Text(
+                              username,
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            );
+                          }),
                   isEditing
                       ? Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.check),
-                        onPressed: () async {
-                          await _db.updateUsername(newName);
-                          setState(() {
-                            isEditing = false;
-                          });
-                        },
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          setState(() {
-                            isEditing = false;
-                            newName = "";
-                          });
-                        },
-                      ),
-                    ],
-                  )
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.check),
+                              onPressed: () async {
+                                await _db.updateUsername(newName);
+                                setState(() {
+                                  isEditing = false;
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.clear),
+                              onPressed: () {
+                                setState(() {
+                                  isEditing = false;
+                                  newName = "";
+                                });
+                              },
+                            ),
+                          ],
+                        )
                       : IconButton(
-                    icon: Icon(Icons.edit),
-                    onPressed: () {
-                      setState(() {
-                        isEditing = true;
-                      });
-                    },
-                  ),
+                          icon: Icon(Icons.edit),
+                          onPressed: () {
+                            setState(() {
+                              isEditing = true;
+                            });
+                          },
+                        ),
                 ],
               ),
               FutureBuilder(
@@ -205,13 +199,13 @@ class _ProfileState extends State<Profile> {
                 builder: (context, snapshot) {
                   return snapshot.hasData
                       ? Text(
-                    snapshot.data,
-                    style: TextStyle(
-                      fontFamily: "monospace",
-                      fontSize: 16,
-                      decoration: TextDecoration.underline,
-                    ),
-                  )
+                          snapshot.data,
+                          style: TextStyle(
+                            fontFamily: "monospace",
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        )
                       : Text("");
                 },
               ),
@@ -224,12 +218,12 @@ class _ProfileState extends State<Profile> {
                       future: _db.getUserCurrentExp(),
                       builder: (context, snapshot) {
                         String currExp =
-                        snapshot.hasData ? snapshot.data.toString() : "";
+                            snapshot.hasData ? snapshot.data.toString() : "";
                         return Text(
                           "Current EXP: " + currExp,
                           style: TextStyle(
-                            // fontSize: 12,
-                          ),
+                              // fontSize: 12,
+                              ),
                         );
                       },
                     ),
@@ -237,12 +231,12 @@ class _ProfileState extends State<Profile> {
                       future: _db.getUserNextExp(),
                       builder: (context, snapshot) {
                         String nextExp =
-                        snapshot.hasData ? snapshot.data.toString() : "";
+                            snapshot.hasData ? snapshot.data.toString() : "";
                         return Text(
                           "EXP to next lvl: " + nextExp,
                           style: TextStyle(
-                            // fontSize: 12,
-                          ),
+                              // fontSize: 12,
+                              ),
                         );
                       },
                     ),
@@ -266,8 +260,8 @@ class _ProfileState extends State<Profile> {
                         valueColor: AlwaysStoppedAnimation(PresetColors.blue),
                         value: snapshot.hasData
                             ? snapshot.data["current"] *
-                            1.0 /
-                            snapshot.data["next"]
+                                1.0 /
+                                snapshot.data["next"]
                             : 0,
                         minHeight: 15,
                       ),
@@ -372,155 +366,105 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                       ),
-                      Table(
-                        defaultVerticalAlignment:
-                        TableCellVerticalAlignment.middle,
-                        children: [
-                          TableRow(
+                      FutureBuilder(
+                        future: _db.getUserAttributes(),
+                        builder: (context, snapshot) {
+                          Map data = snapshot.hasData
+                              ? snapshot.data
+                              : {
+                                  "Vitality": 500,
+                                  "Spirit": 500,
+                                  "Charm": 500,
+                                  "Resolve": 500,
+                                  "Intelligence": 500,
+                                };
+                          return Table(
+                            defaultVerticalAlignment:
+                                TableCellVerticalAlignment.middle,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Total activities completed:",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                _db.countCompletedEventByCategory("total"),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    child: Text(
+                                      "Intelligence:",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Text(
+                                    data["Intelligence"].toString(),
                                     textAlign: TextAlign.center,
                                   )
-                                      : Text("");
-                                },
+                                ],
                               ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Studies:",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future: _db
-                                    .countCompletedEventByCategory("Studies"),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    child: Text(
+                                      "Vitality:",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Text(
+                                    data["Vitality"].toString(),
                                     textAlign: TextAlign.center,
                                   )
-                                      : Text("");
-                                },
+                                ],
                               ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Fitness:",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future: _db
-                                    .countCompletedEventByCategory("Fitness"),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    child: Text(
+                                      "Spirit:",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Text(
+                                    data["Spirit"].toString(),
                                     textAlign: TextAlign.center,
                                   )
-                                      : Text("");
-                                },
+                                ],
                               ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Arts:",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                _db.countCompletedEventByCategory("Arts"),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    child: Text(
+                                      "Charm:",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Text(
+                                    data["Charm"].toString(),
                                     textAlign: TextAlign.center,
                                   )
-                                      : Text("");
-                                },
+                                ],
                               ),
-                            ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Social:",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                _db.countCompletedEventByCategory("Social"),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
+                              TableRow(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 0),
+                                    child: Text(
+                                      "Resolve:",
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  Text(
+                                    data["Resolve"].toString(),
                                     textAlign: TextAlign.center,
                                   )
-                                      : Text("");
-                                },
+                                ],
                               ),
                             ],
-                          ),
-                          TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
-                                child: Text(
-                                  "Others:",
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              FutureBuilder(
-                                future:
-                                _db.countCompletedEventByCategory("Others"),
-                                builder: (context, snapshot) {
-                                  return snapshot.hasData
-                                      ? Text(
-                                    snapshot.data.toString(),
-                                    textAlign: TextAlign.center,
-                                  )
-                                      : Text("");
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -546,10 +490,7 @@ class _ProfileState extends State<Profile> {
   Widget bottomSheet() {
     return Container(
       height: 100.0,
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
@@ -615,9 +556,7 @@ class _ProfileState extends State<Profile> {
 
       // save image to storage
       File image = File(_imageFile.path);
-      String imagePath = "profilePics/" + _auth
-          .getCurrentUser()
-          .uid + ".jpg";
+      String imagePath = "profilePics/" + _auth.getCurrentUser().uid + ".jpg";
       await _storage.ref(imagePath).putFile(image);
 
       // update db users profilePic
@@ -654,13 +593,14 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
           Map data = snapshot.hasData
               ? snapshot.data
               : {
-            "Studies": 0,
-            "Social": 0,
-            "Others": 0,
-            "Arts": 0,
-            "Fitness": 0
-          };
-          int maxValue = 1 + data.values.reduce((value, element) => max<int>(value, element));
+                  "Studies": 0,
+                  "Social": 0,
+                  "Others": 0,
+                  "Arts": 0,
+                  "Fitness": 0
+                };
+          int maxValue = 1 +
+              data.values.reduce((value, element) => max<int>(value, element));
           int maxY = maxValue > 12 ? maxValue : 12;
           return BarChart(
             BarChartData(
@@ -675,8 +615,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                 show: true,
                 bottomTitles: SideTitles(
                   showTitles: true,
-                  getTextStyles: (value) =>
-                  const TextStyle(
+                  getTextStyles: (value) => const TextStyle(
                     color: Colors.black,
                   ),
                   // margin: 16,
@@ -717,10 +656,12 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                   tooltipBgColor: Colors.transparent,
                   tooltipPadding: const EdgeInsets.all(0),
                   // tooltipMargin: 8,
-                  getTooltipItem: (BarChartGroupData group,
-                      int groupIndex,
-                      BarChartRodData rod,
-                      int rodIndex,) {
+                  getTooltipItem: (
+                    BarChartGroupData group,
+                    int groupIndex,
+                    BarChartRodData rod,
+                    int rodIndex,
+                  ) {
                     return BarTooltipItem(
                       rod.y.round().toString(),
                       TextStyle(
@@ -738,8 +679,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
     );
   }
 
-  BarChartGroupData makeGroupData(int x,
-      int y, int max) {
+  BarChartGroupData makeGroupData(int x, int y, int max) {
     return BarChartGroupData(
       x: x,
       barRods: [

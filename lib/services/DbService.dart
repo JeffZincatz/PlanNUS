@@ -31,6 +31,12 @@ class DbService {
       .collection("stats")
       .doc("level");
 
+  DocumentReference attr = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection("stats")
+      .doc("attributes");
+
   Future<String> getUserProfilePic() async {
     try {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
@@ -293,6 +299,13 @@ class DbService {
     return false;
   }
 
+  Future getUserAttributes() async {
+    Map res = (await attr.get())["data"];
+    // print(res);
+    return res;
+    return (await attr.get())["data"];
+  }
+
   /*
   Below are some debugging functions. They should not be used in any feature implementations.
   They should be okay to be removed in the end.
@@ -386,5 +399,20 @@ class DbService {
       print(error); // TODO: remove temp debug
       return null;
     }
+  }
+
+  /// Initialise user attributes.
+  /// All attributes range from 0 to 1000, 500 by default.
+  /// When displayed, an attribute should be <value> ~/ 10.
+  Future<void> initAttributes() async {
+    await attr.set({
+      "data": {
+        "Intelligence": 500, // Studies
+        "Vitality": 500, // Fitness
+        "Spirit": 500, // Arts
+        "Charm": 500, // Social
+        "Resolve": 500, // completed/uncompleted
+      }
+    });
   }
 }

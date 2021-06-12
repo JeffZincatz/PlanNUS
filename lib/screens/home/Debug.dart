@@ -67,7 +67,11 @@ class Debug extends StatelessWidget {
               print(res);
             }),
             debugButton("updateWeekly", _db.updateWeekly),
-            debugButton("isAtLeastOneWeekApart", () => print(TimeUtil.isAtLeastOneWeekApart(DateTime(2021, 1, 1), DateTime.now()))),
+            debugButton(
+                "isAtLeastOneWeekApart",
+                () => print(TimeUtil.isAtLeastOneWeekApart(
+                    DateTime(2021, 1, 1), DateTime.now()))),
+            debugButton("init user Attributes", _db.initAttributes),
           ],
         ),
       ),
