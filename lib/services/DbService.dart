@@ -134,7 +134,7 @@ class DbService {
       "exp": FieldValue.increment(expGained),
     }, SetOptions(merge: true));
 
-    // TODO: check for leveling up
+    // update level if needed
     int currExp = await getUserCurrentExp();
     int nextExp = await getUserNextExp();
     int expNeeded = nextExp - currExp;
@@ -146,6 +146,29 @@ class DbService {
       nextExp = await setUserNextExp(
           StatsUtil.expToNextLevel(await getUserLevel() + 1));
     }
+
+    // TODO: increment attributes
+    // this is for attribute calculation only
+    // somehow modifying event's param does not work
+    Event eventTemp = Event(category: event.category,
+        description: event.description,
+        startTime: event.startTime,
+        endTime: event.endTime,
+        id: event.id,
+        passed: true,
+        completed: true,
+        difficulty: event.difficulty);
+    Map added = StatsUtil.eventToAttributes(eventTemp);
+    added.forEach((key, value) {
+      attr.set({
+        "data": {
+          key: FieldValue.increment(value),
+        },
+      }, SetOptions(merge: true));
+    });
+    attr.update({
+      "lastCheckTime": DateTime.now(),
+    });
 
     return await temp.update({
       "passed": true,
@@ -301,9 +324,7 @@ class DbService {
 
   Future getUserAttributes() async {
     Map res = (await attr.get())["data"];
-    // print(res);
     return res;
-    return (await attr.get())["data"];
   }
 
   /*
@@ -372,7 +393,7 @@ class DbService {
       };
 
       CollectionReference stats =
-          _db.collection("users").doc(uuid).collection("stats");
+      _db.collection("users").doc(uuid).collection("stats");
 
       List<String> categories = [
         "Studies",
@@ -412,7 +433,8 @@ class DbService {
         "Spirit": 500, // Arts
         "Charm": 500, // Social
         "Resolve": 500, // completed/uncompleted
-      }
+      },
+      "lastCheckTime": DateTime.now(),
     });
   }
 }

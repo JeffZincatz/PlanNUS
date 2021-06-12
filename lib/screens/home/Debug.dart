@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/models/Event.dart';
 import 'dart:math';
-import 'package:plannus/util/StatsUtil.dart';
 import 'package:plannus/util/TimeUtil.dart';
 
 class Debug extends StatelessWidget {

@@ -1,17 +1,8 @@
 import 'package:plannus/models/Event.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/services/AuthService.dart';
 import 'TimeUtil.dart';
 import 'dart:math';
 
 class StatsUtil {
-  static final DbService _db = DbService();
-  static final AuthService _auth = AuthService();
-
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  static String _uuid = _auth.getCurrentUser().uid;
 
   // Event EXP calculation
   // roundToNearest5(duration(hours) * difficulty * 3*e)
