@@ -147,10 +147,10 @@ class DbService {
           StatsUtil.expToNextLevel(await getUserLevel() + 1));
     }
 
-    // TODO: increment attributes
     // this is for attribute calculation only
     // somehow modifying event's param does not work
-    Event eventTemp = Event(category: event.category,
+    Event eventTemp = Event(
+        category: event.category,
         description: event.description,
         startTime: event.startTime,
         endTime: event.endTime,
@@ -166,9 +166,24 @@ class DbService {
         },
       }, SetOptions(merge: true));
     });
-    attr.update({
-      "lastCheckTime": DateTime.now(),
-    });
+
+    if (event.category == "Others") {
+      attr.update({
+        "lastCheckTime": {
+          "Intelligence": DateTime.now(),
+          "Vitality": DateTime.now(),
+          "Spirit": DateTime.now(),
+          "Charm": DateTime.now(),
+          "Resolve": DateTime.now(),
+        },
+      });
+    } else {
+      attr.update({
+        "lastCheckTime": {
+          event.category: DateTime.now(),
+        },
+      });
+    }
 
     return await temp.update({
       "passed": true,
@@ -323,8 +338,35 @@ class DbService {
   }
 
   Future getUserAttributes() async {
-    Map res = (await attr.get())["data"];
-    return res;
+    return (await attr.get())["data"];
+  }
+
+  Future<Map<String, int>> _setUserAttribute(
+      String attribute, int value) async {
+    await attr.set({
+      "data": {
+        attribute: value,
+      }
+    }, SetOptions(merge: true));
+    return {
+      attribute: value,
+    };
+  }
+
+  Future reduceAttributeTo80Percent(String attribute) async {
+    int currentValue = (await getUserAttributes())[attribute];
+    await _setUserAttribute(attribute, (currentValue * 0.8).ceil());
+  }
+
+  Future getLastCheckTime() async {
+    return (await attr.get())["lastCheckTime"];
+  }
+
+  /// reset timestamp for the attribute to now
+  Future refreshLastCheckTime(String attribute) async {
+    return await attr.set({
+      "lastCheckTime": {attribute: DateTime.now()}
+    }, SetOptions(merge: true));
   }
 
   /*
@@ -393,7 +435,7 @@ class DbService {
       };
 
       CollectionReference stats =
-      _db.collection("users").doc(uuid).collection("stats");
+          _db.collection("users").doc(uuid).collection("stats");
 
       List<String> categories = [
         "Studies",
@@ -434,7 +476,13 @@ class DbService {
         "Charm": 500, // Social
         "Resolve": 500, // completed/uncompleted
       },
-      "lastCheckTime": DateTime.now(),
+      "lastCheckTime": {
+        "Intelligence": DateTime.now(),
+        "Vitality": DateTime.now(),
+        "Spirit": DateTime.now(),
+        "Charm": DateTime.now(),
+        "Resolve": DateTime.now(),
+      },
     });
   }
 }

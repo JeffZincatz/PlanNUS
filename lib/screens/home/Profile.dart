@@ -12,6 +12,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'dart:math';
 
+import 'package:plannus/util/TimeUtil.dart';
+
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
 
@@ -46,6 +48,30 @@ class _ProfileState extends State<Profile> {
       }
     };
     updateWeekly();
+
+    // deduct for inactivity
+    Function checkInactivity = () async {
+      Map lastCheckTime = await _db.getLastCheckTime();
+      DateTime now = DateTime.now();
+      int counter = 0;
+      lastCheckTime.forEach((key, value) async {
+        // first check for 4 other attributes
+        if (key != "Resolve" &&
+            TimeUtil.isAtLeastThreeDaysApart(now, value.toDate())) {
+          await _db.reduceAttributeTo80Percent(key);
+          setState(() {});
+          _db.refreshLastCheckTime(key);
+          counter++;
+        }
+      });
+      // reduce Resolve if all 4 has been deducted
+      if (counter >= 4) {
+        await _db.reduceAttributeTo80Percent("Resolve");
+        setState(() {});
+        _db.refreshLastCheckTime("Resolve");
+      }
+    };
+    checkInactivity();
 
     return Scaffold(
       body: ListView(shrinkWrap: true, children: [
