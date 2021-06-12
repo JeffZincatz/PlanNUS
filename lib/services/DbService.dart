@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:plannus/models/Event.dart';
+import 'package:plannus/util/TimeUtil.dart';
 
 class DbService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -11,6 +11,24 @@ class DbService {
       .collection("events");
 
   String uuid = FirebaseAuth.instance.currentUser.uid;
+
+  DocumentReference weekly = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection("stats")
+      .doc("weekly");
+
+  DocumentReference counts = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection("stats")
+      .doc("counts");
+
+  DocumentReference level = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection("stats")
+      .doc("level");
 
   Future<String> getUserProfilePic() async {
     try {
@@ -92,14 +110,12 @@ class DbService {
   Future markCompleted(Event event) async {
     DocumentReference temp = events.doc(event.id);
 
-    CollectionReference stats =
-        _db.collection("users").doc(uuid).collection("stats");
-    stats.doc(event.category).update({
-      "value": FieldValue.increment(1),
-    });
-    stats.doc("total").update({
-      "value": FieldValue.increment(1),
-    });
+    counts.set({
+      "data": {
+        event.category: FieldValue.increment(1),
+      },
+      "total": FieldValue.increment(1),
+    }, SetOptions(merge: true));
 
     return await temp.update({
       "passed": true,
@@ -109,6 +125,11 @@ class DbService {
 
   Future markUncompleted(Event event) async {
     DocumentReference temp = events.doc(event.id);
+
+    counts.set({
+      "uncompleted": FieldValue.increment(1),
+    }, SetOptions(merge: true));
+
     return await temp.update({
       "passed": true,
       "completed": false,
@@ -132,12 +153,7 @@ class DbService {
   }
 
   Future<int> countCompletedEventByCategory(String category) async {
-    DocumentSnapshot snapshot = await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("counts")
-        .get();
+    DocumentSnapshot snapshot = await counts.get();
 
     if (category == "total") {
       return snapshot.get("total");
@@ -158,42 +174,24 @@ class DbService {
   }
 
   Future<int> getUserLevel() async {
-    DocumentSnapshot snapshot = await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("level")
-        .get();
+    DocumentSnapshot snapshot = await level.get();
     return snapshot.get("value");
   }
 
   Future<int> getUserCurrentExp() async {
-    DocumentSnapshot snapshot = await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("level")
-        .get();
+    DocumentSnapshot snapshot = await level.get();
     return snapshot.get("exp");
   }
 
   Future<int> getUserNextExp() async {
-    DocumentSnapshot snapshot = await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("level")
-        .get();
+    DocumentSnapshot snapshot = await level.get();
     return snapshot.get("next");
   }
 
   /// Reset user level info
   /// Use for initialising new/existing user level info
   Future<void> initUserLevel() async {
-    CollectionReference stats =
-        _db.collection("users").doc(uuid).collection("stats");
-
-    stats.doc("level").set({
+    await level.set({
       "category": "level",
       "value": 0,
       "exp": 0,
@@ -204,8 +202,8 @@ class DbService {
   /// Reset user weekly stats.
   /// Only use to initialise weekly db document.
   void initWeekly() async {
-    _db.collection("users").doc(uuid).collection("stats").doc("weekly").set({
-      "lastDeduction": DateTime.now(),
+    weekly.set({
+      "thisMonday": TimeUtil.findFirstDateOfTheWeek(DateTime.now()),
       "data": {
         "Studies": 0,
         "Fitness": 0,
@@ -217,12 +215,7 @@ class DbService {
   }
 
   Future<void> addToWeekly(String category) async {
-    await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("weekly")
-        .set({
+    await weekly.set({
       "data": {
         category: FieldValue.increment(1),
       }
@@ -230,13 +223,16 @@ class DbService {
   }
 
   Future getWeekly() async {
-    DocumentSnapshot weekly = await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("weekly")
-        .get();
-    return weekly["data"];
+    return (await weekly.get())["data"];
+  }
+
+  Future<bool> updateWeekly() async {
+    DateTime thisMonday = (await weekly.get())["thisMonday"].toDate();
+    if (TimeUtil.isAtLeastOneWeekApart(DateTime.now(), thisMonday)) {
+      initWeekly(); // TODO: remove temp debugging
+      return true;
+    }
+    return false;
   }
 
   /*

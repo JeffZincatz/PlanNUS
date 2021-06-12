@@ -3,6 +3,7 @@ import 'package:plannus/services/DbService.dart';
 import 'package:plannus/models/Event.dart';
 import 'dart:math';
 import 'package:plannus/util/StatsUtil.dart';
+import 'package:plannus/util/TimeUtil.dart';
 
 class Debug extends StatelessWidget {
   const Debug({Key key}) : super(key: key);
@@ -63,9 +64,10 @@ class Debug extends StatelessWidget {
             debugButton("addToWeekly - Arts", () => _db.addToWeekly("Arts")),
             debugButton("getWeekly", () async {
               var res = await _db.getWeekly();
-              print(res.runtimeType);
               print(res);
             }),
+            debugButton("updateWeekly", _db.updateWeekly),
+            debugButton("isAtLeastOneWeekApart", () => print(TimeUtil.isAtLeastOneWeekApart(DateTime(2021, 1, 1), DateTime.now()))),
           ],
         ),
       ),
