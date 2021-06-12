@@ -89,6 +89,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                   showTitle: true,
                   titleText: "Weekly Overview",
                   textStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  margin: 8.0,
                 ),
               ),
               barTouchData: BarTouchData(

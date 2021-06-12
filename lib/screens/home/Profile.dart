@@ -308,6 +308,13 @@ class _ProfileState extends State<Profile> {
                           child: BarChartWeekly(),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          "All Past Activities",
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                      ),
                       Center(
                         widthFactor: 0.7,
                         child: PieChartOverview(),
