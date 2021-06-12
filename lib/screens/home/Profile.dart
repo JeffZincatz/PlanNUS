@@ -316,7 +316,7 @@ class _ProfileState extends State<Profile> {
                           // need to wrap this around Chart for sizing
                           aspectRatio: 1,
                           child: FutureBuilder(
-                            future: _db.getAllCompletedEventCount(),
+                            future: _db.getAllPassedEventCount(),
                             builder: (context, snapshot) {
                               int studies = 0;
                               int fitness = 0;
@@ -614,7 +614,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
     return AspectRatio(
       aspectRatio: 1,
       child: FutureBuilder(
-        future: _db.getWeekly(),
+        future: _db.getAllPassedEventCount(),
         builder: (context, snapshot) {
           Map data = snapshot.hasData
               ? snapshot.data
@@ -623,8 +623,10 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                   "Social": 0,
                   "Others": 0,
                   "Arts": 0,
-                  "Fitness": 0
+                  "Fitness": 0,
+                  "uncompleted": 0,
                 };
+          print(data);
           int maxValue = 1 +
               data.values.reduce((value, element) => max<int>(value, element));
           int maxY = maxValue > 12 ? maxValue : 12;
@@ -632,10 +634,11 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
             BarChartData(
               barGroups: [
                 makeGroupData(1, data["Studies"], maxY),
-                makeGroupData(2, data["Fitness"], maxY),
-                makeGroupData(3, data["Arts"], maxY),
-                makeGroupData(4, data["Social"], maxY),
-                makeGroupData(5, data["Others"], maxY),
+                makeGroupData(2, data["Fitness"], maxY, color: PresetColors.purple),
+                makeGroupData(3, data["Arts"], maxY, color: PresetColors.lightGreen),
+                makeGroupData(4, data["Social"], maxY, color: PresetColors.orangeAccent),
+                makeGroupData(5, data["Others"], maxY, color: PresetColors.red),
+                makeGroupData(6, data["uncompleted"], maxY, color: Colors.grey[600]),
               ],
               titlesData: FlTitlesData(
                 show: true,
@@ -643,6 +646,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                   showTitles: true,
                   getTextStyles: (value) => const TextStyle(
                     color: Colors.black,
+                    fontSize: 12,
                   ),
                   // margin: 16,
                   getTitles: (double value) {
@@ -656,7 +660,9 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                       case 4:
                         return 'Social';
                       case 5:
-                        return 'Others';
+                        return 'Others ';
+                      case 6:
+                        return '  Uncompleted';
                       default:
                         return '';
                     }
@@ -705,14 +711,15 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
     );
   }
 
-  BarChartGroupData makeGroupData(int x, int y, int max) {
+  BarChartGroupData makeGroupData(int x, int y, int max,
+      {Color color = PresetColors.blue}) {
     return BarChartGroupData(
       x: x,
       barRods: [
         BarChartRodData(
           y: y * 1.0,
           width: 22,
-          colors: [PresetColors.blue],
+          colors: [color],
           backDrawRodData: BackgroundBarChartRodData(
             y: max * 1.0,
             show: true,

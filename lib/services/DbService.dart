@@ -198,6 +198,13 @@ class DbService {
       "uncompleted": FieldValue.increment(1),
     }, SetOptions(merge: true));
 
+    int decreased = StatsUtil.eventToAttributes(event)["Resolve"];
+    attr.set({
+      "data": {
+        "Resolve": FieldValue.increment(decreased),
+      },
+    }, SetOptions(merge: true));
+
     return await temp.update({
       "passed": true,
       "completed": false,
@@ -230,7 +237,7 @@ class DbService {
     }
   }
 
-  Future<Map<String, int>> getAllCompletedEventCount() async {
+  Future<Map<String, int>> getAllPassedEventCount() async {
     return {
       "total": await countCompletedEventByCategory("total"),
       "Studies": await countCompletedEventByCategory("Studies"),
@@ -238,6 +245,7 @@ class DbService {
       "Arts": await countCompletedEventByCategory("Arts"),
       "Social": await countCompletedEventByCategory("Social"),
       "Others": await countCompletedEventByCategory("Others"),
+      "uncompleted": await getUncompletedCount(),
     };
   }
 
@@ -367,6 +375,10 @@ class DbService {
     return await attr.set({
       "lastCheckTime": {attribute: DateTime.now()}
     }, SetOptions(merge: true));
+  }
+
+  Future<int> getUncompletedCount() async {
+    return (await counts.get())["uncompleted"];
   }
 
   /*
