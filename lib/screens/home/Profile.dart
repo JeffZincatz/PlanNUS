@@ -2,16 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:plannus/elements/MyButtons.dart';
 import 'package:plannus/elements/ProfilePic.dart';
+import 'package:plannus/elements/PieCharOverview.dart';
+import 'package:plannus/elements/BarChartWeekly.dart';
 import 'package:plannus/services/DbService.dart';
 import 'package:plannus/services/AuthService.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:plannus/util/PresetColors.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-
-import 'dart:math';
-
 import 'package:plannus/util/TimeUtil.dart';
 
 class Profile extends StatefulWidget {
@@ -312,85 +310,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       Center(
                         widthFactor: 0.7,
-                        child: AspectRatio(
-                          // need to wrap this around Chart for sizing
-                          aspectRatio: 1,
-                          child: FutureBuilder(
-                            future: _db.getAllPassedEventCount(),
-                            builder: (context, snapshot) {
-                              int studies = 0;
-                              int fitness = 0;
-                              int arts = 0;
-                              int social = 0;
-                              int others = 0;
-                              int placeholder = 1;
-                              if (snapshot.hasData) {
-                                studies = snapshot.data["Studies"];
-                                fitness = snapshot.data["Fitness"];
-                                arts = snapshot.data["Arts"];
-                                social = snapshot.data["Social"];
-                                others = snapshot.data["Others"];
-                                placeholder = 0;
-                              }
-                              return PieChart(
-                                PieChartData(
-                                  centerSpaceRadius: screenWidth * 0.12,
-                                  sections: [
-                                    PieChartSectionData(
-                                      // placeholder, loaded before other fields
-                                      // such that non-blank pie chart is displayed
-                                      title: "",
-                                      value: placeholder * 1.0,
-                                      showTitle: false,
-                                      radius: screenWidth * 0.28,
-                                      color: Colors.grey[400],
-                                    ),
-                                    PieChartSectionData(
-                                      title: "Studies\n" + studies.toString(),
-                                      value: studies * 1.0,
-                                      showTitle: true,
-                                      radius: screenWidth * 0.28,
-                                      color: PresetColors.blue,
-                                      titleStyle: TextStyle(fontSize: 15),
-                                    ),
-                                    PieChartSectionData(
-                                      title: "Fitness\n" + fitness.toString(),
-                                      value: fitness * 1.0,
-                                      showTitle: true,
-                                      radius: screenWidth * 0.28,
-                                      color: PresetColors.purple,
-                                      titleStyle: TextStyle(fontSize: 15),
-                                    ),
-                                    PieChartSectionData(
-                                      title: "Arts\n" + arts.toString(),
-                                      value: arts * 1.0,
-                                      showTitle: true,
-                                      radius: screenWidth * 0.28,
-                                      color: PresetColors.lightGreen,
-                                      titleStyle: TextStyle(fontSize: 15),
-                                    ),
-                                    PieChartSectionData(
-                                      title: "Social\n" + social.toString(),
-                                      value: social * 1.0,
-                                      showTitle: true,
-                                      radius: screenWidth * 0.28,
-                                      color: PresetColors.orangeAccent,
-                                      titleStyle: TextStyle(fontSize: 15),
-                                    ),
-                                    PieChartSectionData(
-                                      title: "Others\n" + others.toString(),
-                                      value: others * 1.0,
-                                      showTitle: true,
-                                      radius: screenWidth * 0.28,
-                                      color: PresetColors.red,
-                                      titleStyle: TextStyle(fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                        child: PieChartOverview(),
                       ),
                       FutureBuilder(
                         future: _db.getUserAttributes(),
@@ -595,138 +515,5 @@ class _ProfileState extends State<Profile> {
       print(error); // TODO: remove temp debug
       return null;
     }
-  }
-}
-
-/// weekly overview bar chart
-class BarChartWeekly extends StatefulWidget {
-  const BarChartWeekly({Key key}) : super(key: key);
-
-  @override
-  _BarChartWeeklyState createState() => _BarChartWeeklyState();
-}
-
-class _BarChartWeeklyState extends State<BarChartWeekly> {
-  static DbService _db = new DbService();
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: FutureBuilder(
-        future: _db.getAllPassedEventCount(),
-        builder: (context, snapshot) {
-          Map data = snapshot.hasData
-              ? snapshot.data
-              : {
-                  "Studies": 0,
-                  "Social": 0,
-                  "Others": 0,
-                  "Arts": 0,
-                  "Fitness": 0,
-                  "uncompleted": 0,
-                };
-          print(data);
-          int maxValue = 1 +
-              data.values.reduce((value, element) => max<int>(value, element));
-          int maxY = maxValue > 12 ? maxValue : 12;
-          return BarChart(
-            BarChartData(
-              barGroups: [
-                makeGroupData(1, data["Studies"], maxY),
-                makeGroupData(2, data["Fitness"], maxY, color: PresetColors.purple),
-                makeGroupData(3, data["Arts"], maxY, color: PresetColors.lightGreen),
-                makeGroupData(4, data["Social"], maxY, color: PresetColors.orangeAccent),
-                makeGroupData(5, data["Others"], maxY, color: PresetColors.red),
-                makeGroupData(6, data["uncompleted"], maxY, color: Colors.grey[600]),
-              ],
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: SideTitles(
-                  showTitles: true,
-                  getTextStyles: (value) => const TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
-                  ),
-                  // margin: 16,
-                  getTitles: (double value) {
-                    switch (value.toInt()) {
-                      case 1:
-                        return 'Studies';
-                      case 2:
-                        return 'Fitness';
-                      case 3:
-                        return 'Arts';
-                      case 4:
-                        return 'Social';
-                      case 5:
-                        return 'Others ';
-                      case 6:
-                        return '  Uncompleted';
-                      default:
-                        return '';
-                    }
-                  },
-                ),
-                leftTitles: SideTitles(
-                  showTitles: false,
-                ),
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              axisTitleData: FlAxisTitleData(
-                topTitle: AxisTitle(
-                  showTitle: true,
-                  titleText: "Weekly Overview",
-                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
-                ),
-              ),
-              barTouchData: BarTouchData(
-                enabled: true,
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.transparent,
-                  tooltipPadding: const EdgeInsets.all(0),
-                  // tooltipMargin: 8,
-                  getTooltipItem: (
-                    BarChartGroupData group,
-                    int groupIndex,
-                    BarChartRodData rod,
-                    int rodIndex,
-                  ) {
-                    return BarTooltipItem(
-                      rod.y.round().toString(),
-                      TextStyle(
-                        color: Colors.deepPurple,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  BarChartGroupData makeGroupData(int x, int y, int max,
-      {Color color = PresetColors.blue}) {
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          y: y * 1.0,
-          width: 22,
-          colors: [color],
-          backDrawRodData: BackgroundBarChartRodData(
-            y: max * 1.0,
-            show: true,
-            colors: [Colors.grey[300]],
-          ),
-        ),
-      ],
-    );
   }
 }

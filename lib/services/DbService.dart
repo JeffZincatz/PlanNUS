@@ -198,6 +198,8 @@ class DbService {
       "uncompleted": FieldValue.increment(1),
     }, SetOptions(merge: true));
 
+    addToWeekly("uncompleted");
+
     int decreased = StatsUtil.eventToAttributes(event)["Resolve"];
     attr.set({
       "data": {
@@ -320,6 +322,7 @@ class DbService {
         "Arts": 0,
         "Social": 0,
         "Others": 0,
+        "uncompleted": 0,
       }
     });
   }
