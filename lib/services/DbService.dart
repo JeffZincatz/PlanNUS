@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:plannus/models/Event.dart';
 import 'package:plannus/util/TimeUtil.dart';
+import 'package:plannus/util/StatsUtil.dart';
 
 class DbService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -110,6 +111,7 @@ class DbService {
   Future markCompleted(Event event) async {
     DocumentReference temp = events.doc(event.id);
 
+    // overall counts
     counts.set({
       "data": {
         event.category: FieldValue.increment(1),
@@ -117,7 +119,27 @@ class DbService {
       "total": FieldValue.increment(1),
     }, SetOptions(merge: true));
 
+    // weekly overview
     addToWeekly(event.category);
+
+    // raise exp
+    int expGained = StatsUtil.eventToExp(event);
+    level.set({
+      "exp": FieldValue.increment(expGained),
+    }, SetOptions(merge: true));
+
+    // TODO: check for leveling up
+    int currExp = await getUserCurrentExp();
+    int nextExp = await getUserNextExp();
+    int expNeeded = nextExp - currExp;
+    while (nextExp - currExp <= 0) {
+      // next level reached
+      currExp = await setUserCurrentExp(expNeeded.abs());
+
+      levelUp();
+      nextExp = await setUserNextExp(
+          StatsUtil.expToNextLevel(await getUserLevel() + 1));
+    }
 
     return await temp.update({
       "passed": true,
@@ -180,14 +202,48 @@ class DbService {
     return snapshot.get("value");
   }
 
+  Future<int> _setUserLevel(int level) async {
+    try {
+      await DbService().level.set({"value": level}, SetOptions(merge: true));
+      return level;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<int> levelUp() async {
+    int currentLevel = await getUserLevel();
+    return _setUserLevel(currentLevel + 1);
+  }
+
   Future<int> getUserCurrentExp() async {
     DocumentSnapshot snapshot = await level.get();
     return snapshot.get("exp");
   }
 
+  Future<int> setUserCurrentExp(int exp) async {
+    try {
+      await level.set({
+        "exp": exp,
+      }, SetOptions(merge: true));
+      return exp;
+    } catch (error) {
+      return null;
+    }
+  }
+
   Future<int> getUserNextExp() async {
     DocumentSnapshot snapshot = await level.get();
     return snapshot.get("next");
+  }
+
+  Future<int> setUserNextExp(int exp) async {
+    try {
+      await level.set({"next": exp}, SetOptions(merge: true));
+      return exp;
+    } catch (error) {
+      return null;
+    }
   }
 
   /// Reset user level info
