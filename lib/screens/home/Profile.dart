@@ -10,6 +10,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
+import 'dart:math';
+
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
 
@@ -22,7 +24,7 @@ class _ProfileState extends State<Profile> {
   static AuthService _auth = new AuthService();
   static FirebaseStorage _storage = FirebaseStorage.instance;
 
-  // change profile
+  // change profile pic
   PickedFile _imageFile;
   final ImagePicker _picker = ImagePicker();
 
@@ -33,8 +35,23 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+
+    // update weekly fields
+    Function updateWeekly = () async {
+      bool isUpdated = await DbService().updateWeekly();
+      if (isUpdated) {
+        setState(() {});
+      }
+    };
+     updateWeekly();
 
     return Scaffold(
       body: ListView(shrinkWrap: true, children: [
@@ -56,46 +73,50 @@ class _ProfileState extends State<Profile> {
                   builder: (context, snapshot) {
                     return snapshot.hasData
                         ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(children: [
-                              ProfilePic(
-                                image: snapshot.data,
-                                radius: 60,
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(children: [
+                        ProfilePic(
+                          image: snapshot.data,
+                          radius: 60,
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    width: 4,
+                                    color: PresetColors.background,
+                                  ),
+                                  color: PresetColors.blue),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: ((builder) => bottomSheet()),
+                                  );
+                                },
                               ),
-                              Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          width: 4,
-                                          color: PresetColors.background,
-                                        ),
-                                        color: PresetColors.blue),
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                        size: 20,
-                                      ),
-                                      onPressed: () {
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: ((builder) => bottomSheet()),
-                                        );
-                                      },
-                                    ),
-                                  )),
-                            ]),
-                          )
-                        : Icon(Icons.person, size: 135,);
+                            )),
+                      ]),
+                    )
+                        : Icon(
+                      Icons.person,
+                      size: 135,
+                    );
                   }),
               FutureBuilder(
                 future: _db.getUserLevel(),
                 builder: (context, snapshot) {
-                  String lvl = snapshot.hasData ? snapshot.data.toString() : " ";
+                  String lvl =
+                  snapshot.hasData ? snapshot.data.toString() : " ";
                   return Text(
                     "Level " + lvl,
                     style: TextStyle(
@@ -112,71 +133,71 @@ class _ProfileState extends State<Profile> {
                   ),
                   isEditing
                       ? Container(
-                          height: 50,
-                          width: screenWidth * 0.65,
-                          // color: Colors.red,
-                          child: TextFormField(
-                            initialValue: username,
-                            style: TextStyle(
-                              fontSize: 24,
-                            ),
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              border: isEditing
-                                  ? UnderlineInputBorder()
-                                  : InputBorder.none,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                            onChanged: (String value) {
-                              setState(() {
-                                newName = value;
-                              });
-                            },
-                          ),
-                        )
+                    height: 50,
+                    width: screenWidth * 0.65,
+                    // color: Colors.red,
+                    child: TextFormField(
+                      initialValue: username,
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        border: isEditing
+                            ? UnderlineInputBorder()
+                            : InputBorder.none,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                      onChanged: (String value) {
+                        setState(() {
+                          newName = value;
+                        });
+                      },
+                    ),
+                  )
                       : FutureBuilder(
-                          future: _db.getUsername(),
-                          builder: (context, snapshot) {
-                            username =
-                                snapshot.hasData ? snapshot.data : username;
-                            return Text(
-                              username,
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            );
-                          }),
+                      future: _db.getUsername(),
+                      builder: (context, snapshot) {
+                        username =
+                        snapshot.hasData ? snapshot.data : username;
+                        return Text(
+                          username,
+                          style: TextStyle(
+                              fontSize: 30, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        );
+                      }),
                   isEditing
                       ? Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.check),
-                              onPressed: () async {
-                                await _db.updateUsername(newName);
-                                setState(() {
-                                  isEditing = false;
-                                });
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.clear),
-                              onPressed: () {
-                                setState(() {
-                                  isEditing = false;
-                                  newName = "";
-                                });
-                              },
-                            ),
-                          ],
-                        )
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.check),
+                        onPressed: () async {
+                          await _db.updateUsername(newName);
+                          setState(() {
+                            isEditing = false;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            isEditing = false;
+                            newName = "";
+                          });
+                        },
+                      ),
+                    ],
+                  )
                       : IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () {
-                            setState(() {
-                              isEditing = true;
-                            });
-                          },
-                        ),
+                    icon: Icon(Icons.edit),
+                    onPressed: () {
+                      setState(() {
+                        isEditing = true;
+                      });
+                    },
+                  ),
                 ],
               ),
               FutureBuilder(
@@ -184,13 +205,13 @@ class _ProfileState extends State<Profile> {
                 builder: (context, snapshot) {
                   return snapshot.hasData
                       ? Text(
-                          snapshot.data,
-                          style: TextStyle(
-                            fontFamily: "monospace",
-                            fontSize: 16,
-                            decoration: TextDecoration.underline,
-                          ),
-                        )
+                    snapshot.data,
+                    style: TextStyle(
+                      fontFamily: "monospace",
+                      fontSize: 16,
+                      decoration: TextDecoration.underline,
+                    ),
+                  )
                       : Text("");
                 },
               ),
@@ -203,12 +224,12 @@ class _ProfileState extends State<Profile> {
                       future: _db.getUserCurrentExp(),
                       builder: (context, snapshot) {
                         String currExp =
-                            snapshot.hasData ? snapshot.data.toString() : "";
+                        snapshot.hasData ? snapshot.data.toString() : "";
                         return Text(
                           "Current EXP: " + currExp,
                           style: TextStyle(
-                              // fontSize: 12,
-                              ),
+                            // fontSize: 12,
+                          ),
                         );
                       },
                     ),
@@ -216,12 +237,12 @@ class _ProfileState extends State<Profile> {
                       future: _db.getUserNextExp(),
                       builder: (context, snapshot) {
                         String nextExp =
-                            snapshot.hasData ? snapshot.data.toString() : "";
+                        snapshot.hasData ? snapshot.data.toString() : "";
                         return Text(
                           "EXP to next lvl: " + nextExp,
                           style: TextStyle(
-                              // fontSize: 12,
-                              ),
+                            // fontSize: 12,
+                          ),
                         );
                       },
                     ),
@@ -245,8 +266,8 @@ class _ProfileState extends State<Profile> {
                         valueColor: AlwaysStoppedAnimation(PresetColors.blue),
                         value: snapshot.hasData
                             ? snapshot.data["current"] *
-                                1.0 /
-                                snapshot.data["next"]
+                            1.0 /
+                            snapshot.data["next"]
                             : 0,
                         minHeight: 15,
                       ),
@@ -261,6 +282,14 @@ class _ProfileState extends State<Profile> {
                   child: Column(
                     // column of all stats
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Container(
+                          height: 200,
+                          width: screenWidth * 0.7,
+                          child: BarChartWeekly(),
+                        ),
+                      ),
                       Center(
                         widthFactor: 0.7,
                         child: AspectRatio(
@@ -345,7 +374,7 @@ class _ProfileState extends State<Profile> {
                       ),
                       Table(
                         defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
+                        TableCellVerticalAlignment.middle,
                         children: [
                           TableRow(
                             children: [
@@ -359,13 +388,13 @@ class _ProfileState extends State<Profile> {
                               ),
                               FutureBuilder(
                                 future:
-                                    _db.countCompletedEventByCategory("total"),
+                                _db.countCompletedEventByCategory("total"),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
-                                          snapshot.data.toString(),
-                                          textAlign: TextAlign.center,
-                                        )
+                                    snapshot.data.toString(),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
@@ -387,9 +416,9 @@ class _ProfileState extends State<Profile> {
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
-                                          snapshot.data.toString(),
-                                          textAlign: TextAlign.center,
-                                        )
+                                    snapshot.data.toString(),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
@@ -411,9 +440,9 @@ class _ProfileState extends State<Profile> {
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
-                                          snapshot.data.toString(),
-                                          textAlign: TextAlign.center,
-                                        )
+                                    snapshot.data.toString(),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
@@ -431,13 +460,13 @@ class _ProfileState extends State<Profile> {
                               ),
                               FutureBuilder(
                                 future:
-                                    _db.countCompletedEventByCategory("Arts"),
+                                _db.countCompletedEventByCategory("Arts"),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
-                                          snapshot.data.toString(),
-                                          textAlign: TextAlign.center,
-                                        )
+                                    snapshot.data.toString(),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
@@ -455,13 +484,13 @@ class _ProfileState extends State<Profile> {
                               ),
                               FutureBuilder(
                                 future:
-                                    _db.countCompletedEventByCategory("Social"),
+                                _db.countCompletedEventByCategory("Social"),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
-                                          snapshot.data.toString(),
-                                          textAlign: TextAlign.center,
-                                        )
+                                    snapshot.data.toString(),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
@@ -479,13 +508,13 @@ class _ProfileState extends State<Profile> {
                               ),
                               FutureBuilder(
                                 future:
-                                    _db.countCompletedEventByCategory("Others"),
+                                _db.countCompletedEventByCategory("Others"),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData
                                       ? Text(
-                                          snapshot.data.toString(),
-                                          textAlign: TextAlign.center,
-                                        )
+                                    snapshot.data.toString(),
+                                    textAlign: TextAlign.center,
+                                  )
                                       : Text("");
                                 },
                               ),
@@ -517,7 +546,10 @@ class _ProfileState extends State<Profile> {
   Widget bottomSheet() {
     return Container(
       height: 100.0,
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       margin: EdgeInsets.symmetric(
         horizontal: 20,
         vertical: 20,
@@ -583,7 +615,9 @@ class _ProfileState extends State<Profile> {
 
       // save image to storage
       File image = File(_imageFile.path);
-      String imagePath = "profilePics/" + _auth.getCurrentUser().uid + ".jpg";
+      String imagePath = "profilePics/" + _auth
+          .getCurrentUser()
+          .uid + ".jpg";
       await _storage.ref(imagePath).putFile(image);
 
       // update db users profilePic
@@ -596,5 +630,130 @@ class _ProfileState extends State<Profile> {
       print(error); // TODO: remove temp debug
       return null;
     }
+  }
+}
+
+/// weekly overview bar chart
+class BarChartWeekly extends StatefulWidget {
+  const BarChartWeekly({Key key}) : super(key: key);
+
+  @override
+  _BarChartWeeklyState createState() => _BarChartWeeklyState();
+}
+
+class _BarChartWeeklyState extends State<BarChartWeekly> {
+  static DbService _db = new DbService();
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: FutureBuilder(
+        future: _db.getWeekly(),
+        builder: (context, snapshot) {
+          Map data = snapshot.hasData
+              ? snapshot.data
+              : {
+            "Studies": 0,
+            "Social": 0,
+            "Others": 0,
+            "Arts": 0,
+            "Fitness": 0
+          };
+          int maxValue = 1 + data.values.reduce((value, element) => max<int>(value, element));
+          int maxY = maxValue > 12 ? maxValue : 12;
+          return BarChart(
+            BarChartData(
+              barGroups: [
+                makeGroupData(1, data["Studies"], maxY),
+                makeGroupData(2, data["Fitness"], maxY),
+                makeGroupData(3, data["Arts"], maxY),
+                makeGroupData(4, data["Social"], maxY),
+                makeGroupData(5, data["Others"], maxY),
+              ],
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: SideTitles(
+                  showTitles: true,
+                  getTextStyles: (value) =>
+                  const TextStyle(
+                    color: Colors.black,
+                  ),
+                  // margin: 16,
+                  getTitles: (double value) {
+                    switch (value.toInt()) {
+                      case 1:
+                        return 'Studies';
+                      case 2:
+                        return 'Fitness';
+                      case 3:
+                        return 'Arts';
+                      case 4:
+                        return 'Social';
+                      case 5:
+                        return 'Others';
+                      default:
+                        return '';
+                    }
+                  },
+                ),
+                leftTitles: SideTitles(
+                  showTitles: false,
+                ),
+              ),
+              borderData: FlBorderData(
+                show: false,
+              ),
+              axisTitleData: FlAxisTitleData(
+                topTitle: AxisTitle(
+                  showTitle: true,
+                  titleText: "Weekly Overview",
+                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
+                ),
+              ),
+              barTouchData: BarTouchData(
+                enabled: true,
+                touchTooltipData: BarTouchTooltipData(
+                  tooltipBgColor: Colors.transparent,
+                  tooltipPadding: const EdgeInsets.all(0),
+                  // tooltipMargin: 8,
+                  getTooltipItem: (BarChartGroupData group,
+                      int groupIndex,
+                      BarChartRodData rod,
+                      int rodIndex,) {
+                    return BarTooltipItem(
+                      rod.y.round().toString(),
+                      TextStyle(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  BarChartGroupData makeGroupData(int x,
+      int y, int max) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          y: y * 1.0,
+          width: 22,
+          colors: [PresetColors.blue],
+          backDrawRodData: BackgroundBarChartRodData(
+            y: max * 1.0,
+            show: true,
+            colors: [Colors.grey[300]],
+          ),
+        ),
+      ],
+    );
   }
 }
