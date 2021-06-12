@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/screens/home/BadgeShareTotal.dart';
 
 class TotalActivitiesBadges extends StatefulWidget {
 
@@ -55,7 +57,10 @@ class _TotalActivitiesBadgesState extends State<TotalActivitiesBadges> {
                             border: Border.all(),
                           ),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => BadgeShareTotal(no: widget.no[index], desc: widget.text[index],)));
+                            },
                             child: Column(
                               children: [
                                 Expanded(
