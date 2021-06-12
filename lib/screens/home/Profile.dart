@@ -661,7 +661,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
             "Fitness": 0
           };
           int maxValue = 1 + data.values.reduce((value, element) => max<int>(value, element));
-          int maxY = maxValue > 16 ? maxValue : 16;
+          int maxY = maxValue > 12 ? maxValue : 12;
           return BarChart(
             BarChartData(
               barGroups: [

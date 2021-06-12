@@ -117,6 +117,8 @@ class DbService {
       "total": FieldValue.increment(1),
     }, SetOptions(merge: true));
 
+    addToWeekly(event.category);
+
     return await temp.update({
       "passed": true,
       "completed": true,
@@ -229,7 +231,7 @@ class DbService {
   Future<bool> updateWeekly() async {
     DateTime thisMonday = (await weekly.get())["thisMonday"].toDate();
     if (TimeUtil.isAtLeastOneWeekApart(DateTime.now(), thisMonday)) {
-      initWeekly(); // TODO: remove temp debugging
+      initWeekly();
       return true;
     }
     return false;
