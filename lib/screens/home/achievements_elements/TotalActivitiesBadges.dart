@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plannus/services/DbService.dart';
+import 'package:plannus/screens/home/BadgeShareTotal.dart';
 
 class TotalActivitiesBadges extends StatefulWidget {
 
@@ -54,25 +56,31 @@ class _TotalActivitiesBadgesState extends State<TotalActivitiesBadges> {
                           decoration: BoxDecoration(
                             border: Border.all(),
                           ),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Image.asset(
-                                  "assets/badges/${widget.no[index]}.png",
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  widget.text[index],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 10,
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => BadgeShareTotal(no: widget.no[index], desc: widget.text[index],)));
+                            },
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Image.asset(
+                                    "assets/badges/${widget.no[index]}.png",
                                   ),
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  flex: 1,
+                                  child: Text(
+                                    widget.text[index],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 9,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         )
                       : Stack(
