@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social_content_share/flutter_social_content_share.dart';
+import 'package:plannus/util/PresetColors.dart';
 import 'package:social_share/social_share.dart';
 
 class BadgeShare extends StatefulWidget {
@@ -30,6 +31,7 @@ class _BadgeShareState extends State<BadgeShare> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Great Job"),
+        backgroundColor: PresetColors.blueAccent,
       ),
       body: Column(
         children: [
