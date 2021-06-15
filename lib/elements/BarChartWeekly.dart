@@ -13,7 +13,7 @@ class BarChartWeekly extends StatefulWidget {
 }
 
 class _BarChartWeeklyState extends State<BarChartWeekly> {
-  static DbService _db = new DbService();
+  DbService _db = new DbService();
 
   @override
   Widget build(BuildContext context) {

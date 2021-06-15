@@ -12,7 +12,7 @@ class PieChartOverview extends StatefulWidget {
 }
 
 class _PieChartOverviewState extends State<PieChartOverview> {
-  static DbService _db = new DbService();
+  DbService _db = new DbService();
 
   @override
   Widget build(BuildContext context) {
