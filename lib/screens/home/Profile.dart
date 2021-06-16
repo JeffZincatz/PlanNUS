@@ -11,6 +11,7 @@ import 'package:plannus/services/DbService.dart';
 import 'package:plannus/services/AuthService.dart';
 import 'package:plannus/util/PresetColors.dart';
 import 'package:plannus/util/TimeUtil.dart';
+import 'package:plannus/elements/RadarChartAttribute.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
@@ -20,9 +21,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  static DbService _db = new DbService();
-  static AuthService _auth = new AuthService();
-  static FirebaseStorage _storage = FirebaseStorage.instance;
+  DbService _db = new DbService();
+  AuthService _auth = new AuthService();
+  FirebaseStorage _storage = FirebaseStorage.instance;
 
   // change profile pic
   PickedFile _imageFile;
@@ -30,8 +31,8 @@ class _ProfileState extends State<Profile> {
 
   // edit username button
   bool isEditing = false;
-  static String username = "";
-  static String newName = "";
+  String username = "";
+  String newName = "";
 
   @override
   Widget build(BuildContext context) {
@@ -318,6 +319,18 @@ class _ProfileState extends State<Profile> {
                       Center(
                         widthFactor: 0.7,
                         child: PieChartOverview(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        child: Text(
+                          "Attributes",
+                          style: TextStyle(color: Colors.black, fontSize: 18),
+                        ),
+                      ),
+                      SizedBox(
+                        width: screenWidth,
+                        height: screenWidth,
+                        child: RadarChartAttribute(),
                       ),
                       FutureBuilder(
                         future: _db.getUserAttributes(),
