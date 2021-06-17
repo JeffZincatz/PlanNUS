@@ -27,6 +27,8 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   String description = "";
   int difficulty = 5;
+  String startDate;
+  String endDate;
   String dropdownValue = "Studies";
   String startTime;
   String endTime;
@@ -40,9 +42,13 @@ class _EventEditingPageState extends State<EventEditingPage> {
           passed: false,
           category: dropdownValue,
           description: description,
-          startTime: DateTime(widget.currentDate.year, widget.currentDate.month, widget.currentDate.day,
-                int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-          endTime: DateTime(widget.currentDate.year, widget.currentDate.month, widget.currentDate.day,
+          startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+              int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+              int.parse(startDate.substring(0, startDate.indexOf('/'))),
+              int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
+          endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
+              int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+              int.parse(endDate.substring(0, endDate.indexOf('/'))),
               int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
           difficulty: difficulty,
         );
@@ -77,6 +83,16 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   @override
   Widget build(BuildContext context) {
+    startDate = startDate ?? DateFormat.d().format(widget.currentDate)
+      + "/"
+      + DateFormat.M().format(widget.currentDate)
+      + "/"
+      + DateFormat.y().format(widget.currentDate);
+    endDate = endDate ?? DateFormat.d().format(widget.currentDate)
+        + "/"
+        + DateFormat.M().format(widget.currentDate)
+        + "/"
+        + DateFormat.y().format(widget.currentDate);
     startTime = startTime ?? (sameDay(widget.currentDate, DateTime.now())
       ? DateFormat.Hms().format(DateTime.now()).substring(0, 5)
       : "12.00"
@@ -162,6 +178,40 @@ class _EventEditingPageState extends State<EventEditingPage> {
             ],
           ),
           Text(
+            "Start Date",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return OutlinedButton(
+                  onPressed: () {
+                    DatePicker.showDatePicker(
+                        context,
+                        currentTime: DateTime(
+                          int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+                          int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+                          int.parse(startDate.substring(0, startDate.indexOf('/'))),
+                        ),
+                        onConfirm: (val) {
+                          startDate = DateFormat.d().format(val)
+                              + "/"
+                              + DateFormat.M().format(val)
+                              + "/"
+                              + DateFormat.y().format(val);
+                          setState((){});
+                        }
+                    );
+                  },
+                  child: Text(
+                    startDate,
+                  ),
+                );
+              }
+          ),
+          Text(
             "Start Time",
             style: TextStyle(
               fontWeight: FontWeight.bold,
@@ -189,6 +239,40 @@ class _EventEditingPageState extends State<EventEditingPage> {
             }
           ),
           SizedBox(height: 20.0,),
+          Text(
+            "End Date",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return OutlinedButton(
+                  onPressed: () {
+                    DatePicker.showDatePicker(
+                        context,
+                        currentTime: DateTime(
+                          int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
+                          int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+                          int.parse(endDate.substring(0, endDate.indexOf('/'))),
+                        ),
+                        onConfirm: (val) {
+                          endDate = DateFormat.d().format(val)
+                              + "/"
+                              + DateFormat.M().format(val)
+                              + "/"
+                              + DateFormat.y().format(val);
+                          setState((){});
+                        }
+                    );
+                  },
+                  child: Text(
+                    endDate,
+                  ),
+                );
+              }
+          ),
           Text(
             "End Time",
             style: TextStyle(
