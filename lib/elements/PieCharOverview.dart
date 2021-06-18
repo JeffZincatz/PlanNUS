@@ -43,6 +43,16 @@ class _PieChartOverviewState extends State<PieChartOverview> {
             "placeholder": 1,
           };
 
+          bool needsPlaceholder = true;
+          data.values.forEach((element) {
+            if (element != 0) {
+              needsPlaceholder = false;
+            }
+          });
+          if (needsPlaceholder) {
+            data["placeholder"] = 1;
+          }
+
           return PieChart(
             PieChartData(
               centerSpaceRadius: screenWidth * 0.12,
