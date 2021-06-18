@@ -122,7 +122,7 @@ class DbService {
       "data": {
         event.category: FieldValue.increment(1),
       },
-      "total": FieldValue.increment(1),
+      "total": FieldValue.increment(1)
     }, SetOptions(merge: true));
 
     // weekly overview
@@ -130,22 +130,7 @@ class DbService {
 
     // raise exp
     int expGained = StatsUtil.eventToExp(event);
-    level.set({
-      "exp": FieldValue.increment(expGained),
-    }, SetOptions(merge: true));
-
-    // update level if needed
-    int currExp = await getUserCurrentExp();
-    int nextExp = await getUserNextExp();
-    int expNeeded = nextExp - currExp;
-    while (nextExp - currExp <= 0) {
-      // next level reached
-      currExp = await setUserCurrentExp(expNeeded.abs());
-
-      levelUp();
-      nextExp = await setUserNextExp(
-          StatsUtil.expToNextLevel(await getUserLevel() + 1));
-    }
+    _addExpBy(expGained);
 
     // this is for attribute calculation only
     // somehow modifying event's param does not work
@@ -159,30 +144,28 @@ class DbService {
         completed: true,
         difficulty: event.difficulty);
     Map added = StatsUtil.eventToAttributes(eventTemp);
-    added.forEach((key, value) {
-      attr.set({
-        "data": {
-          key: FieldValue.increment(value),
-        },
-      }, SetOptions(merge: true));
+    var data = await getUserAttributes();
+    added.forEach((key, value) async {
+      int currValue = data[key];
+      _setUserAttribute(key, currValue + value);
     });
 
     if (event.category == "Others") {
-      attr.update({
+      attr.set({
         "lastCheckTime": {
           "Intelligence": DateTime.now(),
           "Vitality": DateTime.now(),
           "Spirit": DateTime.now(),
           "Charm": DateTime.now(),
           "Resolve": DateTime.now(),
-        },
-      });
+        }
+      }, SetOptions(merge: true));
     } else {
-      attr.update({
+      attr.set({
         "lastCheckTime": {
           event.category: DateTime.now(),
-        },
-      });
+        }
+      }, SetOptions(merge: true));
     }
 
     return await temp.update({
@@ -198,13 +181,13 @@ class DbService {
       "uncompleted": FieldValue.increment(1),
     }, SetOptions(merge: true));
 
-    addToWeekly("uncompleted");
+    await addToWeekly("uncompleted");
 
     int decreased = StatsUtil.eventToAttributes(event)["Resolve"];
     attr.set({
       "data": {
         "Resolve": FieldValue.increment(decreased),
-      },
+      }
     }, SetOptions(merge: true));
 
     return await temp.update({
@@ -230,12 +213,19 @@ class DbService {
   }
 
   Future<int> countCompletedEventByCategory(String category) async {
-    DocumentSnapshot snapshot = await counts.get();
+    try {
+      DocumentSnapshot snapshot = await counts.get();
 
-    if (category == "total") {
-      return snapshot.get("total");
-    } else {
-      return snapshot.get("data")[category];
+      int res;
+      if (category == "total") {
+        res = snapshot.get("total");
+      } else {
+        res = snapshot.get("data")[category];
+      }
+      return res == null ? 0 : res;
+    } catch (error) {
+      await initCounts();
+      return countCompletedEventByCategory(category);
     }
   }
 
@@ -252,8 +242,13 @@ class DbService {
   }
 
   Future<int> getUserLevel() async {
-    DocumentSnapshot snapshot = await level.get();
-    return snapshot.get("value");
+    try {
+      DocumentSnapshot snapshot = await level.get();
+      return snapshot.get("value");
+    } catch (error) {
+      await initUserLevel();
+      return getUserLevel();
+    }
   }
 
   Future<int> _setUserLevel(int level) async {
@@ -261,34 +256,44 @@ class DbService {
       await DbService().level.set({"value": level}, SetOptions(merge: true));
       return level;
     } catch (error) {
-      return null;
+      await initUserLevel();
+      return _setUserLevel(level);
     }
   }
 
   Future<int> levelUp() async {
     int currentLevel = await getUserLevel();
+    await setUserNextExp(StatsUtil.expToNextLevel(currentLevel + 1));
     return _setUserLevel(currentLevel + 1);
   }
 
   Future<int> getUserCurrentExp() async {
-    DocumentSnapshot snapshot = await level.get();
-    return snapshot.get("exp");
+    try {
+      DocumentSnapshot snapshot = await level.get();
+      return snapshot.get("exp");
+    } catch (error) {
+      await initUserLevel();
+      return getUserCurrentExp();
+    }
   }
 
   Future<int> setUserCurrentExp(int exp) async {
     try {
-      await level.set({
-        "exp": exp,
-      }, SetOptions(merge: true));
+      await level.set({"exp": exp}, SetOptions(merge: true));
       return exp;
     } catch (error) {
-      return null;
+      await initUserLevel();
+      return setUserCurrentExp(exp);
     }
   }
 
   Future<int> getUserNextExp() async {
-    DocumentSnapshot snapshot = await level.get();
-    return snapshot.get("next");
+    try {
+      return (await level.get())["next"];
+    } catch (error) {
+      await initUserLevel();
+      return getUserNextExp();
+    }
   }
 
   Future<int> setUserNextExp(int exp) async {
@@ -296,7 +301,23 @@ class DbService {
       await level.set({"next": exp}, SetOptions(merge: true));
       return exp;
     } catch (error) {
-      return null;
+      await initUserLevel();
+      return setUserNextExp(exp);
+    }
+  }
+
+  Future<void> _addExpBy(int exp) async {
+    int currExp = await getUserCurrentExp();
+    int currLevel = await getUserLevel();
+    int nextExp = StatsUtil.expToNextLevel(currLevel);
+
+    if (exp + currExp < nextExp) {
+      level.set({
+        "exp": exp + currExp,
+      }, SetOptions(merge: true));
+    } else {
+      levelUp();
+      return _addExpBy(exp - (nextExp - currExp));
     }
   }
 
@@ -313,7 +334,7 @@ class DbService {
 
   /// Reset user weekly stats.
   /// Only use to initialise weekly db document.
-  void initWeekly() async {
+  Future<void> initWeekly() async {
     weekly.set({
       "thisMonday": TimeUtil.findFirstDateOfTheWeek(DateTime.now()),
       "data": {
@@ -328,40 +349,73 @@ class DbService {
   }
 
   Future<void> addToWeekly(String category) async {
-    await weekly.set({
+    return await weekly.set({
       "data": {
         category: FieldValue.increment(1),
-      }
+      },
+      "thisMonday": TimeUtil.findFirstDateOfTheWeek(DateTime.now())
     }, SetOptions(merge: true));
   }
 
   Future getWeekly() async {
-    return (await weekly.get())["data"];
+    try {
+      return (await weekly.get())["data"];
+    } catch (error) {
+      await initWeekly();
+      return getWeekly();
+    }
   }
 
   Future<bool> updateWeekly() async {
-    DateTime thisMonday = (await weekly.get())["thisMonday"].toDate();
-    if (TimeUtil.isAtLeastOneWeekApart(DateTime.now(), thisMonday)) {
-      initWeekly();
-      return true;
+    try {
+      DateTime thisMonday = (await weekly.get())["thisMonday"].toDate();
+      if (TimeUtil.isAtLeastOneWeekApart(DateTime.now(), thisMonday)) {
+        initWeekly();
+        return true;
+      }
+      return false;
+    } catch (error) {
+      await initWeekly();
+      return updateWeekly();
     }
-    return false;
   }
 
   Future getUserAttributes() async {
-    return (await attr.get())["data"];
+    try {
+      Map temp = {
+        "Intelligence": 500, // Studies
+        "Vitality": 500, // Fitness
+        "Spirit": 500, // Arts
+        "Charm": 500, // Social
+        "Resolve": 500, // completed/uncompleted
+      };
+
+      Map res = (await attr.get())["data"];
+      res.forEach((key, value) {
+        temp[key] = value;
+      });
+      return temp;
+    } catch (error) {
+      await initAttributes();
+      return getUserAttributes();
+    }
   }
 
   Future<Map<String, int>> _setUserAttribute(
       String attribute, int value) async {
-    await attr.set({
-      "data": {
+    try {
+      await attr.set({
+        "data": {
+          attribute: value > 1000 ? 1000 : value,
+        }
+      }, SetOptions(merge: true));
+      return {
         attribute: value,
-      }
-    }, SetOptions(merge: true));
-    return {
-      attribute: value,
-    };
+      };
+    } catch (error) {
+      await initAttributes();
+      return _setUserAttribute(attribute, value);
+    }
   }
 
   Future reduceAttributeTo80Percent(String attribute) async {
@@ -370,18 +424,71 @@ class DbService {
   }
 
   Future getLastCheckTime() async {
-    return (await attr.get())["lastCheckTime"];
+    try {
+      return (await attr.get())["lastCheckTime"];
+    } catch (error) {
+      await initAttributes();
+      return getLastCheckTime();
+    }
   }
 
   /// reset timestamp for the attribute to now
   Future refreshLastCheckTime(String attribute) async {
-    return await attr.set({
-      "lastCheckTime": {attribute: DateTime.now()}
-    }, SetOptions(merge: true));
+    try {
+      return await attr.set({
+        "lastCheckTime": {attribute: DateTime.now()}
+      }, SetOptions(merge: true));
+    } catch (error) {
+      await initAttributes();
+      return refreshLastCheckTime(attribute);
+    }
   }
 
   Future<int> getUncompletedCount() async {
-    return (await counts.get())["uncompleted"];
+    try {
+      return (await counts.get())["uncompleted"];
+    } catch (error) {
+      await counts.set({
+        "uncompleted": 0
+      }, SetOptions(merge: true));
+      return getUncompletedCount();
+    }
+  }
+
+  /// Initialise user attributes.
+  /// All attributes range from 0 to 1000, 500 by default.
+  /// When displayed, an attribute should be <value> ~/ 10.
+  Future<void> initAttributes() async {
+    await attr.set({
+      "data": {
+        "Intelligence": 500, // Studies
+        "Vitality": 500, // Fitness
+        "Spirit": 500, // Arts
+        "Charm": 500, // Social
+        "Resolve": 500, // completed/uncompleted
+      },
+      "lastCheckTime": {
+        "Intelligence": DateTime.now(),
+        "Vitality": DateTime.now(),
+        "Spirit": DateTime.now(),
+        "Charm": DateTime.now(),
+        "Resolve": DateTime.now(),
+      },
+    });
+  }
+
+  Future<void> initCounts() async {
+    counts.set({
+      "data": {
+        "Arts": 0,
+        "Fitness": 0,
+        "Others": 0,
+        "Social": 0,
+        "Studies": 0,
+      },
+      "total": 0,
+      "uncompleted": 0,
+    });
   }
 
   /*
@@ -477,27 +584,5 @@ class DbService {
       print(error); // TODO: remove temp debug
       return null;
     }
-  }
-
-  /// Initialise user attributes.
-  /// All attributes range from 0 to 1000, 500 by default.
-  /// When displayed, an attribute should be <value> ~/ 10.
-  Future<void> initAttributes() async {
-    await attr.set({
-      "data": {
-        "Intelligence": 500, // Studies
-        "Vitality": 500, // Fitness
-        "Spirit": 500, // Arts
-        "Charm": 500, // Social
-        "Resolve": 500, // completed/uncompleted
-      },
-      "lastCheckTime": {
-        "Intelligence": DateTime.now(),
-        "Vitality": DateTime.now(),
-        "Spirit": DateTime.now(),
-        "Charm": DateTime.now(),
-        "Resolve": DateTime.now(),
-      },
-    });
   }
 }

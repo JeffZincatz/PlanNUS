@@ -23,17 +23,7 @@ class _PieChartOverviewState extends State<PieChartOverview> {
       child: FutureBuilder(
         future: _db.getAllPassedEventCount(),
         builder: (context, snapshot) {
-          Map data = snapshot.hasData
-              ? {
-            "Studies": snapshot.data["Studies"],
-            "Fitness": snapshot.data["Fitness"],
-            "Arts": snapshot.data["Arts"],
-            "Social": snapshot.data["Social"],
-            "Others": snapshot.data["Others"],
-            "uncompleted": snapshot.data["uncompleted"],
-            "placeholder": 0,
-          }
-              : {
+          Map data = {
             "Studies": 0,
             "Fitness": 0,
             "Arts": 0,
@@ -42,6 +32,13 @@ class _PieChartOverviewState extends State<PieChartOverview> {
             "uncompleted": 0,
             "placeholder": 1,
           };
+
+          if (snapshot.hasData) {
+            data["placeholder"] = 0;
+            snapshot.data.forEach((key, value) {
+              data[key] = value;
+            });
+          }
 
           bool needsPlaceholder = true;
           data.values.forEach((element) {

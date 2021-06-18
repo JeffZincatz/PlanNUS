@@ -22,9 +22,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
       child: FutureBuilder(
         future: _db.getWeekly(),
         builder: (context, snapshot) {
-          Map data = snapshot.hasData
-              ? snapshot.data
-              : {
+          Map data = {
             "Studies": 0,
             "Social": 0,
             "Others": 0,
@@ -32,6 +30,11 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
             "Fitness": 0,
             "uncompleted": 0,
           };
+          if (snapshot.hasData) {
+            snapshot.data.forEach((key, value) {
+              data[key] = value;
+            });
+          }
           int maxValue = 1 +
               data.values.reduce((value, element) => max<int>(value, element));
           int maxY = maxValue > 12 ? maxValue : 12;

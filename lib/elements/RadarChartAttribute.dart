@@ -31,15 +31,19 @@ class _RadarChartAttributeState extends State<RadarChartAttribute> {
     return FutureBuilder(
       future: _db.getUserAttributes(),
       builder: (context, snapshot) {
-        Map data = snapshot.hasData
-            ? snapshot.data
-            : {
+        Map data = {
               "Vitality": 500,
               "Spirit": 500,
               "Charm": 500,
               "Resolve": 500,
               "Intelligence": 500,
             };
+        if (snapshot.hasData) {
+          snapshot.data.forEach((key, value) {
+            data[key] = value;
+          });
+        }
+
         List<int> dataInside = [];
         for (String x in features) {
           dataInside.add(data[x]);
