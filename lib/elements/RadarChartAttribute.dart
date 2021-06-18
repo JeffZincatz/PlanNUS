@@ -15,7 +15,7 @@ class RadarChartAttribute extends StatefulWidget {
 
 class _RadarChartAttributeState extends State<RadarChartAttribute> {
 
-  var ticks = List<int>.generate(9, (int index) => (index + 1) * 100);
+  var ticks = List<int>.generate(10, (int index) => (index + 1) * 100);
   var features = [
     "Charm",
     "Resolve",
