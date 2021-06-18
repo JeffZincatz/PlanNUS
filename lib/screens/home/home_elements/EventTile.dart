@@ -23,6 +23,12 @@ class EventTile extends StatelessWidget {
               : Icon(Icons.thumb_up);
   }
 
+  bool sameDay(DateTime first, DateTime second) {
+    return (first.year == second.year
+        && first.month == second.month
+        && first.day == second.day);
+  }
+
   @override
   Widget build(BuildContext context) {
     void askWhetherCompleted() {
@@ -45,7 +51,7 @@ class EventTile extends StatelessWidget {
               Column(
                 children: [
                   Text(
-                    event.startTime.toString().substring(0, 10),
+                    event.startTime.toString().substring(0, 10)
                   ),
                   Text(
                     "${DateFormat.Hms().format(event.startTime).substring(0, 5)} - ${DateFormat.Hms().format(event.endTime).substring(0, 5)}",
@@ -116,11 +122,19 @@ class EventTile extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  event.startTime.toString().substring(0, 10),
+                  // event.startTime.toString().substring(0, 10),
+                  sameDay(event.startTime, event.endTime)
+                      ? event.startTime.toString().substring(0, 10)
+                      : event.startTime.toString().substring(0, 10) + " "
+                      "${DateFormat.Hms().format(event.startTime).substring(0, 5)}" +
+                      " to "
                 ),
                 Flexible(
                   child: Text(
-                    "${DateFormat.Hms().format(event.startTime).substring(0, 5)} - ${DateFormat.Hms().format(event.endTime).substring(0, 5)}",
+                    sameDay(event.startTime, event.endTime)
+                      ? "${DateFormat.Hms().format(event.startTime).substring(0, 5)} - ${DateFormat.Hms().format(event.endTime).substring(0, 5)}"
+                      : event.endTime.toString().substring(0, 10) + " "
+                        "${DateFormat.Hms().format(event.endTime).substring(0, 5)}",
                   ),
                 ),
               ],

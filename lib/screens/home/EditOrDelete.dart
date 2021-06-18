@@ -42,7 +42,8 @@ class _EditOrDelete extends State<EditOrDelete> {
   String startTime;
   String endTime;
   int difficulty;
-  String date;
+  String startDate;
+  String endDate;
 
   List<Widget> buildEditingActions() {
     return [ElevatedButton.icon(
@@ -53,13 +54,13 @@ class _EditOrDelete extends State<EditOrDelete> {
           passed: false,
           category: dropdownValue,
           description: description,
-          startTime: DateTime(int.parse(date.substring(date.lastIndexOf('/') + 1, date.length)),
-              int.parse(date.substring(date.indexOf('/') + 1, date.lastIndexOf('/'))),
-              int.parse(date.substring(0, date.indexOf('/'))),
+          startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+              int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+              int.parse(startDate.substring(0, startDate.indexOf('/'))),
               int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-          endTime: DateTime(int.parse(date.substring(date.lastIndexOf('/') + 1, date.length)),
-              int.parse(date.substring(date.indexOf('/') + 1, date.lastIndexOf('/'))),
-              int.parse(date.substring(0, date.indexOf('/'))),
+          endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
+              int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+              int.parse(endDate.substring(0, endDate.indexOf('/'))),
               int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
           difficulty: difficulty,
         );
@@ -142,11 +143,16 @@ class _EditOrDelete extends State<EditOrDelete> {
     startTime = startTime ?? DateFormat.Hms().format(widget.event.startTime).substring(0, 5);
     endTime = endTime ?? DateFormat.Hms().format(widget.event.endTime).substring(0, 5);
     difficulty = difficulty ?? widget.event.difficulty;
-    date = date ?? DateFormat.d().format(widget.event.startTime)
+    startDate = startDate ?? DateFormat.d().format(widget.event.startTime)
       + "/"
       + DateFormat.M().format(widget.event.startTime)
       + "/"
       + DateFormat.y().format(widget.event.startTime);
+    endDate = endDate ?? DateFormat.d().format(widget.event.endTime)
+        + "/"
+        + DateFormat.M().format(widget.event.endTime)
+        + "/"
+        + DateFormat.y().format(widget.event.endTime);
 
     return Scaffold(
       appBar: AppBar(
@@ -231,7 +237,7 @@ class _EditOrDelete extends State<EditOrDelete> {
           ),
           SizedBox(height: 20.0,),
           Text(
-            "Date",
+            "Start Date",
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 22,
@@ -244,12 +250,12 @@ class _EditOrDelete extends State<EditOrDelete> {
                     DatePicker.showDatePicker(
                       context,
                       currentTime: DateTime(
-                        int.parse(date.substring(date.lastIndexOf('/') + 1, date.length)),
-                        int.parse(date.substring(date.indexOf('/') + 1, date.lastIndexOf('/'))),
-                        int.parse(date.substring(0, date.indexOf('/'))),
+                        int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+                        int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+                        int.parse(startDate.substring(0, startDate.indexOf('/'))),
                       ),
                       onConfirm: (val) {
-                        date = DateFormat.d().format(val)
+                        startDate = DateFormat.d().format(val)
                             + "/"
                             + DateFormat.M().format(val)
                             + "/"
@@ -259,7 +265,7 @@ class _EditOrDelete extends State<EditOrDelete> {
                     );
                   },
                   child: Text(
-                    date,
+                    startDate,
                   ),
                 );
               }
@@ -293,6 +299,40 @@ class _EditOrDelete extends State<EditOrDelete> {
               }
           ),
           SizedBox(height: 20.0,),
+          Text(
+            "End Date",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
+          StatefulBuilder(
+              builder: (BuildContext context, StateSetter setState) {
+                return OutlinedButton(
+                  onPressed: () {
+                    DatePicker.showDatePicker(
+                        context,
+                        currentTime: DateTime(
+                          int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
+                          int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+                          int.parse(endDate.substring(0, endDate.indexOf('/'))),
+                        ),
+                        onConfirm: (val) {
+                          endDate = DateFormat.d().format(val)
+                              + "/"
+                              + DateFormat.M().format(val)
+                              + "/"
+                              + DateFormat.y().format(val);
+                          setState((){});
+                        }
+                    );
+                  },
+                  child: Text(
+                    endDate,
+                  ),
+                );
+              }
+          ),
           Text(
             "End Time",
             style: TextStyle(
