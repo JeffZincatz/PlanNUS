@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 class Authenticate extends StatefulWidget {
   const Authenticate({Key key}) : super(key: key);
@@ -29,7 +29,7 @@ class _AuthenticateState extends State<Authenticate> {
                     scale: 16,
                   ),
                   Text(
-                    "PlanNUS",
+                    "Planaholic",
                     style: TextStyle(
                       fontFamily: "Lobster Two",
                       fontSize: 54,

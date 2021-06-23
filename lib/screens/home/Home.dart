@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/home/event_list/UnfinishedEventList.dart';
-import 'package:plannus/screens/home/home_elements/Calendar2.dart';
-import 'package:plannus/screens/home/EventEditingPage.dart';
-import 'package:plannus/screens/home/event_list/MaybeFinishedEventList.dart';
-import 'package:plannus/screens/home/event_list/CompletedEventList.dart';
-import 'package:plannus/screens/home/event_list/UncompletedPastEventList.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/models/Event.dart';
+import 'package:planaholic/screens/home/event_list/UnfinishedEventList.dart';
+import 'package:planaholic/screens/home/home_elements/Calendar2.dart';
+import 'package:planaholic/screens/home/EventEditingPage.dart';
+import 'package:planaholic/screens/home/event_list/MaybeFinishedEventList.dart';
+import 'package:planaholic/screens/home/event_list/CompletedEventList.dart';
+import 'package:planaholic/screens/home/event_list/UncompletedPastEventList.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/util/PresetColors.dart';
+import 'package:planaholic/models/Event.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:plannus/elements/MyButtons.dart';
-import 'package:plannus/elements/ProfilePic.dart';
-import 'package:plannus/elements/PieCharOverview.dart';
-import 'package:plannus/elements/BarChartWeekly.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/services/AuthService.dart';
-import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/util/TimeUtil.dart';
-import 'package:plannus/elements/RadarChartAttribute.dart';
+import 'package:planaholic/elements/MyButtons.dart';
+import 'package:planaholic/elements/ProfilePic.dart';
+import 'package:planaholic/elements/PieCharOverview.dart';
+import 'package:planaholic/elements/BarChartWeekly.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/services/AuthService.dart';
+import 'package:planaholic/util/PresetColors.dart';
+import 'package:planaholic/util/TimeUtil.dart';
+import 'package:planaholic/elements/RadarChartAttribute.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
@@ -57,6 +57,10 @@ class _ProfileState extends State<Profile> {
         // first check for 4 other attributes
         if (key != "Resolve" &&
             TimeUtil.isAtLeastThreeDaysApart(now, value.toDate())) {
+          print("\n\n----Profile----\n"+
+              "Function: checkInactivity\n" +
+              "lastCheckTime.forEach, key: " + key +
+              "\n\n");
           await _db.reduceAttributeTo80Percent(key);
           setState(() {});
           _db.refreshLastCheckTime(key);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:plannus/models/Event.dart';
-import 'package:plannus/screens/home/home_elements/EventTile.dart';
-import 'package:plannus/screens/home/home_elements/EmptyCardWithText.dart';
+import 'package:planaholic/models/Event.dart';
+import 'package:planaholic/screens/home/home_elements/EventTile.dart';
+import 'package:planaholic/screens/home/home_elements/EmptyCardWithText.dart';
 
 class MaybeFinishedEventList extends StatefulWidget {
   const MaybeFinishedEventList({Key key}) : super(key: key);

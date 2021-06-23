@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/screens/home/BadgeShareTotal.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/screens/home/BadgeShareTotal.dart';
 
 class TotalActivitiesBadges extends StatefulWidget {
 

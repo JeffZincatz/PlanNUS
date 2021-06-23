@@ -1,10 +1,10 @@
-# PlanNUS
+# Planaholic
 
-The PlanNUS app, made by Team Bogoplan
+The Planaholic app, made by Team Bogoplan
 
 ## Getting Started
 
-This project is a starting point for the PlanNUS Android application, made by Team Bogoplan.
+This project is a starting point for the Planaholic Android application, made by Team Bogoplan.
 
 A few resources to get you started if this is your first Flutter project:
 

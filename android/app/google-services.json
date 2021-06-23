@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:157576978006:android:b97e8f688c809f1437e5f7",
+        "mobilesdk_app_id": "1:157576978006:android:ae482f6a832692f537e5f7",
         "android_client_info": {
-          "package_name": "com.bogoplan.plannus"
+          "package_name": "com.bogoplan.planaholic"
         }
       },
       "oauth_client": [

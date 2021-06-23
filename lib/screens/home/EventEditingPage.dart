@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:plannus/models/Event.dart';
+import 'package:planaholic/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 class EventEditingPage extends StatefulWidget {
 

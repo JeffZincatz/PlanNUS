@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/home/achievements_elements/BadgesView.dart';
-import 'package:plannus/screens/home/achievements_elements/TotalActivitiesBadges.dart';
+import 'package:planaholic/screens/home/achievements_elements/BadgesView.dart';
+import 'package:planaholic/screens/home/achievements_elements/TotalActivitiesBadges.dart';
 
 class Achievements extends StatefulWidget {
 

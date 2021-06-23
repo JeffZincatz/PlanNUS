@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:plannus/models/Event.dart';
-import 'package:plannus/util/TimeUtil.dart';
-import 'package:plannus/util/StatsUtil.dart';
+import 'package:planaholic/models/Event.dart';
+import 'package:planaholic/util/TimeUtil.dart';
+import 'package:planaholic/util/StatsUtil.dart';
 
 class DbService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -419,7 +419,8 @@ class DbService {
   }
 
   Future reduceAttributeTo80Percent(String attribute) async {
-    int currentValue = (await getUserAttributes())[attribute];
+    Map attr = await getUserAttributes();
+    int currentValue = attr[attribute];
     await _setUserAttribute(attribute, (currentValue * 0.8).ceil());
   }
 
@@ -448,9 +449,7 @@ class DbService {
     try {
       return (await counts.get())["uncompleted"];
     } catch (error) {
-      await counts.set({
-        "uncompleted": 0
-      }, SetOptions(merge: true));
+      await counts.set({"uncompleted": 0}, SetOptions(merge: true));
       return getUncompletedCount();
     }
   }

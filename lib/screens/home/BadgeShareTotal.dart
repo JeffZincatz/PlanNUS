@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_social_content_share/flutter_social_content_share.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/util/PresetColors.dart';
 import 'package:social_share/social_share.dart';
 
 class BadgeShareTotal extends StatefulWidget {
@@ -109,8 +109,8 @@ class _BadgeShareTotalState extends State<BadgeShareTotal> {
                           onPressed: () {
                             SocialShare.shareTwitter(
                                 "Badge obtained: ${widget.desc} \n"
-                                    "I have done ${widget.no} ${activityOrActivities()} via PlanNUS",
-                                hashtags: ["PlanNUS", "BogoPlan", "GamifiedPlanner"],
+                                    "I have done ${widget.no} ${activityOrActivities()} via Planaholic",
+                                hashtags: ["Planaholic", "BogoPlan", "GamifiedPlanner"],
                                 url:"https://github.com/bernarduskrishna/PlanNUS-1");
                           },
                         ),
@@ -124,8 +124,8 @@ class _BadgeShareTotalState extends State<BadgeShareTotal> {
                                 type: ShareType.facebookWithoutImage,
                                 url: "https://github.com/bernarduskrishna/PlanNUS-1",
                                 quote: "Badge obtained: ${widget.desc} \n"
-                                    "I have done ${widget.no} ${activityOrActivities()} via PlanNUS \n"
-                                    "#PlanNUS #BogoPlan #GamifiedPlanner");
+                                    "I have done ${widget.no} ${activityOrActivities()} via Planaholic \n"
+                                    "#Planaholic #BogoPlan #GamifiedPlanner");
                           },
                         ),
                       ),

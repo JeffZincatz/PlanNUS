@@ -1,4 +1,4 @@
-import 'package:plannus/models/Event.dart';
+import 'package:planaholic/models/Event.dart';
 
 class TimeUtil {
   static Duration oneWeek = Duration(days: 7);

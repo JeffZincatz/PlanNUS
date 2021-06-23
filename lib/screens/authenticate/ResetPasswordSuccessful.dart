@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 class ResetPasswordSuccessful extends StatelessWidget {
 

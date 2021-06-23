@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:plannus/models/Event.dart';
-import 'package:plannus/services/DbService.dart';
+import 'package:planaholic/models/Event.dart';
+import 'package:planaholic/services/DbService.dart';
 import 'package:flutter_social_content_share/flutter_social_content_share.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/util/PresetColors.dart';
 import 'package:social_share/social_share.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -166,11 +166,11 @@ class _ActivityCompletedState extends State<ActivityCompleted> {
                           child: Image.asset("assets/social_media/twitter_logo.png"),
                           onPressed: () {
                             SocialShare.shareTwitter(
-                                "I just did an activity via PlanNUS. \n"
+                                "I just did an activity via Planaholic. \n"
                                     "Category: ${this.widget.event.category} \n"
                                     "Description: ${this.widget.event.description} \n"
                                     "Ended at ${widget.event.endTime.toString().substring(0, 16)}",
-                                hashtags: ["PlanNUS", "BogoPlan", "GamifiedPlanner"],
+                                hashtags: ["Planaholic", "BogoPlan", "GamifiedPlanner"],
                                 url:"https://github.com/bernarduskrishna/PlanNUS-1");
                           },
                         ),
@@ -183,11 +183,11 @@ class _ActivityCompletedState extends State<ActivityCompleted> {
                             FlutterSocialContentShare.share(
                                 type: ShareType.facebookWithoutImage,
                                 url: "https://github.com/bernarduskrishna/PlanNUS-1",
-                                quote: "I just did an activity via PlanNUS. \n"
+                                quote: "I just did an activity via Planaholic. \n"
                                     "Category: ${this.widget.event.category} \n"
                                     "Description: ${this.widget.event.description} \n"
                                     "Ended at ${widget.event.endTime.toString().substring(0, 16)} \n"
-                                    "#PlanNUS #BogoPlan #GamifiedPlanner");
+                                    "#Planaholic #BogoPlan #GamifiedPlanner");
                           },
                         ),
                       ),

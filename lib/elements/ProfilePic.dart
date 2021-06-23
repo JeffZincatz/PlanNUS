@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 class ProfilePic extends StatelessWidget {
   const ProfilePic({Key key, this.image, this.radius}) : super(key: key);

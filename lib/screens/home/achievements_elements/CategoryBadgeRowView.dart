@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/home/achievements_elements/IndividualBadge.dart';
+import 'package:planaholic/screens/home/achievements_elements/IndividualBadge.dart';
 
 class CategoryBadgeRowView extends StatefulWidget {
 

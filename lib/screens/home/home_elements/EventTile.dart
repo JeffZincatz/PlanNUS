@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:plannus/models/Event.dart';
-import 'package:plannus/screens/home/ActivityCompleted.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/screens/home/EditOrDelete.dart';
+import 'package:planaholic/models/Event.dart';
+import 'package:planaholic/screens/home/ActivityCompleted.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/screens/home/EditOrDelete.dart';
 
 class EventTile extends StatelessWidget {
 

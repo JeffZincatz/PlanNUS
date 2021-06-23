@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/home/Home.dart';
-import 'package:plannus/screens/authenticate/Authenticate.dart';
+import 'package:planaholic/screens/home/Home.dart';
+import 'package:planaholic/screens/authenticate/Authenticate.dart';
 import 'package:provider/provider.dart';
 import 'authenticate/Verifying.dart';
 import 'home/Navigation.dart';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/models/Event.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/models/Event.dart';
 import 'dart:math';
-import 'package:plannus/util/TimeUtil.dart';
+import 'package:planaholic/util/TimeUtil.dart';
 
 class Debug extends StatelessWidget {
   const Debug({Key key}) : super(key: key);

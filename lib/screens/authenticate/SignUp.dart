@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:plannus/elements/MyButtons.dart';
-import 'package:plannus/services/AuthService.dart';
-import 'package:plannus/elements/Loading.dart';
-import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/util/Validate.dart';
+import 'package:planaholic/elements/MyButtons.dart';
+import 'package:planaholic/services/AuthService.dart';
+import 'package:planaholic/elements/Loading.dart';
+import 'package:planaholic/util/PresetColors.dart';
+import 'package:planaholic/util/Validate.dart';
+
+import 'Authenticate.dart';
+import 'Verifying.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
@@ -137,8 +140,11 @@ class _SignUpState extends State<SignUp> {
                                 } else {
                                   User user = _auth.getCurrentUser();
                                   await user.sendEmailVerification().then((_) {
-                                    Navigator.pop(context);
                                     setState(() => error = "");
+                                    // Navigator.pop(context);
+                                    // Navigator.of(context).popUntil((route) => route.isFirst);
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Verifying()));
                                   });
                                 }
                               }

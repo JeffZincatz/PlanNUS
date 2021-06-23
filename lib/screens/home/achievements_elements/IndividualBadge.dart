@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plannus/services/DbService.dart';
-import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/screens/home/BadgeShare.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/util/PresetColors.dart';
+import 'package:planaholic/screens/home/BadgeShare.dart';
 
 class IndividualBadge extends StatefulWidget {
 

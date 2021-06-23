@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/authenticate/ResetPassword.dart';
-import 'package:plannus/util/PresetColors.dart';
-import 'package:plannus/services/AuthService.dart';
-import 'package:plannus/util/Validate.dart';
-import 'package:plannus/elements/Loading.dart';
-import 'package:plannus/elements/MyButtons.dart';
+import 'package:planaholic/screens/authenticate/ResetPassword.dart';
+import 'package:planaholic/util/PresetColors.dart';
+import 'package:planaholic/services/AuthService.dart';
+import 'package:planaholic/util/Validate.dart';
+import 'package:planaholic/elements/Loading.dart';
+import 'package:planaholic/elements/MyButtons.dart';
 
 import 'Verifying.dart';
 import 'ResetPassword.dart';
@@ -120,6 +120,7 @@ class _SignInState extends State<SignIn> {
                               loading = false;
                             });
                           } else {
+                            print("Sign in result:\n" + result.toString());
                             Navigator.pop(context);
                             setState(() => error = "");
                             if (_auth.getCurrentUser() != null && !_auth.getCurrentUser().emailVerified) {

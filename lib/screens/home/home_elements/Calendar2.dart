@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:provider/provider.dart';
-import 'package:plannus/models/Event.dart';
-import 'package:plannus/models/EventDataSource.dart';
-import 'package:plannus/screens/home/home_elements/TaskWidget.dart';
+import 'package:planaholic/models/Event.dart';
+import 'package:planaholic/models/EventDataSource.dart';
+import 'package:planaholic/screens/home/home_elements/TaskWidget.dart';
 
 class Calendar2 extends StatefulWidget {
 

@@ -1,4 +1,4 @@
-import 'package:plannus/models/Event.dart';
+import 'package:planaholic/models/Event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter/material.dart';
 

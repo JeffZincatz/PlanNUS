@@ -1,4 +1,4 @@
-import 'package:plannus/models/Event.dart';
+import 'package:planaholic/models/Event.dart';
 import 'TimeUtil.dart';
 import 'dart:math';
 

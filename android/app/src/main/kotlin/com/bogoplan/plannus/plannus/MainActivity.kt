@@ -1,4 +1,4 @@
-package com.bogoplan.plannus.plannus
+package com.bogoplan.planaholic
 
 import io.flutter.embedding.android.FlutterActivity
 

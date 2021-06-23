@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/screens/home/Debug.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/screens/home/Debug.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 class MyAppBar extends AppBar {
 
@@ -30,7 +30,7 @@ class MyAppBar extends AppBar {
       child: Text(
         // manually added spacing before title to center, due to debug button
         // TODO: remove temp spacing after removing debug button
-        "          " + "PlanNUS",
+        "          " + "Planaholic",
         style: TextStyle(
           fontFamily: "Lobster Two",
           fontWeight: FontWeight.bold,

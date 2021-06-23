@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:plannus/services/DbService.dart';
+import 'package:planaholic/services/DbService.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:plannus/util/PresetColors.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 /// activity count overview pie chart
 class PieChartOverview extends StatefulWidget {
