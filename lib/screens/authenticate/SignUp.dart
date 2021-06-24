@@ -5,6 +5,7 @@ import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/elements/Loading.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
+import 'package:planaholic/screens/authenticate/SignIn.dart';
 
 import 'Authenticate.dart';
 import 'Verifying.dart';
@@ -142,8 +143,8 @@ class _SignUpState extends State<SignUp> {
                                   await user.sendEmailVerification().then((_) {
                                     setState(() => error = "");
                                     // Navigator.pop(context);
-                                    // Navigator.of(context).popUntil((route) => route.isFirst);
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Authenticate()));
+                                    Navigator.of(context).popUntil((route) => route.isFirst);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => SignIn()));
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => Verifying()));
                                   });
                                 }
