@@ -57,10 +57,10 @@ class _ProfileState extends State<Profile> {
         // first check for 4 other attributes
         if (key != "Resolve" &&
             TimeUtil.isAtLeastThreeDaysApart(now, value.toDate())) {
-          print("\n\n----Profile----\n"+
-              "Function: checkInactivity\n" +
-              "lastCheckTime.forEach, key: " + key +
-              "\n\n");
+          // print("\n\n----Profile----\n"+
+          //     "Function: checkInactivity\n" +
+          //     "lastCheckTime.forEach, key: " + key +
+          //     "\n\n");
           await _db.reduceAttributeTo80Percent(key);
           setState(() {});
           _db.refreshLastCheckTime(key);

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 import 'package:planaholic/util/StatsUtil.dart';
+import 'dart:math';
 
 class DbService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -383,16 +384,16 @@ class DbService {
   Future getUserAttributes() async {
     try {
       Map temp = {
-        "Intelligence": 500, // Studies
-        "Vitality": 500, // Fitness
-        "Spirit": 500, // Arts
-        "Charm": 500, // Social
-        "Resolve": 500, // completed/uncompleted
+        "Intelligence": 50, // Studies
+        "Vitality": 50, // Fitness
+        "Spirit": 50, // Arts
+        "Charm": 50, // Social
+        "Resolve": 50, // completed/uncompleted
       };
 
       Map res = (await attr.get())["data"];
       res.forEach((key, value) {
-        temp[key] = value;
+        temp[key] = (value / 10).round();
       });
       return temp;
     } catch (error) {

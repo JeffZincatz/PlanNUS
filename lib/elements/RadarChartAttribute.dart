@@ -15,7 +15,7 @@ class RadarChartAttribute extends StatefulWidget {
 
 class _RadarChartAttributeState extends State<RadarChartAttribute> {
 
-  var ticks = List<int>.generate(10, (int index) => (index + 1) * 100);
+  var ticks = List<int>.generate(10, (int index) => (index + 1) * 10);
   var features = [
     "Charm",
     "Resolve",
@@ -32,11 +32,11 @@ class _RadarChartAttributeState extends State<RadarChartAttribute> {
       future: _db.getUserAttributes(),
       builder: (context, snapshot) {
         Map data = {
-              "Vitality": 500,
-              "Spirit": 500,
-              "Charm": 500,
-              "Resolve": 500,
-              "Intelligence": 500,
+              "Vitality": 50,
+              "Spirit": 50,
+              "Charm": 50,
+              "Resolve": 50,
+              "Intelligence": 50,
             };
         if (snapshot.hasData) {
           snapshot.data.forEach((key, value) {
