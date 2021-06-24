@@ -171,7 +171,7 @@ class _ActivityCompletedState extends State<ActivityCompleted> {
                                     "Description: ${this.widget.event.description} \n"
                                     "Ended at ${widget.event.endTime.toString().substring(0, 16)}",
                                 hashtags: ["Planaholic", "BogoPlan", "GamifiedPlanner"],
-                                url:"https://github.com/bernarduskrishna/PlanNUS-1");
+                                url:"https://github.com/bernarduskrishna/Planaholic");
                           },
                         ),
                       ),
@@ -182,7 +182,7 @@ class _ActivityCompletedState extends State<ActivityCompleted> {
                           onPressed: () {
                             FlutterSocialContentShare.share(
                                 type: ShareType.facebookWithoutImage,
-                                url: "https://github.com/bernarduskrishna/PlanNUS-1",
+                                url: "https://github.com/bernarduskrishna/Planaholic",
                                 quote: "I just did an activity via Planaholic. \n"
                                     "Category: ${this.widget.event.category} \n"
                                     "Description: ${this.widget.event.description} \n"
