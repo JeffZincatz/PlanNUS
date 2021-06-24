@@ -18,7 +18,7 @@ class StatsUtil {
   }
 
   // Attribute points added to each category for an event
-  // duration * diff * sqrt(14)
+  // round(duration * diff * sqrt(14))
   // add for each /4 if is Others category
   static Map<String, int> eventToAttributes(Event event) {
     String _catToAttr(String cat) {
@@ -36,12 +36,12 @@ class StatsUtil {
       }
     }
 
-    int points =
-        (TimeUtil.getEvenHours(event) * event.difficulty * sqrt(14)).round();
+    double points =
+        TimeUtil.getEvenHours(event) * event.difficulty * sqrt(14);
     if (event.completed) {
       String attr = _catToAttr(event.category);
       if (attr == "Others") {
-        int pointsForEach = points ~/ 4;
+        int pointsForEach = (points / 4).round();
         return {
           "Intelligence": pointsForEach,
           "Vitality": pointsForEach,
@@ -51,13 +51,13 @@ class StatsUtil {
         };
       } else {
         return {
-          attr: points,
-          "Resolve": points ~/ 4,
+          attr: points.round(),
+          "Resolve": (points / 4).round(),
         };
       }
     } else {
       return {
-        "Resolve": -points ~/ 2,
+        "Resolve": -(points / 2).round(),
       };
     }
   }
