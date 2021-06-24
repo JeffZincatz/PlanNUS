@@ -325,15 +325,14 @@ class _ProfileState extends State<Profile> {
                         child: PieChartOverview(),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
+                        padding: EdgeInsets.only(top: 30.0),
                         child: Text(
                           "Attributes",
                           style: TextStyle(color: Colors.black, fontSize: 18),
                         ),
                       ),
-                      SizedBox(
-                        width: screenWidth,
-                        height: screenWidth,
+                      Container(
+                        height: screenWidth * 0.8,
                         child: RadarChartAttribute(),
                       ),
                       FutureBuilder(
@@ -342,11 +341,11 @@ class _ProfileState extends State<Profile> {
                           Map data = snapshot.hasData
                               ? snapshot.data
                               : {
-                                  "Vitality": 500,
-                                  "Spirit": 500,
-                                  "Charm": 500,
-                                  "Resolve": 500,
-                                  "Intelligence": 500,
+                                  "Vitality": 50,
+                                  "Spirit": 50,
+                                  "Charm": 50,
+                                  "Resolve": 50,
+                                  "Intelligence": 50,
                                 };
                           return Table(
                             defaultVerticalAlignment:

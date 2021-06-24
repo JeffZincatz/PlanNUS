@@ -18,26 +18,29 @@ class _AchievementsState extends State<Achievements> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: ListView(
-        children: [
-          Text(
-            "Achievement Page",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 24,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: ListView(
+          children: [
+            Text(
+              "Achievement Page",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+              ),
             ),
-          ),
-          SizedBox(
-            width: screenWidth,
-            height: screenHeight * 1 / 7,
-            child: TotalActivitiesBadges(),
-          ),
-          SizedBox(
-            child: BadgesView(cat: cat),
-            width: screenWidth,
-            height: screenHeight * 5 / 7,
-          ),
-        ],
+            SizedBox(
+              width: screenWidth,
+              height: screenHeight * 1 / 7,
+              child: TotalActivitiesBadges(),
+            ),
+            SizedBox(
+              child: BadgesView(cat: cat),
+              width: screenWidth,
+              height: screenHeight * 5 / 7,
+            ),
+          ],
+        ),
       ),
     );
   }
