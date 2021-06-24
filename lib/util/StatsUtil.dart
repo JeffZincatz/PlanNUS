@@ -14,7 +14,7 @@ class StatsUtil {
   // EXP required for the next level
   // round(10 sqrt(1.5 x) - 2.5) * 10
   static int expToNextLevel(int currentLvl) {
-    return (10 * sqrt(1.5 * currentLvl + 1) - 2.5).round() * 10;
+    return (10 * sqrt(1.5 * (currentLvl + 1)) - 2.5).round() * 10;
   }
 
   // Attribute points added to each category for an event
