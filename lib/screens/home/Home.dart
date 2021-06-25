@@ -60,62 +60,60 @@ class _HomeState extends State<Home> {
             enablePullDown: true,
             controller: _refreshController,
             onRefresh: _onRefresh,
-            child: Padding(
+            child: ListView(
               padding: const EdgeInsets.fromLTRB(8, 0, 8, 18),
-              child: ListView(
-                children: [
-                  Calendar2(updateCurrentDate: updateCurrentDate),
-                  Divider(
-                    height: screenHeight / 20,
-                    thickness: 3.0,
-                    color: Colors.blue[100],
+              children: [
+                Calendar2(updateCurrentDate: updateCurrentDate),
+                Divider(
+                  height: screenHeight / 20,
+                  thickness: 3.0,
+                  color: Colors.blue[100],
+                ),
+                Text(
+                  "Upcoming Activities",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    "Upcoming Activities",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: UnfinishedEventList(),
+                ),
+                Text(
+                  "Have you done these activities?",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(
-                    height: 140,
-                    child: UnfinishedEventList(),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: MaybeFinishedEventList(),
+                ),
+                Text(
+                  "Completed Activities",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    "Have you done these activities?",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: CompletedEventList(),
+                ),
+                Text(
+                  "Uncompleted past activities",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  SizedBox(
-                    height: 140,
-                    child: MaybeFinishedEventList(),
-                  ),
-                  Text(
-                    "Completed Activities",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 140,
-                    child: CompletedEventList(),
-                  ),
-                  Text(
-                    "Uncompleted past activities",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 140,
-                    child: UncompletedPastEventList(),
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  height: 140,
+                  child: UncompletedPastEventList(),
+                ),
+              ],
             ),
           ),
           floatingActionButton: FloatingActionButton(
