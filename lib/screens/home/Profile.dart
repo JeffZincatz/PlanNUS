@@ -160,6 +160,7 @@ class _ProfileState extends State<Profile> {
                           width: screenWidth * 0.65,
                           // color: Colors.red,
                           child: TextFormField(
+                            key: ValueKey("nameField"),
                             initialValue: username,
                             style: TextStyle(
                               fontSize: 24,
@@ -194,6 +195,7 @@ class _ProfileState extends State<Profile> {
                       ? Row(
                           children: [
                             IconButton(
+                              key: ValueKey("finalised"),
                               icon: Icon(Icons.check),
                               onPressed: () async {
                                 await _db.updateUsername(newName);
@@ -214,6 +216,7 @@ class _ProfileState extends State<Profile> {
                           ],
                         )
                       : IconButton(
+                          key: ValueKey("changeNameIcon"),
                           icon: Icon(Icons.edit),
                           onPressed: () {
                             setState(() {

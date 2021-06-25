@@ -117,6 +117,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
+            key: ValueKey("adding_activity"),
             child: Icon(Icons.add, color: PresetColors.blue),
             backgroundColor: Colors.blue[100],
             onPressed: () {
