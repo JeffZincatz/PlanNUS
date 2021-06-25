@@ -109,6 +109,7 @@ class _SignInState extends State<SignIn> {
                     child: MyButtons.roundedBlue(
                       text: "Sign In",
                       onPressed: () async {
+                        _auth.signOut();
                         if (_formKey.currentState.validate()) {
                           setState(() => loading = true);
                           dynamic result = await _auth

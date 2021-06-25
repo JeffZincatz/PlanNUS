@@ -112,7 +112,7 @@ class _BadgeShareState extends State<BadgeShare> {
                                 "Badge obtained: ${widget.desc} \n"
                                     "I have done ${widget.no} ${activityOrActivities()} in ${widget.cat} category via Planaholic",
                                 hashtags: ["Planaholic", "BogoPlan", "GamifiedPlanner"],
-                                url:"https://github.com/bernarduskrishna/PlanNUS-1");
+                                url:"https://github.com/bernarduskrishna/Planaholic");
                           },
                         ),
                       ),
@@ -123,7 +123,7 @@ class _BadgeShareState extends State<BadgeShare> {
                           onPressed: () {
                             FlutterSocialContentShare.share(
                                 type: ShareType.facebookWithoutImage,
-                                url: "https://github.com/bernarduskrishna/PlanNUS-1",
+                                url: "https://github.com/bernarduskrishna/Planaholic",
                                 quote: "Badge obtained: ${widget.desc} \n"
                                     "I have done ${widget.no} ${activityOrActivities()} in ${widget.cat} category via Planaholic \n"
                                     "#Planaholic #BogoPlan #GamifiedPlanner");

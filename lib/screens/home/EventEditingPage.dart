@@ -56,7 +56,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
         if (submitted.description == "") {
           errorMessage = "Please add a description";
           setState(() {});
-        } else if (today(submitted.startTime) && submitted.startTime.compareTo(DateTime.now()) < 0) {
+        } else if (submitted.startTime.compareTo(DateTime.now()) < 0) {
           errorMessage = "Start Time cannot be in the past!";
           setState(() {});
         } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
