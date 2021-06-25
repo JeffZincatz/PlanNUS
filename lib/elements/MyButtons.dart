@@ -3,8 +3,9 @@ import 'package:planaholic/util/PresetColors.dart';
 
 class MyButtons {
   static TextButton roundedBlue(
-      {@required Function onPressed, @required String text}) {
+      {@required Function onPressed, @required String text, @required Key key}) {
     return TextButton(
+      key: key,
       onPressed: onPressed,
       child: Text(
         text,
@@ -25,8 +26,9 @@ class MyButtons {
   }
 
   static TextButton roundedWhite(
-      {@required Function onPressed, @required String text}) {
+      {@required Function onPressed, @required String text, @required Key key}) {
     return TextButton(
+      key: key,
       onPressed: onPressed,
       child: Text(
         text,
@@ -46,8 +48,9 @@ class MyButtons {
     );
   }
   static TextButton roundedRed(
-      {@required Function onPressed, @required String text}) {
+      {@required Function onPressed, @required String text, @required Key key}) {
     return TextButton(
+      key: key,
       onPressed: onPressed,
       child: Text(
         text,

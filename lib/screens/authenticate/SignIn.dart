@@ -68,6 +68,7 @@ class _SignInState extends State<SignIn> {
                     child: Column(
                       children: [
                         TextFormField(
+                          key: ValueKey("sign-in-email-form-field"),
                           decoration: InputDecoration(
                             icon: Icon(Icons.email),
                             hintText: 'Enter your email',
@@ -79,6 +80,7 @@ class _SignInState extends State<SignIn> {
                           validator: validator.validateEmail,
                         ),
                         TextFormField(
+                          key: ValueKey("sign-in-password-form-field"),
                           decoration: InputDecoration(
                             icon: Icon(Icons.lock),
                             hintText: 'Enter your password',
@@ -107,6 +109,7 @@ class _SignInState extends State<SignIn> {
                   Padding(
                     padding: const EdgeInsets.all(12),
                     child: MyButtons.roundedBlue(
+                      key: ValueKey("sign-in-confirm-button"),
                       text: "Sign In",
                       onPressed: () async {
                         _auth.signOut();

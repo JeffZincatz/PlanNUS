@@ -55,12 +55,14 @@ class _VerifyingState extends State<Verifying> {
               ),
             ),
             MyButtons.roundedBlue(
+              key: ValueKey("verifying-go-back-button"),
                 onPressed: () {
                   Navigator.pop(context);
                 },
                 text: "Go Back"
             ),
             TextButton(
+              key: ValueKey("verifying-resend-verification-email"),
               child: Text(
                 "Resend verification email"
               ),

@@ -73,6 +73,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         ),
                       ),
                       MyButtons.roundedBlue(
+                        key: ValueKey("reset-password-button"),
                         onPressed: () async {
                           if (_formKey.currentState.validate()) {
                             setState(() {

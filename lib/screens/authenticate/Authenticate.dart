@@ -44,6 +44,7 @@ class _AuthenticateState extends State<Authenticate> {
             Column(
               children: [
                 TextButton.icon(
+                  key: ValueKey("sign-in-button"),
                   onPressed: (){Navigator.pushNamed(context, '/signin');},
                   icon: Icon(
                     Icons.login_rounded,
@@ -65,6 +66,7 @@ class _AuthenticateState extends State<Authenticate> {
                 ),
                 SizedBox(height: 30,),
                 TextButton.icon(
+                  key: ValueKey("sign-up-button"),
                   onPressed: (){Navigator.pushNamed(context, '/signup');},
                   icon: Icon(
                     Icons.account_box,

@@ -446,6 +446,7 @@ class _ProfileState extends State<Profile> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           child: MyButtons.roundedRed(
+            key: ValueKey("sign-out-button"),
             text: "Sign Out",
             onPressed: () async {
               await _auth.signOut();

@@ -72,6 +72,7 @@ class _SignUpState extends State<SignUp> {
                         child: Column(
                           children: [
                             TextFormField(
+                              key: ValueKey("sign-up-username"),
                               decoration: InputDecoration(
                                 icon: Icon(Icons.person),
                                 hintText: 'Enter your username',
@@ -83,6 +84,7 @@ class _SignUpState extends State<SignUp> {
                               },
                             ),
                             TextFormField(
+                              key: ValueKey("sign-up-email"),
                               decoration: InputDecoration(
                                 icon: Icon(Icons.email),
                                 hintText: 'Enter your email',
@@ -94,6 +96,7 @@ class _SignUpState extends State<SignUp> {
                               },
                             ),
                             TextFormField(
+                              key: ValueKey("sign-up-password"),
                               decoration: InputDecoration(
                                 icon: Icon(Icons.lock),
                                 hintText: 'Enter your password',
@@ -107,6 +110,7 @@ class _SignUpState extends State<SignUp> {
                               },
                             ),
                             TextFormField(
+                              key: ValueKey("sign-up-repeat-password"),
                               decoration: InputDecoration(
                                 icon: Icon(Icons.lock),
                                 hintText: 'Repeat your password',
@@ -126,6 +130,7 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: MyButtons.roundedBlue(
+                          key: ValueKey("sign-up-confirm-button"),
                             onPressed: () async {
                               if (_formKey.currentState.validate()) {
                                 setState(() => loading = true);
