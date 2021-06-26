@@ -105,6 +105,7 @@ class _BadgeShareTotalState extends State<BadgeShareTotal> {
                       Expanded(
                         flex: 1,
                         child: TextButton(
+                          key: ValueKey("badgeShareTotalTwitter"),
                           child: Image.asset("assets/social_media/twitter_logo.png"),
                           onPressed: () {
                             SocialShare.shareTwitter(

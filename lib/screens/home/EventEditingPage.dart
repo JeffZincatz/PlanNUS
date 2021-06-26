@@ -144,6 +144,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
             ),
           ),
           TextFormField(
+            key: ValueKey("descField"),
             decoration: InputDecoration(
               hintText: 'Enter description',
               labelText: 'Description',
@@ -221,6 +222,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
           StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return OutlinedButton(
+                key: ValueKey("startTimePicker"),
                 onPressed: () {
                   DatePicker.showTimePicker(
                     context,
@@ -283,6 +285,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
           StatefulBuilder(
             builder: (BuildContext context, StateSetter setState) {
               return OutlinedButton(
+                key: ValueKey("endTimePicker"),
                 onPressed: () {
                   DatePicker.showTimePicker(
                     context,

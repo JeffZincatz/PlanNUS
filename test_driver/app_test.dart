@@ -198,5 +198,59 @@ void main() {
         await driver.waitFor(signInButton);
       });
     });
+
+    group("Functionalities", () {
+      // Authenticate first
+      final signInButton = find.byValueKey("sign-in-button");
+
+      test("Change username", () async {
+        // go to SignIn page
+        await driver.tap(signInButton);
+
+        // find widgets
+        final emailField = find.byValueKey("sign-in-email-form-field");
+        final passwordField = find.byValueKey("sign-in-password-form-field");
+        final signInConfirmButton = find.byValueKey("sign-in-confirm-button");
+
+        // enter email
+        await driver.tap(emailField);
+        await driver.enterText("jeffzincatz@gmail.com");
+
+        // enter password
+        await driver.tap(passwordField);
+        await driver.enterText("Test1234.");
+
+        // confirm sign in
+        await driver.tap(signInConfirmButton);
+
+        // await to go to home screen
+        await driver.waitFor(find.text("Upcoming Activities"));
+
+        // go to profile page
+        final profilePage = find.text("My Profile");
+        await driver.tap(profilePage);
+
+        final change_name = find.byValueKey("changeNameIcon");
+        await driver.tap(change_name);
+
+        final field = find.byValueKey("nameField");
+        await driver.tap(field);
+
+        await driver.enterText("JeffZincatzEdited");
+        final finalised = find.byValueKey("finalised");
+
+        await driver.tap(finalised);
+
+        await driver.tap(find.text("Home"));
+      });
+
+      test("Sharing", () async {
+        await driver.tap(find.text("Achievements"));
+        await driver.tap(find.text("Get started"));
+
+        await driver.tap(find.byValueKey("badgeShareTotalTwitter"));
+      });
+
+    });
   });
 }

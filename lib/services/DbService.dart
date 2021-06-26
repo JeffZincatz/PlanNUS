@@ -145,6 +145,7 @@ class DbService {
         completed: true,
         difficulty: event.difficulty);
     Map added = StatsUtil.eventToAttributes(eventTemp);
+    // okay
     var data = await getUserAttributes();
     added.forEach((key, value) async {
       int currValue = data[key];
@@ -392,10 +393,10 @@ class DbService {
       };
 
       Map res = (await attr.get())["data"];
-      res.forEach((key, value) {
-        temp[key] = (value / 10).round();
-      });
-      return temp;
+      // res.forEach((key, value) {
+      //   temp[key] = (value / 10).round();
+      // });
+      return res;
     } catch (error) {
       await initAttributes();
       return getUserAttributes();

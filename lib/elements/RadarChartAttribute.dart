@@ -40,7 +40,7 @@ class _RadarChartAttributeState extends State<RadarChartAttribute> {
             };
         if (snapshot.hasData) {
           snapshot.data.forEach((key, value) {
-            data[key] = value;
+            data[key] = (value / 10).round();
           });
         }
 
