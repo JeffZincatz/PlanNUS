@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:planaholic/screens/home/Debug.dart';
+// import 'package:planaholic/screens/home/Debug.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
 class MyAppBar extends AppBar {
@@ -7,30 +7,32 @@ class MyAppBar extends AppBar {
   MyAppBar(context) : super(
     backgroundColor: PresetColors.blueAccent,
     elevation: 10,
-    actions: [
-      TextButton(
-        onPressed: () {
-          showModalBottomSheet(
-            context: context,
-            builder: ((builder) => Debug()),
-          );
-        },
-        child: Row(
-          children: [
-            Icon(Icons.bug_report_outlined),
-            Text("Debug"),
-          ],
-        ),
-        style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all(Colors.white),
-        ),
-      ),
-    ],
+    // Debug Button
+    // actions: [
+    //   TextButton(
+    //     onPressed: () {
+    //       showModalBottomSheet(
+    //         context: context,
+    //         builder: ((builder) => Debug()),
+    //       );
+    //     },
+    //     child: Row(
+    //       children: [
+    //         Icon(Icons.bug_report_outlined),
+    //         Text("Debug"),
+    //       ],
+    //     ),
+    //     style: ButtonStyle(
+    //       foregroundColor: MaterialStateProperty.all(Colors.white),
+    //     ),
+    //   ),
+    // ],
     title: Center(
       child: Text(
         // manually added spacing before title to center, due to debug button
-        // TODO: remove temp spacing after removing debug button
-        "          " + "Planaholic",
+        // remove temp spacing after removing debug button
+        // "          " + "Planaholic",
+        "Planaholic",
         style: TextStyle(
           fontFamily: "Lobster Two",
           fontWeight: FontWeight.bold,
