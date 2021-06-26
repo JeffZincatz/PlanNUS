@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 import 'package:planaholic/util/StatsUtil.dart';
-import 'dart:math';
 
 class DbService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:planaholic/models/EventDataSource.dart';

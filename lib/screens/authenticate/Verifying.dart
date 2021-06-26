@@ -4,9 +4,6 @@ import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/services/AuthService.dart';
 
-
-import '../Wrapper.dart';
-
 class Verifying extends StatefulWidget {
   const Verifying({Key key}) : super(key: key);
 

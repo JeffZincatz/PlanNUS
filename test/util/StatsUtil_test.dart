@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'dart:math';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/StatsUtil.dart';
 

@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:planaholic/screens/authenticate/SignIn.dart';
 import 'package:planaholic/screens/authenticate/SignUp.dart';
-import 'package:planaholic/screens/authenticate/Verifying.dart';
 import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/screens/Wrapper.dart';
 import 'package:provider/provider.dart';

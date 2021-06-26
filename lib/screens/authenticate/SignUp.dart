@@ -6,9 +6,7 @@ import 'package:planaholic/elements/Loading.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
 import 'package:planaholic/screens/authenticate/SignIn.dart';
-
-import 'Authenticate.dart';
-import 'Verifying.dart';
+import 'package:planaholic/screens/authenticate/Verifying.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);

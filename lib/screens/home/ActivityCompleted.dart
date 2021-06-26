@@ -1,12 +1,9 @@
-import 'dart:math';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:social_share/social_share.dart';
-import 'package:image_picker/image_picker.dart';
 
 class ActivityCompleted extends StatefulWidget {
   final Event event;

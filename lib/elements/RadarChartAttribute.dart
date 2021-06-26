@@ -1,8 +1,5 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
-// import 'package:fl_chart/fl_chart.dart';
 import 'package:planaholic/services/DbService.dart';
-import 'package:planaholic/util/PresetColors.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
 
 /// weekly overview bar chart
