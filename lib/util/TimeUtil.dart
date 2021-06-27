@@ -16,11 +16,11 @@ class TimeUtil {
 
   /// Used to reset weekly overview
   static bool isAtLeastOneWeekApart(DateTime t1, DateTime t2) {
-    return t1.difference(t2).abs().compareTo(oneWeek) == 1;
+    return t1.difference(t2).abs().compareTo(oneWeek) > 0;
   }
 
   /// Used to deduct attributes for inactivity
   static bool isAtLeastThreeDaysApart(DateTime t1, DateTime t2) {
-    return t1.difference(t2).abs().compareTo(threeDays) == 1;
+    return t1.difference(t2).abs().compareTo(threeDays) > 0;
   }
 }

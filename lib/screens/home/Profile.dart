@@ -355,7 +355,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    data["Intelligence"].toString(),
+                                    (data["Intelligence"]/10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -371,7 +371,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    data["Vitality"].toString(),
+                                  (data["Vitality"]/10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -387,7 +387,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    data["Spirit"].toString(),
+                                    (data["Spirit"]/10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -403,7 +403,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    data["Charm"].toString(),
+                                  (data["Charm"]/10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -419,7 +419,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    data["Resolve"].toString(),
+                                  (data["Resolve"]/10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
