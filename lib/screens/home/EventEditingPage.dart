@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,6 +6,8 @@ import 'package:planaholic/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/util/PresetColors.dart';
+import 'package:planaholic/services/NotifService.dart';
+import 'package:planaholic/services/DbNotifService.dart';
 
 class EventEditingPage extends StatefulWidget {
 
@@ -35,44 +38,69 @@ class _EventEditingPageState extends State<EventEditingPage> {
 
   List<Widget> buildEditingActions() {
     return [ElevatedButton.icon(
-      onPressed: () async {
-        // save data to firestore
-        Event submitted = Event(
-          completed: false,
-          passed: false,
-          category: dropdownValue,
-          description: description,
-          startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
-              int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
-              int.parse(startDate.substring(0, startDate.indexOf('/'))),
-              int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-          endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
-              int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
-              int.parse(endDate.substring(0, endDate.indexOf('/'))),
-              int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
-          difficulty: difficulty,
-        );
+        onPressed: () async {
+          // save data to firestore
+          Event submitted = Event(
+            completed: false,
+            passed: false,
+            category: dropdownValue,
+            description: description,
+            startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+                int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+                int.parse(startDate.substring(0, startDate.indexOf('/'))),
+                int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
+            endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
+                int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+                int.parse(endDate.substring(0, endDate.indexOf('/'))),
+                int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
+            difficulty: difficulty,
+          );
 
-        if (submitted.description == "") {
-          errorMessage = "Please add a description";
-          setState(() {});
-        } else if (submitted.startTime.compareTo(DateTime.now()) < 0) {
-          errorMessage = "Start Time cannot be in the past!";
-          setState(() {});
-        } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
-          errorMessage = "End Time has to be after Start Time";
-          setState(() {});
-        } else {
-          await DbService().addNewEvent(submitted);
-          Navigator.pop(context);
-        }
-      },
-      icon: Icon(Icons.done),
-      label: Text("SAVE"),
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(PresetColors.blueAccent),
-      ),
-    )];
+          if (submitted.description == "") {
+            errorMessage = "Please add a description";
+            setState(() {});
+          } else if (submitted.startTime.compareTo(DateTime.now()) < 0) {
+            errorMessage = "Start Time cannot be in the past!";
+            setState(() {});
+          } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
+            errorMessage = "End Time has to be after Start Time";
+            setState(() {});
+          } else {
+            DocumentReference docRef = await DbService().addNewEvent(submitted);
+            DbService().editEvent2(docRef.id,
+                Event(
+                  completed: false,
+                  passed: false,
+                  category: dropdownValue,
+                  description: description,
+                  id: docRef.id,
+                  startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+                      int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+                      int.parse(startDate.substring(0, startDate.indexOf('/'))),
+                      int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
+                  endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
+                      int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+                      int.parse(endDate.substring(0, endDate.indexOf('/'))),
+                      int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
+                  difficulty: difficulty,
+                )
+            );
+            Navigator.pop(context);
+            List<dynamic> lsInit = await DbNotifService().getAvailable();
+            List<int> ls = lsInit.cast<int>();
+            int notifId = ls[0];
+            ls.removeAt(0);
+            await DbNotifService().updateAvailable(ls);
+            await DbNotifService().addToTaken(notifId, docRef.id);
+            await NotifService.notifyScheduled(submitted, notifId);
+          }
+        },
+        icon: Icon(Icons.done),
+        label: Text("SAVE"),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(PresetColors.blueAccent),
+        ),
+      )];
   }
 
   bool sameDay(DateTime first, DateTime second) {

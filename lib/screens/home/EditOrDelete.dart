@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:planaholic/services/DbNotifService.dart';
 import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/services/NotifService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
 class EditOrDelete extends StatefulWidget {
@@ -53,6 +55,7 @@ class _EditOrDelete extends State<EditOrDelete> {
           completed: false,
           passed: false,
           category: dropdownValue,
+          id: widget.event.id,
           description: description,
           startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
               int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
@@ -73,6 +76,8 @@ class _EditOrDelete extends State<EditOrDelete> {
           setState(() {});
         } else {
           await DbService().editEvent(widget.event, submitted);
+          int id = await DbNotifService().findIndex(widget.event.id);
+          await NotifService.changeSchedule(id, submitted);
           Navigator.pop(context);
         }
       },
@@ -115,6 +120,13 @@ class _EditOrDelete extends State<EditOrDelete> {
                     children: [
                       IconButton(icon: Icon(Icons.done), onPressed: () async {
                         await DbService().delete(widget.event);
+                        int notifId = await DbNotifService().findIndex(widget.event.id);
+                        NotifService.deleteSchedule(notifId);
+                        DbNotifService().removeFromTaken(widget.event.id);
+                        List<dynamic> lsInit = await DbNotifService().getAvailable();
+                        List<int> ls = lsInit.cast<int>();
+                        ls.add(notifId);
+                        DbNotifService().updateAvailable(ls);
                         Navigator.of(context).popUntil((route) => route.isFirst);
                       }),
                       IconButton(icon: Icon(Icons.close), onPressed: () {
