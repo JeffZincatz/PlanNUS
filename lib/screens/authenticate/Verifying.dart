@@ -14,65 +14,66 @@ class Verifying extends StatefulWidget {
 class _VerifyingState extends State<Verifying> {
   final AuthService _auth = new AuthService();
 
-  String error = "";
-
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(backgroundColor: PresetColors.blueAccent),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.thumb_up_alt_outlined,
-              color: PresetColors.blueAccent,
-              size: 72,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              "Almost there!\nGo check your email and verify before you log in!",
-              style: TextStyle(
-                fontSize: 36,
+      body: ListView(
+        children: [Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(
+                height: screenHeight * 0.025,
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Text(
-              error,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.red,
+              Icon(
+                Icons.thumb_up_alt_outlined,
+                color: PresetColors.blueAccent,
+                size: screenHeight * 0.12,
               ),
-            ),
-            MyButtons.roundedBlue(
-              key: ValueKey("verifying-go-back-button"),
-                onPressed: () {
-                  Navigator.pop(context);
+              SizedBox(
+                height: screenHeight * 0.1,
+              ),
+              Text(
+                "Almost there!\nGo check your email and verify before you log in!",
+                style: TextStyle(
+                  fontSize: screenHeight * 0.055,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: screenHeight * 0.1,
+              ),
+              MyButtons.roundedBlue(
+                key: ValueKey("verifying-go-back-button"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: "Go Back"
+              ),
+              SizedBox(
+                height: screenHeight * 0.03,
+              ),
+              TextButton(
+                key: ValueKey("verifying-resend-verification-email"),
+                child: Text(
+                  "Resend verification email"
+                ),
+                onPressed: () async {
+                  User user = _auth.getCurrentUser();
+                  await user.sendEmailVerification().then((_) {
+                    Navigator.pop(context);
+                    // setState(() => error = "");
+                  });
                 },
-                text: "Go Back"
-            ),
-            TextButton(
-              key: ValueKey("verifying-resend-verification-email"),
-              child: Text(
-                "Resend verification email"
               ),
-              onPressed: () async {
-                User user = _auth.getCurrentUser();
-                await user.sendEmailVerification().then((_) {
-                  Navigator.pop(context);
-                  // setState(() => error = "");
-                });
-              },
-            ),
-          ],
-        ),
+            ],
+          ),
+        )],
       ),
     );
   }
