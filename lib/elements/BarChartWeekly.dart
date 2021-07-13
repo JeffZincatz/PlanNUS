@@ -17,6 +17,8 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return AspectRatio(
       aspectRatio: 1,
       child: FutureBuilder(
@@ -56,9 +58,9 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                 show: true,
                 bottomTitles: SideTitles(
                   showTitles: true,
-                  getTextStyles: (value) => const TextStyle(
+                  getTextStyles: (value) => TextStyle(
                     color: Colors.black,
-                    fontSize: 12,
+                    fontSize: screenWidth / 38,
                   ),
                   // margin: 16,
                   getTitles: (double value) {
@@ -72,9 +74,9 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                       case 4:
                         return 'Social';
                       case 5:
-                        return 'Others ';
+                        return 'Others';
                       case 6:
-                        return '  Uncompleted';
+                        return 'Uncompleted';
                       default:
                         return '';
                     }
