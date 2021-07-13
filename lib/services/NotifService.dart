@@ -67,7 +67,7 @@ class NotifService {
         UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  static void changeSchedule(int id, Event event) async {
+  static Future<void> changeSchedule(int id, Event event) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin.cancel(id);
