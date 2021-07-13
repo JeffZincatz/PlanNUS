@@ -13,6 +13,8 @@ class _AuthenticateState extends State<Authenticate> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: PresetColors.background,
       body: Padding(
@@ -26,18 +28,22 @@ class _AuthenticateState extends State<Authenticate> {
                 children: [
                   Image.asset(
                     "assets/images/notebook_logo.png",
-                    scale: 16,
+                    width: screenWidth * 0.15,
                   ),
-                  Text(
-                    "Planaholic",
-                    style: TextStyle(
-                      fontFamily: "Lobster Two",
-                      fontSize: 54,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1,
-                    ),
+                  Image.asset(
+                    "assets/images/Planaholic logo.png",
+                    width: screenWidth * 0.7,
                   ),
+                  // Text(
+                  //   "Planaholic",
+                  //   style: TextStyle(
+                  //     fontFamily: "Lobster Two",
+                  //     fontSize: 54,
+                  //     fontStyle: FontStyle.italic,
+                  //     fontWeight: FontWeight.bold,
+                  //     letterSpacing: 1,
+                  //   ),
+                  // ),
                 ],
               ),
             ),
