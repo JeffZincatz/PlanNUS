@@ -24,9 +24,13 @@ class _SettingsState extends State<Settings> {
     DbService _db = new DbService();
 
     // Text field changes
+    // change password:
     String passwordOld = "";
     String password_1 = "";
     String password_2 = "";
+    // delete account:
+    String passwordDelete_1 = "";
+    String passwordDelete_2 = "";
 
     return Scaffold(
       body: ListView(
@@ -207,6 +211,186 @@ class _SettingsState extends State<Settings> {
                                     Navigator.of(context).pop();
                                   },
                                   child: Text("Cancel")),
+                            ],
+                          );
+                        });
+                  }),
+              buildSettingOptions(
+                  context: context,
+                  title: "Delete account",
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(
+                              "WARNING",
+                              style: TextStyle(
+                                color: Colors.red[700],
+                              ),
+                            ),
+                            content: Text(
+                              "Are you sure you want to delete your account? All of your user information will be deleted.\n\nThis process cannot be reverted.",
+                              style: TextStyle(fontSize: screenHeight * 0.03),
+                            ),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                            title: Text("Enter Password"),
+                                            scrollable: true,
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Form(
+                                                  key: _formKey,
+                                                  child: Column(
+                                                    children: [
+                                                      TextFormField(
+                                                        key: ValueKey(
+                                                            "delete-password"),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          icon:
+                                                              Icon(Icons.lock),
+                                                          hintText:
+                                                              'Enter your password',
+                                                          labelText: 'Password',
+                                                          errorMaxLines: 3,
+                                                        ),
+                                                        validator: Validate()
+                                                            .validatePassword,
+                                                        obscureText: true,
+                                                        onChanged: (value) {
+                                                          setState(() =>
+                                                              passwordDelete_1 =
+                                                                  value);
+                                                        },
+                                                      ),
+                                                      TextFormField(
+                                                        key: ValueKey(
+                                                            "delete-repeat-password"),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          icon:
+                                                              Icon(Icons.lock),
+                                                          hintText:
+                                                              'Repeat your password',
+                                                          labelText:
+                                                              'Repeat Password',
+                                                        ),
+                                                        obscureText: true,
+                                                        onChanged: (value) {
+                                                          setState(() =>
+                                                              passwordDelete_2 =
+                                                                  value);
+                                                        },
+                                                        validator: (value) => value !=
+                                                                passwordDelete_1
+                                                            ? "Passwords do not match"
+                                                            : null,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                  key: ValueKey(
+                                                      "confirm-delete-account-button"),
+                                                  onPressed: () async {
+                                                    print("passwordDelete_1: " +
+                                                        passwordDelete_1 +
+                                                        "\npasswordDelete_2: " +
+                                                        passwordDelete_2);
+
+                                                    if (_formKey.currentState
+                                                        .validate()) {
+                                                      dynamic result = await _auth
+                                                          .signInWithEmailAndPassword(
+                                                              await _db
+                                                                  .getEmail(),
+                                                              passwordDelete_1);
+
+                                                      print(
+                                                          "Delete Account Sign In Result:\n" +
+                                                              result
+                                                                  .toString());
+
+                                                      if (result != null) {
+                                                        // delete account here!
+                                                        await _db
+                                                            .deleteUserData()
+                                                            .then((_) async {
+                                                          // This line would actually delete user auth! Use with care.
+                                                          // await _auth
+                                                          //     .deleteUser();
+
+                                                          Navigator.pop(
+                                                              context);
+                                                          showDialog(
+                                                            context: context,
+                                                            builder: (context) {
+                                                              return AlertDialog(
+                                                                title: Text("Account deleted."),
+                                                                content: Text(
+                                                                    "Your account has been deleted successfully.\nThank you for using Planaholic!"),
+                                                                actions: [
+                                                                  TextButton(
+                                                                      child: Text(
+                                                                          "Confirm"),
+                                                                      onPressed: () => Navigator.of(
+                                                                              context)
+                                                                          .popUntil((route) =>
+                                                                              route.isFirst)),
+                                                                ],
+                                                              );
+                                                            },
+                                                          );
+                                                        });
+                                                      } else {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                  "Failed to delete account."),
+                                                              content: Text(
+                                                                  "Your password could be incorrect."),
+                                                              actions: [
+                                                                TextButton(
+                                                                  child: Text(
+                                                                      "Ok"),
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context),
+                                                                ),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      }
+                                                    }
+                                                  },
+                                                  child: Text("Confirm")),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("Cancel")),
+                                            ],
+                                          );
+                                        });
+                                  },
+                                  child: Text("Confirm")),
+                              MyButtons.roundedRed(
+                                  onPressed: () => Navigator.pop(context),
+                                  text: "Cancel",
+                                  key: ValueKey("cancel-delete-account")),
                             ],
                           );
                         });

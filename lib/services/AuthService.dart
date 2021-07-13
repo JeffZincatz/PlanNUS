@@ -80,4 +80,11 @@ class AuthService {
   Future<void> changePassword({String password}) async {
     return _auth.currentUser.updatePassword(password);
   }
+
+  /// Permanently remove current user from Firebase auth.
+  /// Requires recent sign in.
+  /// Use with care.
+  Future deleteUser() async {
+    return _auth.currentUser.delete();
+  }
 }

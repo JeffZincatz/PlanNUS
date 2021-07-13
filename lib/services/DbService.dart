@@ -505,6 +505,20 @@ class DbService {
     });
   }
 
+  /// Pseudo-remove current user from Firebase auth.
+  Future<void> deleteUserData() async {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .set({"deleted": true}, SetOptions(merge: true));
+
+    // // Below uses true delete. Use with care.
+    // return FirebaseFirestore.instance
+    //     .collection("users")
+    //     .doc(FirebaseAuth.instance.currentUser.uid)
+    //     .delete();
+  }
+
   /*
   Below are some debugging functions. They should not be used in any feature implementations.
   They should be okay to be removed in the end.
