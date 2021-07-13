@@ -74,4 +74,10 @@ class AuthService {
   Future<void> sendPasswordResetEmail({String email}) async {
     return await _auth.sendPasswordResetEmail(email: email);
   }
+
+  /// change user password.
+  /// Note that this function does not validate for strong password.
+  Future<void> changePassword({String password}) async {
+    return _auth.currentUser.updatePassword(password);
+  }
 }
