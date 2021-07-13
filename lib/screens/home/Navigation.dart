@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planaholic/elements/MyAppBar.dart';
 import 'package:planaholic/screens/home/Achievements.dart';
 import 'package:planaholic/screens/home/Home.dart';
+import 'package:planaholic/screens/home/Settings.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
 import 'Profile.dart';
@@ -15,12 +16,13 @@ class Navigation extends StatefulWidget {
 
 class _NavigationState extends State<Navigation> {
 
-  int _selectedIndex = 1;
+  int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
-    Profile(),
     Home(),
+    Profile(),
     Achievements(),
+    Settings(),
   ];
 
   void _onItemTapped(int index) {
@@ -47,22 +49,27 @@ class _NavigationState extends State<Navigation> {
           ],
         ),
         child: BottomNavigationBar(
-          backgroundColor: PresetColors.background,
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'My Profile',
-            ),
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
             BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'My Profile',
+            ),
+            BottomNavigationBarItem(
               icon: Icon(Icons.stars),
               label: 'Achievements',
             ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
           ],
           currentIndex: _selectedIndex,
+          backgroundColor: PresetColors.background,
+          unselectedItemColor: Colors.grey,
           selectedItemColor: PresetColors.blue,
           onTap: _onItemTapped,
           iconSize: 30,
