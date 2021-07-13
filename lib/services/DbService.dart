@@ -203,8 +203,22 @@ class DbService {
       "description": change.description,
       "startTime": change.startTime,
       "endTime": change.endTime,
+      "id": change.id,
       "completed": old.completed,
       "passed": old.passed,
+      "difficulty": change.difficulty,
+    });
+  }
+
+  Future editEvent2(String id, Event change) async {
+    return await events.doc(id).set({
+      "category": change.category,
+      "description": change.description,
+      "startTime": change.startTime,
+      "id": change.id,
+      "endTime": change.endTime,
+      "completed": change.completed,
+      "passed": change.passed,
       "difficulty": change.difficulty,
     });
   }

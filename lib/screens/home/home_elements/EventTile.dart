@@ -4,6 +4,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/screens/home/ActivityCompleted.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/screens/home/EditOrDelete.dart';
+import 'package:planaholic/services/NotifService.dart';
 
 class EventTile extends StatelessWidget {
 

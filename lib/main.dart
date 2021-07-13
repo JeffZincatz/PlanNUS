@@ -7,6 +7,7 @@ import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/screens/Wrapper.dart';
 import 'package:provider/provider.dart';
 import 'screens/home/Home.dart';
+import 'services/NotifService.dart';
 
 
 void main() async {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    NotifService.initialise(context);
     return MaterialApp(
         home: StreamProvider<User>.value(
           value: AuthService().user,
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
           '/signin': (context) => SignIn(),
           '/signup': (context) => SignUp(),
           '/home': (context) => Home(),
+          '/wrapper': (context) => Wrapper(),
         }
     );
   }

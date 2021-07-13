@@ -11,6 +11,8 @@ import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:planaholic/services/NotifService.dart';
+import 'package:planaholic/services/DbNotifService.dart';
 
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
@@ -31,6 +33,8 @@ class _HomeState extends State<Home> {
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   void _onRefresh() async{
+    // DbNotifService().initialise();
+    // DbNotifService().getAvailable();
     // monitor network fetch
     await Future.delayed(Duration(milliseconds: 1000));
     setState(() {});

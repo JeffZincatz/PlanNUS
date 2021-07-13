@@ -25,7 +25,7 @@ class _AuthenticateState extends State<Authenticate> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/notebook-logo.png",
+                    "assets/images/notebook_logo.png",
                     scale: 16,
                   ),
                   Text(
