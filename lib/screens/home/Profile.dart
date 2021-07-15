@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/ProfilePic.dart';
 import 'package:planaholic/elements/PieCharOverview.dart';
@@ -23,11 +23,6 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   DbService _db = new DbService();
   AuthService _auth = new AuthService();
-  FirebaseStorage _storage = FirebaseStorage.instance;
-
-  // change profile pic
-  PickedFile _imageFile;
-  final ImagePicker _picker = ImagePicker();
 
   // edit username button
   bool isEditing = false;
@@ -316,7 +311,6 @@ class _ProfileState extends State<Profile> {
                           child: BarChartWeekly(),
                         ),
                       ),
-
                       Padding(
                         padding: EdgeInsets.only(top: 30.0),
                         child: Text(
@@ -355,7 +349,9 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    (data["Intelligence"]/10).round().toString(),
+                                    (data["Intelligence"] / 10)
+                                        .round()
+                                        .toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -371,7 +367,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                  (data["Vitality"]/10).round().toString(),
+                                    (data["Vitality"] / 10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -387,7 +383,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                    (data["Spirit"]/10).round().toString(),
+                                    (data["Spirit"] / 10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -403,7 +399,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                  (data["Charm"]/10).round().toString(),
+                                    (data["Charm"] / 10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -419,7 +415,7 @@ class _ProfileState extends State<Profile> {
                                     ),
                                   ),
                                   Text(
-                                  (data["Resolve"]/10).round().toString(),
+                                    (data["Resolve"] / 10).round().toString(),
                                     textAlign: TextAlign.center,
                                   )
                                 ],
@@ -493,8 +489,13 @@ class _ProfileState extends State<Profile> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    takePhoto(ImageSource.camera);
+                  onPressed: () async {
+                    PickedFile pickedImage = await pickPhoto(ImageSource.camera);
+                    File croppedImage = await cropPhoto(pickedImage);
+                    _db.uploadProfilePic(croppedImage).then((_) {
+                      setState(() {});
+                      Navigator.pop(context);
+                    });
                   },
                 ),
                 TextButton(
@@ -507,8 +508,13 @@ class _ProfileState extends State<Profile> {
                       ),
                     ],
                   ),
-                  onPressed: () {
-                    takePhoto(ImageSource.gallery);
+                  onPressed: () async {
+                    PickedFile pickedImage = await pickPhoto(ImageSource.gallery);
+                    File croppedImage = await cropPhoto(pickedImage);
+                    _db.uploadProfilePic(croppedImage).then((_) {
+                      setState(() {});
+                      Navigator.pop(context);
+                    });
                   },
                 ),
               ])
@@ -517,31 +523,27 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    try {
-      final pickedFile = await _picker.getImage(
-        source: source,
-        maxHeight: 200, // limit pic size to 200*200
-        maxWidth: 200,
-      );
-      setState(() {
-        _imageFile = pickedFile;
-      });
+  Future<PickedFile> pickPhoto(ImageSource source) async {
+    final PickedFile pickedFile = await ImagePicker().getImage(
+      source: source,
+    );
 
-      // save image to storage
-      File image = File(_imageFile.path);
-      String imagePath = "profilePics/" + _auth.getCurrentUser().uid + ".jpg";
-      await _storage.ref(imagePath).putFile(image);
+    return pickedFile;
+  }
 
-      // update db users profilePic
-      String url = await _storage.ref(imagePath).getDownloadURL();
-      _db.updateUserProfilePic(url);
-
-      setState(() {}); // refresh profile page
-      Navigator.pop(context); // close bottom sheet
-    } catch (error) {
-      print(error); // TODO: remove temp debug
-      return null;
-    }
+  Future<File> cropPhoto(PickedFile pickedImage) async {
+    return ImageCropper.cropImage(
+      sourcePath: pickedImage.path,
+      maxHeight: 200,
+      maxWidth: 200,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatioPresets: [CropAspectRatioPreset.square],
+      androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Crop image',
+          toolbarColor: PresetColors.blueAccent,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: true),
+    );
   }
 }

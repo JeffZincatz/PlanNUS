@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 import 'package:planaholic/util/StatsUtil.dart';
@@ -41,17 +43,6 @@ class DbService {
     try {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["profilePic"];
-    } catch (error) {
-      print(error); // TODO: remove temp debug
-      return null;
-    }
-  }
-
-  Future<void> updateUserProfilePic(String url) async {
-    try {
-      await _db.collection("users").doc(uuid).update({
-        "profilePic": url,
-      });
     } catch (error) {
       print(error); // TODO: remove temp debug
       return null;
@@ -517,6 +508,19 @@ class DbService {
     //     .collection("users")
     //     .doc(FirebaseAuth.instance.currentUser.uid)
     //     .delete();
+  }
+
+  Future<void> uploadProfilePic(File profilePic) async {
+    FirebaseStorage _storage = FirebaseStorage.instance;
+
+    String imagePath = "profilePics/" + uuid + ".jpg";
+    await _storage.ref(imagePath).putFile(profilePic);
+
+    // update db users profilePic
+    String url = await _storage.ref(imagePath).getDownloadURL();
+    return await _db.collection("users").doc(uuid).update({
+      "profilePic": url,
+    });
   }
 
   /*
