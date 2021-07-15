@@ -46,6 +46,7 @@ dependencies:
   flutter_radar_chart: ^0.2.0
   flutter_local_notifications: ^6.0.0
   image_cropper: ^1.4.1
+#  flutter_launcher_icons: ^0.9.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +54,12 @@ dev_dependencies:
   flutter_driver:
     sdk: flutter
   test: any
+  flutter_launcher_icons: "^0.9.0"
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/notebook_logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
