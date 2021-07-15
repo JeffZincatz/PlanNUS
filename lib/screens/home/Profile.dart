@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:planaholic/elements/MyButtons.dart';
+// import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/ProfilePic.dart';
 import 'package:planaholic/elements/PieCharOverview.dart';
 import 'package:planaholic/elements/BarChartWeekly.dart';
 import 'package:planaholic/services/DbService.dart';
-import 'package:planaholic/services/AuthService.dart';
+// import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 import 'package:planaholic/elements/RadarChartAttribute.dart';
@@ -22,7 +22,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   DbService _db = new DbService();
-  AuthService _auth = new AuthService();
+  // AuthService _auth = new AuthService();
 
   // edit username button
   bool isEditing = false;
@@ -74,16 +74,13 @@ class _ProfileState extends State<Profile> {
     return Scaffold(
       body: ListView(shrinkWrap: true, children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
           child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Text(
-                  "My Profile",
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
+              Text(
+                "My Profile",
+                style: TextStyle(
+                  fontSize: 20,
                 ),
               ),
               FutureBuilder(
@@ -442,17 +439,18 @@ class _ProfileState extends State<Profile> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-          child: MyButtons.roundedRed(
-            key: ValueKey("sign-out-button"),
-            text: "Sign Out",
-            onPressed: () async {
-              await _auth.signOut();
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            },
-          ),
-        ),
+        // Hid sign out button on Profile page
+        // Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        //   child: MyButtons.roundedRed(
+        //     key: ValueKey("sign-out-button"),
+        //     text: "Sign Out",
+        //     onPressed: () async {
+        //       await _auth.signOut();
+        //       Navigator.of(context).popUntil((route) => route.isFirst);
+        //     },
+        //   ),
+        // ),
       ]),
     );
   }
