@@ -27,6 +27,15 @@ class Debug extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            debugButton("getAllEvents", () async {
+              print(await _db.getAllEvents());
+            }),
+            debugButton("show snack bar", () {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(
+                    "Looooooooooooooooooooooooooooooooooooooooog snack bar"),
+              ));
+            }),
             StreamBuilder<List<Event>>(
                 stream: _db.eventsStream,
                 builder: (context, snapshot) {

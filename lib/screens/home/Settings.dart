@@ -2,12 +2,14 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
+import 'package:ical/serializer.dart' as ICal;
 
 class Settings extends StatefulWidget {
   const Settings({Key key}) : super(key: key);
@@ -432,6 +434,52 @@ class _SettingsState extends State<Settings> {
                 title: "Import ics file",
                 onTap: _importICS,
               ),
+              buildSettingOptions(
+                context: context,
+                title: "Export all activities as ics",
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("Export all activities"),
+                          content: Text(
+                              "Do you want to export all of your activities as an .ics file?"),
+                          actions: [
+                            TextButton(
+                                onPressed: () async {
+                                  _generateEventIcs(await _db.getAllEvents())
+                                      .then((filePath) {
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(
+                                      content:
+                                          Text("Saved .ics file as $filePath."),
+                                      backgroundColor:
+                                          Colors.black26.withOpacity(0.8),
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                screenHeight * 0.1)),
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: screenWidth * 0.08),
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: screenWidth * 0.05,
+                                          vertical: screenWidth * 0.02),
+                                    ));
+                                  });
+                                },
+                                child: Text("Confirm")),
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("Cancel")),
+                          ],
+                        );
+                      });
+                },
+              ),
               SizedBox(
                 height: screenHeight * 0.02,
               ),
@@ -480,72 +528,6 @@ class _SettingsState extends State<Settings> {
             ]),
           ),
         ],
-      ),
-    );
-  }
-
-  Row buildNotificationOptionRow(String title, bool isActive) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600]),
-        ),
-      ],
-    );
-  }
-
-  GestureDetector buildAccountOptionRow(BuildContext context, String title) {
-    double screenHeight = MediaQuery.of(context).size.height;
-
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Text(title),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Option 1"),
-                    Text("Option 2"),
-                    Text("Option 3"),
-                  ],
-                ),
-                actions: [
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Close")),
-                ],
-              );
-            });
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: screenHeight * 0.036,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[800],
-              ),
-            ),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: Colors.grey,
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -604,7 +586,8 @@ class _SettingsState extends State<Settings> {
         DateTime endTime = _parseIcsTimeToDateTime(dtEnd);
 
         Event event = new Event(
-          category: "Others", // By default. User can edit later.
+          category: "Others",
+          // By default. User can edit later.
           description: summary,
           startTime: startTime,
           endTime: endTime,
@@ -629,5 +612,29 @@ class _SettingsState extends State<Settings> {
     int min = int.parse(dt.substring(11, 13));
 
     return new DateTime(year, month, day, hour, min);
+  }
+
+  Future<String> _generateEventIcs(List<Event> events) async {
+    ICal.ICalendar cal = ICal.ICalendar();
+    events.forEach((event) {
+      cal.addElement(ICal.IEvent(
+        uid: "bogoplan@gmail.com",
+        start: event.startTime,
+        end: event.endTime,
+        status: ICal.IEventStatus.CONFIRMED,
+        description: event.description,
+        summary: event.description,
+      ));
+    });
+
+    String path = (await getExternalStorageDirectory()).path;
+    // print(path);
+
+    String filePath =
+        "$path/Planaholic_Export_${DateTime.now().toString()}.ics";
+    File testFile = new File(filePath);
+    testFile.writeAsString(cal.serialize());
+
+    return filePath;
   }
 }

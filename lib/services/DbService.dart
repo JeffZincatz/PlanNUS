@@ -527,6 +527,28 @@ class DbService {
     });
   }
 
+  Future<List<Event>> getAllEvents() async {
+    QuerySnapshot snapshot = await events.get();
+    List<QueryDocumentSnapshot> docs = snapshot.docs;
+
+    List<Event> allEvents = [];
+    docs.forEach((element) {
+      Event event = new Event(
+        description: element["description"],
+        startTime: element["startTime"].toDate(),
+        endTime: element["endTime"].toDate(),
+        // unimportant fields for export
+        category: "",
+        id: "",
+        completed: false,
+        passed: false,
+      );
+      allEvents.add(event);
+    });
+
+    return allEvents;
+  }
+
   /*
   Below are some debugging functions. They should not be used in any feature implementations.
   They should be okay to be removed in the end.

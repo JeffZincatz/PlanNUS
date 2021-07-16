@@ -341,6 +341,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
+  ical:
+    dependency: "direct main"
+    description:
+      name: ical
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   icalendar_parser:
     dependency: "direct main"
     description:
@@ -432,6 +439,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  nanoid:
+    dependency: transitive
+    description:
+      name: nanoid
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   nested:
     dependency: transitive
     description:
@@ -461,7 +475,7 @@ packages:
     source: hosted
     version: "1.8.0"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       url: "https://pub.dartlang.org"
