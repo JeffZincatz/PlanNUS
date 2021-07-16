@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:planaholic/elements/MyButtons.dart';
+import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/util/PresetColors.dart';
@@ -57,7 +61,7 @@ class _SettingsState extends State<Settings> {
                 ],
               ),
               SizedBox(
-                height: 40,
+                height: screenHeight * 0.02,
               ),
               Row(
                 children: [
@@ -336,7 +340,8 @@ class _SettingsState extends State<Settings> {
                                                             context: context,
                                                             builder: (context) {
                                                               return AlertDialog(
-                                                                title: Text("Account deleted."),
+                                                                title: Text(
+                                                                    "Account deleted."),
                                                                 content: Text(
                                                                     "Your account has been deleted successfully.\nThank you for using Planaholic!"),
                                                                 actions: [
@@ -396,7 +401,39 @@ class _SettingsState extends State<Settings> {
                         });
                   }),
               SizedBox(
-                height: screenHeight * 0.05,
+                height: screenHeight * 0.02,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.import_export_outlined,
+                    color: PresetColors.blue,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Text(
+                    "Import & Export",
+                    style: TextStyle(
+                        fontSize: screenHeight * 0.038,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Divider(
+                height: screenHeight * 0.02,
+                thickness: 2,
+              ),
+              SizedBox(
+                height: screenHeight * 0.01,
+              ),
+              buildSettingOptions(
+                context: context,
+                title: "Import ics file",
+                onTap: _importICS,
+              ),
+              SizedBox(
+                height: screenHeight * 0.02,
               ),
               Row(
                 children: [
@@ -425,7 +462,7 @@ class _SettingsState extends State<Settings> {
               buildSettingOptions(
                   context: context, title: "[Placeholder]", onTap: () {}),
               SizedBox(
-                height: 50,
+                height: screenHeight * 0.02,
               ),
               Center(
                 child: Container(
@@ -541,5 +578,56 @@ class _SettingsState extends State<Settings> {
         ),
       ),
     );
+  }
+
+  Future<void> _importICS() async {
+    FilePickerResult result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: [
+      "ics",
+    ]);
+
+    if (result != null) {
+      File file = File(result.files.single.path);
+      ICalendar icsObj = ICalendar.fromLines(file.readAsLinesSync());
+      Map eventMap = icsObj.toJson();
+      List data = eventMap["data"];
+
+      // iterate over all events
+      for (int i = 2; i < data.length; i++) {
+        Map eventData = data[i];
+
+        String dtStart = eventData["dtstart"]["dt"];
+        String dtEnd = eventData["dtend"]["dt"];
+        String summary = eventData["summary"];
+
+        DateTime startTime = _parseIcsTimeToDateTime(dtStart);
+        DateTime endTime = _parseIcsTimeToDateTime(dtEnd);
+
+        Event event = new Event(
+          category: "Others", // By default. User can edit later.
+          description: summary,
+          startTime: startTime,
+          endTime: endTime,
+          completed: false,
+          passed: endTime.compareTo(DateTime.now()) == -1 ? true : false,
+          difficulty: 5,
+        );
+
+        dynamic ref = await DbService().addNewEvent(event); // DocumentReference
+        DbService().syncEventId(ref.id);
+      }
+    } else {
+      // User canceled the picker
+    }
+  }
+
+  DateTime _parseIcsTimeToDateTime(String dt) {
+    int year = int.parse(dt.substring(0, 4));
+    int month = int.parse(dt.substring(4, 6));
+    int day = int.parse(dt.substring(6, 8));
+    int hour = int.parse(dt.substring(9, 11));
+    int min = int.parse(dt.substring(11, 13));
+
+    return new DateTime(year, month, day, hour, min);
   }
 }

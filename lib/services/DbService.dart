@@ -214,6 +214,10 @@ class DbService {
     });
   }
 
+  Future<void> syncEventId(String id) async {
+    return await events.doc(id).update({"id": id});
+  }
+
   Future<void> delete(Event event) async {
     return await events.doc(event.id).delete();
   }
