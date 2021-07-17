@@ -58,7 +58,7 @@ class _SettingsState extends State<Settings> {
                   Text(
                     "Settings",
                     style: TextStyle(
-                        fontSize: screenHeight * 0.04,
+                        fontSize: screenHeight * 0.03,
                         fontWeight: FontWeight.w500),
                   ),
                 ],
@@ -66,31 +66,11 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.02,
               ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.person,
-                    color: PresetColors.blue,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    "Account",
-                    style: TextStyle(
-                        fontSize: screenHeight * 0.038,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              Divider(
-                height: screenHeight * 0.02,
-                thickness: 2,
-              ),
+              buildSettingCategory(context, Icons.person, "Account"),
               SizedBox(
                 height: screenHeight * 0.01,
               ),
-              buildSettingOptions(
+              buildSettingOption(
                   context: context,
                   title: "Change password",
                   onTap: () {
@@ -222,7 +202,7 @@ class _SettingsState extends State<Settings> {
                           );
                         });
                   }),
-              buildSettingOptions(
+              buildSettingOption(
                   context: context,
                   title: "Delete account",
                   onTap: () {
@@ -406,36 +386,16 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.02,
               ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.import_export_outlined,
-                    color: PresetColors.blue,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    "Import & Export",
-                    style: TextStyle(
-                        fontSize: screenHeight * 0.038,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              Divider(
-                height: screenHeight * 0.02,
-                thickness: 2,
-              ),
+              buildSettingCategory(context, Icons.import_export_outlined, "Import & Export"),
               SizedBox(
                 height: screenHeight * 0.01,
               ),
-              buildSettingOptions(
+              buildSettingOption(
                 context: context,
                 title: "Import ics file",
                 onTap: _importICS,
               ),
-              buildSettingOptions(
+              buildSettingOption(
                 context: context,
                 title: "Export all activities as ics",
                 onTap: () {
@@ -468,31 +428,11 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.02,
               ),
-              Row(
-                children: [
-                  Icon(
-                    Icons.volume_up_outlined,
-                    color: PresetColors.blue,
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    "Notifications",
-                    style: TextStyle(
-                        fontSize: screenHeight * 0.038,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              Divider(
-                height: screenHeight * 0.02,
-                thickness: 2,
-              ),
+              buildSettingCategory(context, Icons.volume_up_outlined, "Notifications"),
               SizedBox(
                 height: screenHeight * 0.01,
               ),
-              buildSettingOptions(
+              buildSettingOption(
                   context: context, title: "[Placeholder]", onTap: () {}),
               SizedBox(
                 height: screenHeight * 0.02,
@@ -517,7 +457,39 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  GestureDetector buildSettingOptions(
+  Widget buildSettingCategory(BuildContext context, IconData iconData, String title) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(
+                iconData,
+                color: PresetColors.blue,
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Text(
+                title,
+                style: TextStyle(
+                    fontSize: screenHeight * 0.024,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Divider(
+            height: screenHeight * 0.01,
+            thickness: 2,
+          ),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector buildSettingOption(
       {@required BuildContext context,
       @required String title,
       @required Function onTap}) {
@@ -525,14 +497,14 @@ class _SettingsState extends State<Settings> {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.005),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               title,
               style: TextStyle(
-                fontSize: screenHeight * 0.036,
+                fontSize: screenHeight * 0.024,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[800],
               ),
