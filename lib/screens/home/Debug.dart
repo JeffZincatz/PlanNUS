@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/models/Event.dart';
 import 'dart:math';
@@ -27,6 +28,9 @@ class Debug extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
+            debugButton("show MySnackBar", () {
+              MySnackBar.show(context, Text("Testing MySnackBar Abstraction. 1234567890987654321"));
+            }),
             debugButton("getAllEvents", () async {
               print(await _db.getAllEvents());
             }),

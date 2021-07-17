@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:planaholic/elements/MyButtons.dart';
+import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/services/DbService.dart';
@@ -451,24 +452,8 @@ class _SettingsState extends State<Settings> {
                                   _generateEventIcs(await _db.getAllEvents())
                                       .then((filePath) {
                                     Navigator.pop(context);
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
-                                      content:
-                                          Text("Saved .ics file as $filePath."),
-                                      backgroundColor:
-                                          Colors.black26.withOpacity(0.8),
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(
-                                                screenHeight * 0.1)),
-                                      ),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: screenWidth * 0.08),
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: screenWidth * 0.05,
-                                          vertical: screenWidth * 0.02),
-                                    ));
+                                    MySnackBar.show(context,
+                                        Text("Saved .ics file as $filePath."));
                                   });
                                 },
                                 child: Text("Confirm")),
