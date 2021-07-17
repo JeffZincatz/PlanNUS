@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:planaholic/services/DbNotifService.dart';
@@ -69,11 +70,13 @@ class _EditOrDelete extends State<EditOrDelete> {
         );
 
         if (submitted.description == "") {
-          errorMessage = "Please add a description";
-          setState(() {});
+          // errorMessage = "Please add a description.";
+          // setState(() {});
+          MySnackBar.show(context, Text("Please add a description."));
         } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
-          errorMessage = "End Time has to be after Start Time";
-          setState(() {});
+          // errorMessage = "End Time has to be after Start Time";
+          // setState(() {});
+          MySnackBar.show(context, Text("End Time has to be after Start Time."));
         } else {
           await DbService().editEvent(widget.event, submitted);
           int id = await DbNotifService().findIndex(widget.event.id);
@@ -128,6 +131,7 @@ class _EditOrDelete extends State<EditOrDelete> {
                         ls.add(notifId);
                         DbNotifService().updateAvailable(ls);
                         Navigator.of(context).popUntil((route) => route.isFirst);
+                        MySnackBar.show(context, Text("Activity successfully deleted."));
                       }),
                       IconButton(icon: Icon(Icons.close), onPressed: () {
                         Navigator.pop(context);

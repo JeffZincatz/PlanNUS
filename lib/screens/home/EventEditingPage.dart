@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:planaholic/services/DbService.dart';
@@ -26,7 +27,8 @@ class _EventEditingPageState extends State<EventEditingPage> {
         && currentDate.day == DateTime.now().day);
   }
 
-  String errorMessage = "";
+  // Not needed if MySnackBar works well
+  // String errorMessage = "";
 
   String description = "";
   int difficulty = 5;
@@ -57,14 +59,17 @@ class _EventEditingPageState extends State<EventEditingPage> {
           );
 
           if (submitted.description == "") {
-            errorMessage = "Please add a description";
-            setState(() {});
+            // errorMessage = "Please add a description";
+            // setState(() {});
+            MySnackBar.show(context, Text("Please add a description."));
           } else if (submitted.startTime.compareTo(DateTime.now()) < 0) {
-            errorMessage = "Start Time cannot be in the past!";
-            setState(() {});
+            // errorMessage = "Start Time cannot be in the past!";
+            // setState(() {});
+            MySnackBar.show(context, Text("Start Time cannot be in the past!"));
           } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
-            errorMessage = "End Time has to be after Start Time";
-            setState(() {});
+            // errorMessage = "End Time has to be after Start Time";
+            // setState(() {});
+            MySnackBar.show(context, Text("End Time has to be after Start Time."));
           } else {
             DocumentReference docRef = await DbService().addNewEvent(submitted);
             DbService().editEvent2(docRef.id,
@@ -86,6 +91,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
                 )
             );
             Navigator.pop(context);
+            MySnackBar.show(context, Text("Activity successfully added."));
             List<dynamic> lsInit = await DbNotifService().getAvailable();
             List<int> ls = lsInit.cast<int>();
             int notifId = ls[0];
@@ -332,13 +338,14 @@ class _EventEditingPageState extends State<EventEditingPage> {
             },
           ),
           SizedBox(height: 10,),
-          Text(
-            errorMessage,
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          // Not needed if MySnackBar works well
+          // Text(
+          //   errorMessage,
+          //   style: TextStyle(
+          //     color: Colors.red,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
         ],
       ),
     );
