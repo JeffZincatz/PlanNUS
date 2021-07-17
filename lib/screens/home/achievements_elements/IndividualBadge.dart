@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/screens/home/BadgeShare.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class IndividualBadge extends StatefulWidget {
 
@@ -45,18 +46,20 @@ class _IndividualBadgeState extends State<IndividualBadge> {
                     child: Column(
                       children: [
                         Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: Image.asset(
                             "assets/badges/${widget.cat}${widget.no}.png",
                           ),
                         ),
                         Expanded(
                           flex: 1,
-                          child: Text(
-                            widget.desc,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 9,
+                          child: Center(
+                            child: Text(
+                              widget.desc,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 9,
+                              ),
                             ),
                           ),
                         ),
@@ -75,18 +78,20 @@ class _IndividualBadgeState extends State<IndividualBadge> {
                       child: Column(
                         children: [
                           Expanded(
-                            flex: 2,
+                            flex: 1,
                             child: Image.asset(
                               "assets/badges/${widget.cat}${widget.no}.png",
                             ),
                           ),
                           Expanded(
                             flex: 1,
-                            child: Text(
-                              widget.desc,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 10,
+                            child: Center(
+                              child: Text(
+                                widget.desc,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 10,
+                                ),
                               ),
                             ),
                           ),
@@ -99,14 +104,44 @@ class _IndividualBadgeState extends State<IndividualBadge> {
                     color: Colors.grey.withOpacity(0.9),
                     child: Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        "Complete ${widget.no} activities in ${widget.cat} category",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: IconButton(
+                              icon: Icon(Icons.lock),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text("Badge locked", textAlign: TextAlign.center,),
+                                        scrollable: true,
+                                        content: Text(
+                                          "Complete ${widget.no} activities in ${widget.cat} category",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                );
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: LinearPercentIndicator(
+                              percent: snapshot.data / widget.no,
+                              backgroundColor: Colors.black,
+                              progressColor: Colors.blueGrey,
+                            ),
+                          )
+                        ],
+                      )
                     ),
                   ),
                 ],
