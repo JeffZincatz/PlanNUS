@@ -78,7 +78,7 @@ class _ActivityCompletedState extends State<ActivityCompleted> {
                     )
                   ),
                   Expanded(
-                    flex: 2,
+                    flex: 4,
                     child: Text(
                       "Activity Completed Successfully",
                       textAlign: TextAlign.center,
