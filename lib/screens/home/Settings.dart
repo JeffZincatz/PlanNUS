@@ -11,6 +11,9 @@ import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
 import 'package:ical/serializer.dart' as ICal;
+import 'package:planaholic/services/DbNotifService.dart';
+import 'package:planaholic/services/DbService.dart';
+import 'package:planaholic/services/NotifService.dart';
 
 class Settings extends StatefulWidget {
   const Settings({Key key}) : super(key: key);
@@ -20,8 +23,20 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+
+  // Notification
+  int notify_before = 5;
+
   @override
   Widget build(BuildContext context) {
+
+    Future<void> updateBefore() async {
+      int before = await DbNotifService().getBefore();
+      notify_before = before;
+    }
+
+    updateBefore();
+
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
@@ -432,8 +447,60 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.01,
               ),
-              buildSettingOption(
-                  context: context, title: "[Placeholder]", onTap: () {}),
+              buildSettingOptions(
+                  context: context, title: "Activity reminder", onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("When do you want to be notified of an upcoming activity?"),
+                          content: StatefulBuilder(
+                            builder: (BuildContext context, StateSetter setState) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Slider(
+                                    value: notify_before.toDouble(),
+                                    min: 1,
+                                    max: 60,
+                                    divisions: 60,
+                                    onChanged: (val) => setState(() => notify_before = val.round()),
+                                  ),
+                                  Text(notify_before.toString() + (notify_before == 1 ? " minute before" : " minutes before")),
+                                ],
+                              );
+                            }
+                          ),
+                          actions: [
+                            TextButton(
+                                onPressed: () async {
+                                  await DbNotifService().updateBefore(notify_before);
+                                  await DbNotifService().initialise();
+                                  List<Event> events = await DbService().getAllEvents();
+                                  int before = await DbNotifService().getBefore();
+                                  NotifService.deleteAll();
+                                  for (Event e in events) {
+                                    DateTime startTimeDb = e.startTime;
+                                    if (e.id != null && startTimeDb.subtract(Duration(minutes: before)).compareTo(DateTime.now()) > 0) {
+                                      List<dynamic> lsInit = await DbNotifService().getAvailable();
+                                      List<int> ls = lsInit.cast<int>();
+                                      int notifId = ls[0];
+                                      ls.removeAt(0);
+                                      await DbNotifService().updateAvailable(ls);
+                                      await DbNotifService().addToTaken(notifId, e.id);
+                                      await NotifService.notifyScheduled(e, notifId, before);
+                                    }
+                                  }
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Confirm")),
+                            TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: Text("Cancel")),
+                          ],
+                        );
+                      });
+              }),
               SizedBox(
                 height: screenHeight * 0.02,
               ),

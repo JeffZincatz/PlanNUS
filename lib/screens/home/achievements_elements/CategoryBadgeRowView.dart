@@ -78,7 +78,7 @@ class _CategoryBadgeRowViewState extends State<CategoryBadgeRowView> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Container(
-      height: screenHeight / 7,
+      height: screenHeight / 6,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -86,6 +86,7 @@ class _CategoryBadgeRowViewState extends State<CategoryBadgeRowView> {
             widget.cat,
             textAlign: TextAlign.left,
           ),
+          SizedBox(height: 8.0,),
           SizedBox(
             height: screenHeight / 9,
             child: ListView.builder(

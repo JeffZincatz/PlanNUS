@@ -112,7 +112,9 @@ class EventTile extends StatelessWidget {
           Expanded(
             flex: 1,
             child: Text(
-              event.description,
+              event.description.length > 20
+                  ? event.description.substring(0, 17) + "..."
+                  : event.description,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

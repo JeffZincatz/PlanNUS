@@ -79,8 +79,25 @@ class _EditOrDelete extends State<EditOrDelete> {
           MySnackBar.show(context, Text("End Time has to be after Start Time."));
         } else {
           await DbService().editEvent(widget.event, submitted);
-          int id = await DbNotifService().findIndex(widget.event.id);
-          await NotifService.changeSchedule(id, submitted);
+          DateTime startTimeDb = DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
+              int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+              int.parse(startDate.substring(0, startDate.indexOf('/'))),
+              int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5)));
+          int before = await DbNotifService().getBefore();
+          if (startTimeDb.subtract(Duration(minutes: before)).compareTo(DateTime.now()) > 0) {
+            try {
+              int id = await DbNotifService().findIndex(widget.event.id);
+              await NotifService.changeSchedule(id, submitted, before);
+            } catch(e) {
+              List<dynamic> lsInit = await DbNotifService().getAvailable();
+              List<int> ls = lsInit.cast<int>();
+              int notifId = ls[0];
+              ls.removeAt(0);
+              await DbNotifService().updateAvailable(ls);
+              await DbNotifService().addToTaken(notifId, widget.event.id);
+              await NotifService.notifyScheduled(submitted, notifId, before);
+            }
+          }
           Navigator.pop(context);
         }
       },

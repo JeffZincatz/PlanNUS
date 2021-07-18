@@ -26,6 +26,12 @@ class DbNotifService {
       .collection("notif")
       .doc("taken");
 
+  DocumentReference before = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection("notif")
+      .doc("before");
+
   List<int> newLi = List.generate(100, (x) => x);
 
   Future<void> addInitialAvail() async {
@@ -42,6 +48,10 @@ class DbNotifService {
     await addInitialAvail();
   }
 
+  Future<void> initialiseBefore() async {
+    await before.set({"before": 10});
+  }
+
   Future<List<dynamic>> getAvailable() async {
     try {
       DocumentSnapshot snapshot = await available.get();
@@ -53,8 +63,23 @@ class DbNotifService {
     }
   }
 
+  Future<int> getBefore() async {
+    try {
+      DocumentSnapshot snapshot = await before.get();
+      return snapshot.get("before");
+    } catch(e) {
+      await initialiseBefore();
+      DocumentSnapshot snapshot = await before.get();
+      return snapshot.get("before");
+    }
+  }
+
   int availableIndex(List<int> ls) {
     return ls[0];
+  }
+
+  Future<void> updateBefore(int x) async {
+    return await before.set({"before": x});
   }
 
   Future<void> updateAvailable(List<int> ls) async {

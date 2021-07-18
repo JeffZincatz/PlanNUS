@@ -47,7 +47,8 @@ class NotifService {
         payload: 'item x');
   }
 
-  static void notifyScheduled(Event event, int id) async {
+  static void notifyScheduled(Event event, int id, int before) async {
+    DateTime startTime = event.startTime.subtract(Duration(minutes: before));
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation("Asia/Singapore"));
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -55,10 +56,11 @@ class NotifService {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
         'You have an activity coming!',
-        event.category + ": " + event.description,
+        event.category + ": " + event.description + " at " +
+            event.startTime.hour.toString() + ":" + event.startTime.minute.toString(),
         // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         tz.TZDateTime(tz.getLocation("Asia/Singapore"),
-        event.startTime.year, event.startTime.month, event.startTime.day, event.startTime.hour, event.startTime.minute),
+        startTime.year, startTime.month, startTime.day, startTime.hour, startTime.minute),
         const NotificationDetails(
             android: AndroidNotificationDetails('your channel id',
                 'your channel name', 'your channel description')),
@@ -67,7 +69,8 @@ class NotifService {
         UILocalNotificationDateInterpretation.absoluteTime);
   }
 
-  static Future<void> changeSchedule(int id, Event event) async {
+  static Future<void> changeSchedule(int id, Event event, int before) async {
+    DateTime startTime = event.startTime.subtract(Duration(minutes: before));
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin.cancel(id);
@@ -76,10 +79,11 @@ class NotifService {
     await flutterLocalNotificationsPlugin.zonedSchedule(
         id,
         'You have an activity coming!',
-        event.category + ": " + event.description,
+        event.category + ": " + event.description + " at " +
+            event.startTime.hour.toString() + ":" + event.startTime.minute.toString(),
         // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         tz.TZDateTime(tz.getLocation("Asia/Singapore"),
-            event.startTime.year, event.startTime.month, event.startTime.day, event.startTime.hour, event.startTime.minute),
+            startTime.year, startTime.month, startTime.day, startTime.hour, startTime.minute),
         const NotificationDetails(
             android: AndroidNotificationDetails('your channel id',
                 'your channel name', 'your channel description')),
@@ -92,5 +96,11 @@ class NotifService {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  static void deleteAll() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

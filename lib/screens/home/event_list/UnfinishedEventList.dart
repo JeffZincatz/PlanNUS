@@ -29,7 +29,7 @@ class _UnfinishedEventListState extends State<UnfinishedEventList> {
     void updateDbNotif() async {
       for (Event event in events) {
         int notifId = await DbNotifService().findIndex(event.id ?? "not avail");
-        if (notifId != null && event.startTime.compareTo(DateTime.now()) < 0) {
+        if (notifId != null && event.endTime.compareTo(DateTime.now()) < 0) {
           DbNotifService().removeFromTaken(event.id);
           List<dynamic> lsInit = await DbNotifService().getAvailable();
           List<int> ls = lsInit.cast<int>();

@@ -29,15 +29,16 @@ class _AchievementsState extends State<Achievements> {
                 fontSize: 24,
               ),
             ),
+            SizedBox(height: 5.0,),
             SizedBox(
               width: screenWidth,
-              height: screenHeight * 1 / 7,
+              height: screenHeight * 1 / 6,
               child: TotalActivitiesBadges(),
             ),
             SizedBox(
               child: BadgesView(cat: cat),
               width: screenWidth,
-              height: screenHeight * 5 / 7,
+              height: screenHeight * 5 / 6,
             ),
           ],
         ),

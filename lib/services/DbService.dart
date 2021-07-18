@@ -539,7 +539,7 @@ class DbService {
         endTime: element["endTime"].toDate(),
         // unimportant fields for export
         category: "",
-        id: "",
+        id: element.id,
         completed: false,
         passed: false,
       );
