@@ -11,8 +11,8 @@ import 'package:planaholic/services/NotifService.dart';
 import 'package:planaholic/services/DbNotifService.dart';
 
 class EventEditingPage extends StatefulWidget {
-
   final DateTime currentDate;
+
   EventEditingPage({this.currentDate});
 
   @override
@@ -20,11 +20,10 @@ class EventEditingPage extends StatefulWidget {
 }
 
 class _EventEditingPageState extends State<EventEditingPage> {
-
   bool today(DateTime currentDate) {
-    return (currentDate.year == DateTime.now().year
-        && currentDate.month == DateTime.now().month
-        && currentDate.day == DateTime.now().day);
+    return (currentDate.year == DateTime.now().year &&
+        currentDate.month == DateTime.now().month &&
+        currentDate.day == DateTime.now().day);
   }
 
   // Not needed if MySnackBar works well
@@ -48,14 +47,22 @@ class _EventEditingPageState extends State<EventEditingPage> {
             passed: false,
             category: dropdownValue,
             description: description,
-            startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
-                int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+            startTime: DateTime(
+                int.parse(startDate.substring(
+                    startDate.lastIndexOf('/') + 1, startDate.length)),
+                int.parse(startDate.substring(
+                    startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
                 int.parse(startDate.substring(0, startDate.indexOf('/'))),
-                int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-            endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
-                int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+                int.parse(startTime.substring(0, 2)),
+                int.parse(startTime.substring(3, 5))),
+            endTime: DateTime(
+                int.parse(endDate.substring(
+                    endDate.lastIndexOf('/') + 1, endDate.length)),
+                int.parse(endDate.substring(
+                    endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
                 int.parse(endDate.substring(0, endDate.indexOf('/'))),
-                int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
+                int.parse(endTime.substring(0, 2)),
+                int.parse(endTime.substring(3, 5))),
             difficulty: difficulty,
           );
 
@@ -70,35 +77,51 @@ class _EventEditingPageState extends State<EventEditingPage> {
           } else if (submitted.endTime.compareTo(submitted.startTime) <= 0) {
             // errorMessage = "End Time has to be after Start Time";
             // setState(() {});
-            MySnackBar.show(context, Text("End Time has to be after Start Time."));
+            MySnackBar.show(
+                context, Text("End Time has to be after Start Time."));
           } else {
             DocumentReference docRef = await DbService().addNewEvent(submitted);
-            DbService().editEvent2(docRef.id,
+            DbService().editEvent2(
+                docRef.id,
                 Event(
                   completed: false,
                   passed: false,
                   category: dropdownValue,
                   description: description,
                   id: docRef.id,
-                  startTime: DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
-                      int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+                  startTime: DateTime(
+                      int.parse(startDate.substring(
+                          startDate.lastIndexOf('/') + 1, startDate.length)),
+                      int.parse(startDate.substring(startDate.indexOf('/') + 1,
+                          startDate.lastIndexOf('/'))),
                       int.parse(startDate.substring(0, startDate.indexOf('/'))),
-                      int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-                  endTime: DateTime(int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
-                      int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
+                      int.parse(startTime.substring(0, 2)),
+                      int.parse(startTime.substring(3, 5))),
+                  endTime: DateTime(
+                      int.parse(endDate.substring(
+                          endDate.lastIndexOf('/') + 1, endDate.length)),
+                      int.parse(endDate.substring(
+                          endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
                       int.parse(endDate.substring(0, endDate.indexOf('/'))),
-                      int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
+                      int.parse(endTime.substring(0, 2)),
+                      int.parse(endTime.substring(3, 5))),
                   difficulty: difficulty,
-                )
-            );
+                ));
             Navigator.pop(context);
             MySnackBar.show(context, Text("Activity successfully added."));
-            DateTime startTimeDb = DateTime(int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
-                int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
+            DateTime startTimeDb = DateTime(
+                int.parse(startDate.substring(
+                    startDate.lastIndexOf('/') + 1, startDate.length)),
+                int.parse(startDate.substring(
+                    startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
                 int.parse(startDate.substring(0, startDate.indexOf('/'))),
-                int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5)));
+                int.parse(startTime.substring(0, 2)),
+                int.parse(startTime.substring(3, 5)));
             int before = await DbNotifService().getBefore();
-            if (startTimeDb.subtract(Duration(minutes: before)).compareTo(DateTime.now()) > 0) {
+            if (startTimeDb
+                    .subtract(Duration(minutes: before))
+                    .compareTo(DateTime.now()) >
+                0) {
               List<dynamic> lsInit = await DbNotifService().getAvailable();
               List<int> ls = lsInit.cast<int>();
               int notifId = ls[0];
@@ -119,28 +142,34 @@ class _EventEditingPageState extends State<EventEditingPage> {
   }
 
   bool sameDay(DateTime first, DateTime second) {
-    return (first.year == second.year
-        && first.month == second.month
-        && first.day == second.day);
+    return (first.year == second.year &&
+        first.month == second.month &&
+        first.day == second.day);
   }
 
   @override
   Widget build(BuildContext context) {
-    startDate = startDate ?? DateFormat.d().format(widget.currentDate)
-      + "/"
-      + DateFormat.M().format(widget.currentDate)
-      + "/"
-      + DateFormat.y().format(widget.currentDate);
-    endDate = endDate ?? DateFormat.d().format(widget.currentDate)
-        + "/"
-        + DateFormat.M().format(widget.currentDate)
-        + "/"
-        + DateFormat.y().format(widget.currentDate);
-    startTime = startTime ?? (sameDay(widget.currentDate, DateTime.now())
-      ? DateFormat.Hms().format(DateTime.now()).substring(0, 5)
-      : "12.00"
-    );
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+
+    startDate = startDate ??
+        DateFormat.d().format(widget.currentDate) +
+            "/" +
+            DateFormat.M().format(widget.currentDate) +
+            "/" +
+            DateFormat.y().format(widget.currentDate);
+    endDate = endDate ??
+        DateFormat.d().format(widget.currentDate) +
+            "/" +
+            DateFormat.M().format(widget.currentDate) +
+            "/" +
+            DateFormat.y().format(widget.currentDate);
+    startTime = startTime ??
+        (sameDay(widget.currentDate, DateTime.now())
+            ? DateFormat.Hms().format(DateTime.now()).substring(0, 5)
+            : "12.00");
     endTime = endTime ?? startTime;
+
     return Scaffold(
       appBar: AppBar(
         actions: buildEditingActions(),
@@ -149,212 +178,275 @@ class _EventEditingPageState extends State<EventEditingPage> {
       ),
       body: ListView(
         children: [
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            "Category",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return DropdownButton<String>(
-                isExpanded: true,
-                items: <String>["Studies", "Fitness", "Arts", "Social", "Others"]
-                    .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(value: value, child: Text(value));
-                    })
-                    .toList(),
-                value: dropdownValue,
-                icon: Icon(Icons.arrow_downward),
-                onChanged: (String newValue) {
-                  setState(() {
-                    dropdownValue = newValue;
-                  });
-                },
-              );
-            },
-          ),
-          SizedBox(height: 20.0,),
-          Text(
-            "Description",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          TextFormField(
-            key: ValueKey("descField"),
-            decoration: InputDecoration(
-              hintText: 'Enter description',
-              labelText: 'Description',
-            ),
-            onChanged: (String desc) {
-              description = desc;
-            },
-          ),
-          SizedBox(height: 20.0,),
-          Text(
-            "Perceived Difficulty",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                flex: 13,
-                child: Slider(
-                  value: difficulty.toDouble(),
-                  activeColor: Colors.blue[difficulty * 100],
-                  inactiveColor: Colors.blue[difficulty * 100],
-                  min: 1,
-                  max: 9,
-                  divisions: 8,
-                  onChanged: (val) => setState(() => difficulty = val.round()),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: screenWidth / 24, vertical: screenHeight / 30),
+            child: Wrap(
+              runSpacing: screenHeight / 30,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Category",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return DropdownButton<String>(
+                          isExpanded: true,
+                          items: <String>[
+                            "Studies",
+                            "Fitness",
+                            "Arts",
+                            "Social",
+                            "Others"
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                                value: value, child: Text(value));
+                          }).toList(),
+                          value: dropdownValue,
+                          icon: Icon(Icons.arrow_downward),
+                          onChanged: (String newValue) {
+                            setState(() {
+                              dropdownValue = newValue;
+                            });
+                          },
+                        );
+                      },
+                    ),
+                  ],
                 ),
-              ),
-              Expanded(flex: 1, child: Text(difficulty.toString())),
-            ],
-          ),
-          Text(
-            "Start Date",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return OutlinedButton(
-                  onPressed: () {
-                    DatePicker.showDatePicker(
-                        context,
-                        currentTime: DateTime(
-                          int.parse(startDate.substring(startDate.lastIndexOf('/') + 1, startDate.length)),
-                          int.parse(startDate.substring(startDate.indexOf('/') + 1, startDate.lastIndexOf('/'))),
-                          int.parse(startDate.substring(0, startDate.indexOf('/'))),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Description",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    TextFormField(
+                      key: ValueKey("descField"),
+                      decoration: InputDecoration(
+                        hintText: 'Enter description',
+                        labelText: 'Description',
+                      ),
+                      onChanged: (String desc) {
+                        description = desc;
+                      },
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Perceived Difficulty",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 13,
+                          child: Slider(
+                            value: difficulty.toDouble(),
+                            activeColor: Colors.blue[difficulty * 100],
+                            inactiveColor: Colors.blue[difficulty * 100],
+                            min: 1,
+                            max: 9,
+                            divisions: 8,
+                            onChanged: (val) =>
+                                setState(() => difficulty = val.round()),
+                          ),
                         ),
-                        onConfirm: (val) {
-                          startDate = DateFormat.d().format(val)
-                              + "/"
-                              + DateFormat.M().format(val)
-                              + "/"
-                              + DateFormat.y().format(val);
-                          setState((){});
-                        }
-                    );
-                  },
-                  child: Text(
-                    startDate,
-                  ),
-                );
-              }
-          ),
-          Text(
-            "Start Time",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return OutlinedButton(
-                key: ValueKey("startTimePicker"),
-                onPressed: () {
-                  DatePicker.showTimePicker(
-                    context,
-                      currentTime: DateTime(2021, 1, 1, int.parse(startTime.substring(0, 2)), int.parse(startTime.substring(3, 5))),
-                    showSecondsColumn: false,
-                    onConfirm: (date) {
-                      startTime = DateFormat.Hms().format(date).substring(0, 5);
-                      setState(() {});
-                    }
-                  );
-                },
-                child: Text(
-                  startTime,
+                        Expanded(flex: 1, child: Text(difficulty.toString())),
+                      ],
+                    ),
+                  ],
                 ),
-              );
-            }
-          ),
-          SizedBox(height: 20.0,),
-          Text(
-            "End Date",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          StatefulBuilder(
-              builder: (BuildContext context, StateSetter setState) {
-                return OutlinedButton(
-                  onPressed: () {
-                    DatePicker.showDatePicker(
-                        context,
-                        currentTime: DateTime(
-                          int.parse(endDate.substring(endDate.lastIndexOf('/') + 1, endDate.length)),
-                          int.parse(endDate.substring(endDate.indexOf('/') + 1, endDate.lastIndexOf('/'))),
-                          int.parse(endDate.substring(0, endDate.indexOf('/'))),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Start Date",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            DatePicker.showDatePicker(context,
+                                currentTime: DateTime(
+                                  int.parse(startDate.substring(
+                                      startDate.lastIndexOf('/') + 1,
+                                      startDate.length)),
+                                  int.parse(startDate.substring(
+                                      startDate.indexOf('/') + 1,
+                                      startDate.lastIndexOf('/'))),
+                                  int.parse(startDate.substring(
+                                      0, startDate.indexOf('/'))),
+                                ), onConfirm: (val) {
+                              startDate = DateFormat.d().format(val) +
+                                  "/" +
+                                  DateFormat.M().format(val) +
+                                  "/" +
+                                  DateFormat.y().format(val);
+                              setState(() {});
+                            });
+                          },
+                          child: Text(
+                            startDate,
+                          ),
                         ),
-                        onConfirm: (val) {
-                          endDate = DateFormat.d().format(val)
-                              + "/"
-                              + DateFormat.M().format(val)
-                              + "/"
-                              + DateFormat.y().format(val);
-                          setState((){});
-                        }
-                    );
-                  },
-                  child: Text(
-                    endDate,
-                  ),
-                );
-              }
-          ),
-          Text(
-            "End Time",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 22,
-            ),
-          ),
-          StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return OutlinedButton(
-                key: ValueKey("endTimePicker"),
-                onPressed: () {
-                  DatePicker.showTimePicker(
-                    context,
-                    currentTime: DateTime(2021, 1, 1, int.parse(endTime.substring(0, 2)), int.parse(endTime.substring(3, 5))),
-                    showSecondsColumn: false,
-                    onConfirm: (date) {
-                      endTime = DateFormat.Hms().format(date).substring(0, 5);
-                      setState(() {});
-                    }
-                  );
-                },
-                child: Text(
-                  endTime,
+                      );
+                    }),
+                  ],
                 ),
-              );
-            },
-          ),
-          SizedBox(height: 10,),
-          // Not needed if MySnackBar works well
-          // Text(
-          //   errorMessage,
-          //   style: TextStyle(
-          //     color: Colors.red,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Start Time",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          key: ValueKey("startTimePicker"),
+                          onPressed: () {
+                            DatePicker.showTimePicker(context,
+                                currentTime: DateTime(
+                                    2021,
+                                    1,
+                                    1,
+                                    int.parse(startTime.substring(0, 2)),
+                                    int.parse(startTime.substring(3, 5))),
+                                showSecondsColumn: false, onConfirm: (date) {
+                              startTime =
+                                  DateFormat.Hms().format(date).substring(0, 5);
+                              setState(() {});
+                            });
+                          },
+                          child: Text(
+                            startTime,
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "End Date",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            DatePicker.showDatePicker(context,
+                                currentTime: DateTime(
+                                  int.parse(endDate.substring(
+                                      endDate.lastIndexOf('/') + 1,
+                                      endDate.length)),
+                                  int.parse(endDate.substring(
+                                      endDate.indexOf('/') + 1,
+                                      endDate.lastIndexOf('/'))),
+                                  int.parse(endDate.substring(
+                                      0, endDate.indexOf('/'))),
+                                ), onConfirm: (val) {
+                              endDate = DateFormat.d().format(val) +
+                                  "/" +
+                                  DateFormat.M().format(val) +
+                                  "/" +
+                                  DateFormat.y().format(val);
+                              setState(() {});
+                            });
+                          },
+                          child: Text(
+                            endDate,
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "End Time",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                    StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            key: ValueKey("endTimePicker"),
+                            onPressed: () {
+                              DatePicker.showTimePicker(context,
+                                  currentTime: DateTime(
+                                      2021,
+                                      1,
+                                      1,
+                                      int.parse(endTime.substring(0, 2)),
+                                      int.parse(endTime.substring(3, 5))),
+                                  showSecondsColumn: false, onConfirm: (date) {
+                                endTime = DateFormat.Hms()
+                                    .format(date)
+                                    .substring(0, 5);
+                                setState(() {});
+                              });
+                            },
+                            child: Text(
+                              endTime,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                // Not needed if MySnackBar works well
+                // Text(
+                //   errorMessage,
+                //   style: TextStyle(
+                //     color: Colors.red,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+              ],
+            ),
+          )
         ],
       ),
     );
