@@ -447,7 +447,7 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.01,
               ),
-              buildSettingOptions(
+              buildSettingOption(
                   context: context, title: "Activity reminder", onTap: () {
                     showDialog(
                       context: context,
