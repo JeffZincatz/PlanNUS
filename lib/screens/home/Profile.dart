@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:planaholic/elements/MySnackBar.dart';
 // import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/ProfilePic.dart';
 import 'package:planaholic/elements/PieCharOverview.dart';
@@ -194,6 +195,7 @@ class _ProfileState extends State<Profile> {
                                 setState(() {
                                   isEditing = false;
                                 });
+                                MySnackBar.show(context, Text("Username updated successfully."));
                               },
                             ),
                             IconButton(
@@ -493,6 +495,7 @@ class _ProfileState extends State<Profile> {
                     _db.uploadProfilePic(croppedImage).then((_) {
                       setState(() {});
                       Navigator.pop(context);
+                      MySnackBar.show(context, Text("Profile picture updated successfully."));
                     });
                   },
                 ),
@@ -512,6 +515,7 @@ class _ProfileState extends State<Profile> {
                     _db.uploadProfilePic(croppedImage).then((_) {
                       setState(() {});
                       Navigator.pop(context);
+                      MySnackBar.show(context, Text("Profile picture updated successfully."));
                     });
                   },
                 ),
