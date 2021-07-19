@@ -129,6 +129,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
               await DbNotifService().updateAvailable(ls);
               await DbNotifService().addToTaken(notifId, docRef.id);
               await NotifService.notifyScheduled(submitted, notifId, before);
+              MySnackBar.show(context, Text("Activity created successfully."));
             }
           }
         },

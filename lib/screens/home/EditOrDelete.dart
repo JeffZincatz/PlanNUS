@@ -114,6 +114,7 @@ class _EditOrDelete extends State<EditOrDelete> {
                 await NotifService.notifyScheduled(submitted, notifId, before);
               }
             }
+            MySnackBar.show(context, Text("Activity edited successfully."));
             Navigator.pop(context);
           }
         },
