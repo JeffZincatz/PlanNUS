@@ -62,7 +62,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
                         ),
                       ),
-                      Center(
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 15),
                         child: Text(
                           error,
                           textAlign: TextAlign.center,
@@ -86,7 +87,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             } catch (err) {
                               setState(() {
                                 loading = false;
-                                error = err;
+                                error = err.message.toString();
                               });
                             }
                           }
