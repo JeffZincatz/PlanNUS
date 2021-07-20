@@ -23,13 +23,11 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-
   // Notification
   int notify_before = 5;
 
   @override
   Widget build(BuildContext context) {
-
     Future<void> updateBefore() async {
       int before = await DbNotifService().getBefore();
       notify_before = before;
@@ -237,163 +235,157 @@ class _SettingsState extends State<Settings> {
                             ),
                             actions: [
                               TextButton(
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return AlertDialog(
-                                            title: Text("Enter Password"),
-                                            scrollable: true,
-                                            content: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Form(
-                                                  key: _formKey,
-                                                  child: Column(
-                                                    children: [
-                                                      TextFormField(
-                                                        key: ValueKey(
-                                                            "delete-password"),
-                                                        decoration:
-                                                            InputDecoration(
-                                                          icon:
-                                                              Icon(Icons.lock),
-                                                          hintText:
-                                                              'Enter your password',
-                                                          labelText: 'Password',
-                                                          errorMaxLines: 3,
-                                                        ),
-                                                        validator: Validate()
-                                                            .validatePassword,
-                                                        obscureText: true,
-                                                        onChanged: (value) {
-                                                          setState(() =>
-                                                              passwordDelete_1 =
-                                                                  value);
-                                                        },
+                                key: ValueKey(
+                                    "confirm-delete-account-warning-button"),
+                                child: Text("CONFIRM",
+                                    style: TextStyle(color: Colors.red[700])),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text("Enter Password"),
+                                          scrollable: true,
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  children: [
+                                                    TextFormField(
+                                                      key: ValueKey(
+                                                          "delete-password"),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        icon: Icon(Icons.lock),
+                                                        hintText:
+                                                            'Enter your password',
+                                                        labelText: 'Password',
+                                                        errorMaxLines: 3,
                                                       ),
-                                                      TextFormField(
-                                                        key: ValueKey(
-                                                            "delete-repeat-password"),
-                                                        decoration:
-                                                            InputDecoration(
-                                                          icon:
-                                                              Icon(Icons.lock),
-                                                          hintText:
-                                                              'Repeat your password',
-                                                          labelText:
-                                                              'Repeat Password',
-                                                        ),
-                                                        obscureText: true,
-                                                        onChanged: (value) {
-                                                          setState(() =>
-                                                              passwordDelete_2 =
-                                                                  value);
-                                                        },
-                                                        validator: (value) => value !=
-                                                                passwordDelete_1
-                                                            ? "Passwords do not match"
-                                                            : null,
+                                                      validator: Validate()
+                                                          .validatePassword,
+                                                      obscureText: true,
+                                                      onChanged: (value) {
+                                                        setState(() =>
+                                                            passwordDelete_1 =
+                                                                value);
+                                                      },
+                                                    ),
+                                                    TextFormField(
+                                                      key: ValueKey(
+                                                          "delete-repeat-password"),
+                                                      decoration:
+                                                          InputDecoration(
+                                                        icon: Icon(Icons.lock),
+                                                        hintText:
+                                                            'Repeat your password',
+                                                        labelText:
+                                                            'Repeat Password',
                                                       ),
-                                                    ],
-                                                  ),
+                                                      obscureText: true,
+                                                      onChanged: (value) {
+                                                        setState(() =>
+                                                            passwordDelete_2 =
+                                                                value);
+                                                      },
+                                                      validator: (value) => value !=
+                                                              passwordDelete_1
+                                                          ? "Passwords do not match"
+                                                          : null,
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                  key: ValueKey(
-                                                      "confirm-delete-account-button"),
-                                                  onPressed: () async {
-                                                    print("passwordDelete_1: " +
-                                                        passwordDelete_1 +
-                                                        "\npasswordDelete_2: " +
-                                                        passwordDelete_2);
-
-                                                    if (_formKey.currentState
-                                                        .validate()) {
-                                                      dynamic result = await _auth
-                                                          .signInWithEmailAndPassword(
-                                                              await _db
-                                                                  .getEmail(),
-                                                              passwordDelete_1);
-
-                                                      print(
-                                                          "Delete Account Sign In Result:\n" +
-                                                              result
-                                                                  .toString());
-
-                                                      if (result != null) {
-                                                        // delete account here!
-                                                        await _db
-                                                            .deleteUserData()
-                                                            .then((_) async {
-                                                          // This line would actually delete user auth! Use with care.
-                                                          // await _auth
-                                                          //     .deleteUser();
-
-                                                          Navigator.pop(
-                                                              context);
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return AlertDialog(
-                                                                title: Text(
-                                                                    "Account deleted."),
-                                                                content: Text(
-                                                                    "Your account has been deleted successfully.\nThank you for using Planaholic!"),
-                                                                actions: [
-                                                                  TextButton(
-                                                                      child: Text(
-                                                                          "Confirm"),
-                                                                      onPressed: () => Navigator.of(
-                                                                              context)
-                                                                          .popUntil((route) =>
-                                                                              route.isFirst)),
-                                                                ],
-                                                              );
-                                                            },
-                                                          );
-                                                        });
-                                                      } else {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return AlertDialog(
-                                                              title: Text(
-                                                                  "Failed to delete account."),
-                                                              content: Text(
-                                                                  "Your password could be incorrect."),
-                                                              actions: [
-                                                                TextButton(
-                                                                  child: Text(
-                                                                      "Ok"),
-                                                                  onPressed: () =>
-                                                                      Navigator.pop(
-                                                                          context),
-                                                                ),
-                                                              ],
-                                                            );
-                                                          },
-                                                        );
-                                                      }
-                                                    }
-                                                  },
-                                                  child: Text("Confirm")),
-                                              TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text("Cancel")),
+                                              ),
                                             ],
-                                          );
-                                        });
-                                  },
-                                  child: Text("Confirm")),
-                              MyButtons.roundedRed(
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              key: ValueKey(
+                                                  "confirm-delete-account-button"),
+                                              child: Text(
+                                                "CONFIRM",
+                                                style: TextStyle(
+                                                    color: Colors.red[700]),
+                                              ),
+                                              onPressed: () async {
+                                                if (_formKey.currentState
+                                                    .validate()) {
+                                                  dynamic result = await _auth
+                                                      .signInWithEmailAndPassword(
+                                                          await _db.getEmail(),
+                                                          passwordDelete_1);
+
+                                                  if (result != null) {
+                                                    // delete account here!
+                                                    await _db
+                                                        .deleteUserData()
+                                                        .then((_) async {
+                                                      // This line would actually delete user auth! Use with care.
+                                                      // await _auth
+                                                      //     .deleteUser();
+
+                                                      Navigator.pop(context);
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) {
+                                                          return AlertDialog(
+                                                            title: Text(
+                                                                "Account deleted."),
+                                                            content: Text(
+                                                                "Your account has been deleted successfully.\nThank you for using Planaholic!"),
+                                                            actions: [
+                                                              TextButton(
+                                                                  child: Text(
+                                                                      "Confirm"),
+                                                                  onPressed: () => Navigator.of(
+                                                                          context)
+                                                                      .popUntil(
+                                                                          (route) =>
+                                                                              route.isFirst)),
+                                                            ],
+                                                          );
+                                                        },
+                                                      );
+                                                    });
+                                                  } else {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return AlertDialog(
+                                                          title: Text(
+                                                              "Failed to delete account."),
+                                                          content: Text(
+                                                              "Your password could be incorrect."),
+                                                          actions: [
+                                                            TextButton(
+                                                              child: Text("Ok"),
+                                                              onPressed: () =>
+                                                                  Navigator.pop(
+                                                                      context),
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                }
+                                              },
+                                            ),
+                                            TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: Text("Cancel")),
+                                          ],
+                                        );
+                                      });
+                                },
+                              ),
+                              TextButton(
                                   onPressed: () => Navigator.pop(context),
-                                  text: "Cancel",
-                                  key: ValueKey("cancel-delete-account")),
+                                  child: Text("Cancel")),
                             ],
                           );
                         });
@@ -401,7 +393,8 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.02,
               ),
-              buildSettingCategory(context, Icons.import_export_outlined, "Import & Export"),
+              buildSettingCategory(
+                  context, Icons.import_export_outlined, "Import & Export"),
               SizedBox(
                 height: screenHeight * 0.01,
               ),
@@ -418,7 +411,7 @@ class _SettingsState extends State<Settings> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text("Export all activities"),
+                          title: Text("Export All Activities"),
                           content: Text(
                               "Do you want to export all of your activities as an .ics file?"),
                           actions: [
@@ -443,19 +436,23 @@ class _SettingsState extends State<Settings> {
               SizedBox(
                 height: screenHeight * 0.02,
               ),
-              buildSettingCategory(context, Icons.volume_up_outlined, "Notifications"),
+              buildSettingCategory(
+                  context, Icons.volume_up_outlined, "Notifications"),
               SizedBox(
                 height: screenHeight * 0.01,
               ),
               buildSettingOption(
-                  context: context, title: "Activity reminder", onTap: () {
+                  context: context,
+                  title: "Activity reminder",
+                  onTap: () {
                     showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("When do you want to be notified of an upcoming activity?"),
-                          content: StatefulBuilder(
-                            builder: (BuildContext context, StateSetter setState) {
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text(
+                                "When do you want to be notified of an upcoming activity?"),
+                            content: StatefulBuilder(builder:
+                                (BuildContext context, StateSetter setState) {
                               return Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
@@ -464,55 +461,95 @@ class _SettingsState extends State<Settings> {
                                     min: 1,
                                     max: 60,
                                     divisions: 60,
-                                    onChanged: (val) => setState(() => notify_before = val.round()),
+                                    onChanged: (val) => setState(
+                                        () => notify_before = val.round()),
                                   ),
-                                  Text(notify_before.toString() + (notify_before == 1 ? " minute before" : " minutes before")),
+                                  Text(notify_before.toString() +
+                                      (notify_before == 1
+                                          ? " minute before"
+                                          : " minutes before")),
                                 ],
                               );
-                            }
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () async {
-                                  await DbNotifService().updateBefore(notify_before);
-                                  await DbNotifService().initialise();
-                                  List<Event> events = await DbService().getAllEvents();
-                                  int before = await DbNotifService().getBefore();
-                                  NotifService.deleteAll();
-                                  for (Event e in events) {
-                                    DateTime startTimeDb = e.startTime;
-                                    if (e.id != null && startTimeDb.subtract(Duration(minutes: before)).compareTo(DateTime.now()) > 0) {
-                                      List<dynamic> lsInit = await DbNotifService().getAvailable();
-                                      List<int> ls = lsInit.cast<int>();
-                                      int notifId = ls[0];
-                                      ls.removeAt(0);
-                                      await DbNotifService().updateAvailable(ls);
-                                      await DbNotifService().addToTaken(notifId, e.id);
-                                      await NotifService.notifyScheduled(e, notifId, before);
+                            }),
+                            actions: [
+                              TextButton(
+                                  onPressed: () async {
+                                    await DbNotifService()
+                                        .updateBefore(notify_before);
+                                    await DbNotifService().initialise();
+                                    List<Event> events =
+                                        await DbService().getAllEvents();
+                                    int before =
+                                        await DbNotifService().getBefore();
+                                    NotifService.deleteAll();
+                                    for (Event e in events) {
+                                      DateTime startTimeDb = e.startTime;
+                                      if (e.id != null &&
+                                          startTimeDb
+                                                  .subtract(
+                                                      Duration(minutes: before))
+                                                  .compareTo(DateTime.now()) >
+                                              0) {
+                                        List<dynamic> lsInit =
+                                            await DbNotifService()
+                                                .getAvailable();
+                                        List<int> ls = lsInit.cast<int>();
+                                        int notifId = ls[0];
+                                        ls.removeAt(0);
+                                        await DbNotifService()
+                                            .updateAvailable(ls);
+                                        await DbNotifService()
+                                            .addToTaken(notifId, e.id);
+                                        await NotifService.notifyScheduled(
+                                            e, notifId, before);
+                                      }
                                     }
-                                  }
-                                  Navigator.pop(context);
-                                },
-                                child: Text("Confirm")),
-                            TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: Text("Cancel")),
-                          ],
-                        );
-                      });
-              }),
+                                    Navigator.pop(context);
+                                  },
+                                  child: Text("Confirm")),
+                              TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("Cancel")),
+                            ],
+                          );
+                        });
+                  }),
               SizedBox(
                 height: screenHeight * 0.02,
               ),
               Center(
                 child: Container(
                   width: screenWidth * 0.7,
+                  padding: EdgeInsets.only(top: screenHeight * 0.02),
                   child: MyButtons.roundedRed(
                     key: ValueKey("sign-out-button"),
                     text: "Sign Out",
-                    onPressed: () async {
-                      await _auth.signOut();
-                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text("Signing Out"),
+                              content: Text(
+                                  "Are you sure you want to sign out of your account?"),
+                              actions: [
+                                TextButton(
+                                  child: Text("Sign Out",
+                                      style: TextStyle(color: Colors.red[700])),
+                                  onPressed: () {
+                                    _auth.signOut().then((_) =>
+                                        Navigator.of(context).popUntil(
+                                            (route) => route.isFirst));
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text("Cancel",
+                                      style: TextStyle(color: Colors.grey)),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            );
+                          });
                     },
                   ),
                 ),
@@ -524,7 +561,8 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget buildSettingCategory(BuildContext context, IconData iconData, String title) {
+  Widget buildSettingCategory(
+      BuildContext context, IconData iconData, String title) {
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Container(
