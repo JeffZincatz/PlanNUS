@@ -177,11 +177,15 @@ class _ProfileState extends State<Profile> {
                           builder: (context, snapshot) {
                             username =
                                 snapshot.hasData ? snapshot.data : username;
-                            return Text(
-                              username,
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
+                            return Container(
+                              width: screenWidth * 0.6,
+                              child: Text(
+                                username,
+                                style: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             );
                           }),
                   isEditing
