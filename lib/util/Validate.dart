@@ -11,7 +11,7 @@ class Validate {
 
   String validatePassword(String password) {
     Pattern pattern =
-        r'^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?\W).*$';
+        r'^(?=.{8,}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[\W_]).*$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(password))
       return "Password must have at least 8 characters, 1 uppercase letter, 1 lowercase letter and 1 special character.";
