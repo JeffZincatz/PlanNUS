@@ -68,6 +68,7 @@ class EventTile extends StatelessWidget {
                     // I'm not sure why this throws some error but it still works fine somehow
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityCompleted(event: event)));
                   }),
+                  SizedBox(width: 48),
                   IconButton(icon: Icon(Icons.close), onPressed: () {
                     DbService().markUncompleted(event);
                     Navigator.pop(context, true);

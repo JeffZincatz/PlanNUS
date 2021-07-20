@@ -177,6 +177,7 @@ class _EditOrDelete extends State<EditOrDelete> {
                             MySnackBar.show(context,
                                 Text("Activity successfully deleted."));
                           }),
+                      SizedBox(width: 48),
                       IconButton(
                           icon: Icon(Icons.close),
                           onPressed: () {
