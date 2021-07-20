@@ -66,11 +66,15 @@ class _EventEditingPageState extends State<EventEditingPage> {
             difficulty: difficulty,
           );
 
+          DateTime now = DateTime.now();
+          DateTime nowToNearestMin =
+              DateTime(now.year, now.month, now.day, now.hour, now.minute);
+
           if (submitted.description == "") {
             // errorMessage = "Please add a description";
             // setState(() {});
             MySnackBar.show(context, Text("Please add a description."));
-          } else if (submitted.startTime.compareTo(DateTime.now()) < 0) {
+          } else if (submitted.startTime.compareTo(nowToNearestMin) < 0) {
             // errorMessage = "Start Time cannot be in the past!";
             // setState(() {});
             MySnackBar.show(context, Text("Start Time cannot be in the past!"));
