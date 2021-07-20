@@ -3,6 +3,7 @@ import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:social_share/social_share.dart';
 
+/// This widget class is no longer used, since AlertDialog is used instead.
 class BadgeShare extends StatefulWidget {
   final String cat;
   final int no;
@@ -25,7 +26,6 @@ class _BadgeShareState extends State<BadgeShare> {
   @override
   Widget build(BuildContext context) {
 
-    double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(

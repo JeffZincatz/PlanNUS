@@ -3,7 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:planaholic/elements/ActivitiesCompletedDialog.dart';
+import 'package:planaholic/elements/ActivityCompletedDialog.dart';
 import 'package:planaholic/elements/BadgeShareDialog.dart';
 import 'package:planaholic/elements/BadgeShareTotalDialog.dart';
 import 'package:planaholic/elements/MyButtons.dart';
@@ -15,7 +15,6 @@ import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
 import 'package:ical/serializer.dart' as ICal;
 import 'package:planaholic/services/DbNotifService.dart';
-import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/services/NotifService.dart';
 
 class Settings extends StatefulWidget {
@@ -27,13 +26,13 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   // Notification
-  int notify_before = 5;
+  int notifyBefore = 5;
 
   @override
   Widget build(BuildContext context) {
     Future<void> updateBefore() async {
       int before = await DbNotifService().getBefore();
-      notify_before = before;
+      notifyBefore = before;
     }
 
     updateBefore();
@@ -460,15 +459,15 @@ class _SettingsState extends State<Settings> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Slider(
-                                    value: notify_before.toDouble(),
+                                    value: notifyBefore.toDouble(),
                                     min: 1,
                                     max: 60,
                                     divisions: 60,
                                     onChanged: (val) => setState(
-                                        () => notify_before = val.round()),
+                                        () => notifyBefore = val.round()),
                                   ),
-                                  Text(notify_before.toString() +
-                                      (notify_before == 1
+                                  Text(notifyBefore.toString() +
+                                      (notifyBefore == 1
                                           ? " minute before"
                                           : " minutes before")),
                                 ],
@@ -478,7 +477,7 @@ class _SettingsState extends State<Settings> {
                               TextButton(
                                   onPressed: () async {
                                     await DbNotifService()
-                                        .updateBefore(notify_before);
+                                        .updateBefore(notifyBefore);
                                     await DbNotifService().initialise();
                                     List<Event> events =
                                         await DbService().getAllEvents();
@@ -600,7 +599,7 @@ class _SettingsState extends State<Settings> {
                             passed: true,
                             difficulty: 7,
                           );
-                          return ActivitiesCompletedDialog(event: test);
+                          return ActivityCompletedDialog(event: test);
                         });
                   }),
             ]),

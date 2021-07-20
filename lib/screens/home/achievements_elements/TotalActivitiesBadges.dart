@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:planaholic/elements/BadgeShareTotalDialog.dart';
 import 'package:planaholic/services/DbService.dart';
-import 'package:planaholic/screens/home/BadgeShareTotal.dart';
 
 class TotalActivitiesBadges extends StatefulWidget {
 
@@ -60,8 +60,14 @@ class _TotalActivitiesBadgesState extends State<TotalActivitiesBadges> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => BadgeShareTotal(no: widget.no[index], desc: widget.text[index],)));
+                              // Navigator.push(context,
+                              //   MaterialPageRoute(builder: (context) => BadgeShareTotal(no: widget.no[index], desc: widget.text[index],)));
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => BadgeShareTotalDialog(
+                                    no: widget.no[index],
+                                    desc: widget.text[index],
+                                  ));
                             },
                             child: Column(
                               children: [

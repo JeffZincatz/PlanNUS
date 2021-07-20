@@ -5,6 +5,7 @@ import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:social_share/social_share.dart';
 
+/// This widget class is no longer used, since AlertDialog is used instead.
 class ActivityCompleted extends StatefulWidget {
   final Event event;
 
@@ -68,7 +69,7 @@ class _ActivityCompletedState extends State<ActivityCompleted> {
                         if (snapshot.hasData) {
                           badgeNo = whichBadge(snapshot.data);
                           return Image.asset(
-                            'assets/badges/${widget.event.category}${badgeNo}.png',
+                            'assets/badges/${widget.event.category}$badgeNo.png',
                             scale: 1/5,
                           );
                         } else {

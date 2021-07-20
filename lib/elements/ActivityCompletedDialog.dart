@@ -4,16 +4,16 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:social_share/social_share.dart';
 
-class ActivitiesCompletedDialog extends StatefulWidget {
+class ActivityCompletedDialog extends StatefulWidget {
   final Event event;
 
-  const ActivitiesCompletedDialog({Key key, this.event}) : super(key: key);
+  const ActivityCompletedDialog({Key key, this.event}) : super(key: key);
 
   @override
-  _ActivitiesCompletedDialogState createState() => _ActivitiesCompletedDialogState();
+  _ActivityCompletedDialogState createState() => _ActivityCompletedDialogState();
 }
 
-class _ActivitiesCompletedDialogState extends State<ActivitiesCompletedDialog> {
+class _ActivityCompletedDialogState extends State<ActivityCompletedDialog> {
   DbService dbService = new DbService();
 
   String _printDuration(Duration duration) {
