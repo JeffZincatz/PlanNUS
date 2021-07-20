@@ -47,7 +47,7 @@ class NotifService {
         payload: 'item x');
   }
 
-  static void notifyScheduled(Event event, int id, int before) async {
+  static Future<void> notifyScheduled(Event event, int id, int before) async {
     DateTime startTime = event.startTime.subtract(Duration(minutes: before));
     tz.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation("Asia/Singapore"));
