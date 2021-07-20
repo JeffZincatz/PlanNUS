@@ -3,6 +3,9 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:planaholic/elements/ActivitiesCompletedDialog.dart';
+import 'package:planaholic/elements/BadgeShareDialog.dart';
+import 'package:planaholic/elements/BadgeShareTotalDialog.dart';
 import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/models/Event.dart';
@@ -553,7 +556,53 @@ class _SettingsState extends State<Settings> {
                     },
                   ),
                 ),
-              )
+              ),
+              buildSettingOption(
+                  context: context,
+                  title: "BadgeShareDialog Test",
+                  onTap: () {
+                    // show badge share dialog example
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return BadgeShareDialog(
+                              cat: "Studies", no: 5, desc: "Test Description");
+                        });
+                  }),
+              buildSettingOption(
+                  context: context,
+                  title: "BadgeShareTotalDialog Test",
+                  onTap: () {
+                    // show badge share total dialog example
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return BadgeShareTotalDialog(
+                            no: 15,
+                            desc: "Test total description",
+                          );
+                        });
+                  }),
+              buildSettingOption(
+                  context: context,
+                  title: "ActivityCompletedDialog Test",
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          Event test = new Event(
+                            category: "Arts",
+                            description:
+                                "Activities Competed Dialog abstraction test.",
+                            startTime: DateTime(2021, 7, 20, 12),
+                            endTime: DateTime(2021, 7, 20, 13),
+                            completed: true,
+                            passed: true,
+                            difficulty: 7,
+                          );
+                          return ActivitiesCompletedDialog(event: test);
+                        });
+                  }),
             ]),
           ),
         ],
