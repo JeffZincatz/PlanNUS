@@ -9,7 +9,7 @@ class EmptyCardWithText extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: () {},
-      child: Center(child: Text(text)),
+      child: Center(child: Text(text, textAlign: TextAlign.center,)),
     );
   }
 }
