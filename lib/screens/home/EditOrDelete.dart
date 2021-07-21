@@ -230,237 +230,163 @@ class _EditOrDelete extends State<EditOrDelete> {
         title: Text("Edit or delete"),
         backgroundColor: PresetColors.blueAccent,
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: screenWidth / 24, vertical: screenHeight / 30),
-            child: Wrap(
-              runSpacing: screenHeight / 30,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Category",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+      body: GestureDetector(
+        onTap: () {
+          // un-focus text form field when tapped outside
+          FocusScope.of(context).unfocus();
+        },
+        child: ListView(
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(
+                  horizontal: screenWidth / 24, vertical: screenHeight / 30),
+              child: Wrap(
+                runSpacing: screenHeight / 30,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Category",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
                       ),
-                    ),
-                    StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) {
-                        return DropdownButton<String>(
-                          isExpanded: true,
-                          items: <String>[
-                            "Studies",
-                            "Fitness",
-                            "Arts",
-                            "Social",
-                            "Others"
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                                value: value, child: Text(value));
-                          }).toList(),
-                          value: dropdownValue,
-                          icon: Icon(Icons.arrow_downward),
-                          onChanged: (String newValue) {
-                            setState(() {
-                              dropdownValue = newValue;
-                            });
-                          },
+                      StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return DropdownButton<String>(
+                            isExpanded: true,
+                            items: <String>[
+                              "Studies",
+                              "Fitness",
+                              "Arts",
+                              "Social",
+                              "Others"
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                  value: value, child: Text(value));
+                            }).toList(),
+                            value: dropdownValue,
+                            icon: Icon(Icons.arrow_downward),
+                            onChanged: (String newValue) {
+                              setState(() {
+                                dropdownValue = newValue;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Description",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      TextFormField(
+                        decoration: InputDecoration(
+                          hintText: 'Enter description',
+                          labelText: 'Description',
+                        ),
+                        initialValue: description,
+                        onChanged: (String desc) {
+                          description = desc;
+                        },
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Perceived Difficulty",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 13,
+                            child: Slider(
+                              value: difficulty.toDouble(),
+                              // value: difficulty ?? 5,
+                              activeColor: Colors.blue[difficulty * 100],
+                              inactiveColor: Colors.blue[difficulty * 100],
+                              min: 1,
+                              max: 9,
+                              divisions: 8,
+                              onChanged: (val) =>
+                                  setState(() => difficulty = val.round()),
+                            ),
+                          ),
+                          Expanded(flex: 1, child: Text(difficulty.toString())),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Start Date",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              DatePicker.showDatePicker(context,
+                                  currentTime: DateTime(
+                                    int.parse(startDate.substring(
+                                        startDate.lastIndexOf('/') + 1,
+                                        startDate.length)),
+                                    int.parse(startDate.substring(
+                                        startDate.indexOf('/') + 1,
+                                        startDate.lastIndexOf('/'))),
+                                    int.parse(
+                                        startDate.substring(0, startDate.indexOf('/'))),
+                                  ), onConfirm: (val) {
+                                startDate = DateFormat.d().format(val) +
+                                    "/" +
+                                    DateFormat.M().format(val) +
+                                    "/" +
+                                    DateFormat.y().format(val);
+                                setState(() {});
+                              });
+                            },
+                            child: Text(
+                              startDate,
+                            ),
+                          ),
                         );
-                      },
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Description",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: 'Enter description',
-                        labelText: 'Description',
-                      ),
-                      initialValue: description,
-                      onChanged: (String desc) {
-                        description = desc;
-                      },
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Perceived Difficulty",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 13,
-                          child: Slider(
-                            value: difficulty.toDouble(),
-                            // value: difficulty ?? 5,
-                            activeColor: Colors.blue[difficulty * 100],
-                            inactiveColor: Colors.blue[difficulty * 100],
-                            min: 1,
-                            max: 9,
-                            divisions: 8,
-                            onChanged: (val) =>
-                                setState(() => difficulty = val.round()),
-                          ),
+                      }),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Start Time",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
                         ),
-                        Expanded(flex: 1, child: Text(difficulty.toString())),
-                      ],
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Start Date",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
                       ),
-                    ),
-                    StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            DatePicker.showDatePicker(context,
-                                currentTime: DateTime(
-                                  int.parse(startDate.substring(
-                                      startDate.lastIndexOf('/') + 1,
-                                      startDate.length)),
-                                  int.parse(startDate.substring(
-                                      startDate.indexOf('/') + 1,
-                                      startDate.lastIndexOf('/'))),
-                                  int.parse(
-                                      startDate.substring(0, startDate.indexOf('/'))),
-                                ), onConfirm: (val) {
-                              startDate = DateFormat.d().format(val) +
-                                  "/" +
-                                  DateFormat.M().format(val) +
-                                  "/" +
-                                  DateFormat.y().format(val);
-                              setState(() {});
-                            });
-                          },
-                          child: Text(
-                            startDate,
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Start Time",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            DatePicker.showTimePicker(context,
-                                currentTime: DateTime(
-                                    2021,
-                                    1,
-                                    1,
-                                    int.parse(startTime.substring(0, 2)),
-                                    int.parse(startTime.substring(3, 5))),
-                                showSecondsColumn: false, onConfirm: (date) {
-                              startTime =
-                                  DateFormat.Hms().format(date).substring(0, 5);
-                              setState(() {});
-                            });
-                          },
-                          child: Text(
-                            startTime,
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "End Date",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setState) {
-                      return SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {
-                            DatePicker.showDatePicker(context,
-                                currentTime: DateTime(
-                                  int.parse(endDate.substring(
-                                      endDate.lastIndexOf('/') + 1, endDate.length)),
-                                  int.parse(endDate.substring(
-                                      endDate.indexOf('/') + 1,
-                                      endDate.lastIndexOf('/'))),
-                                  int.parse(
-                                      endDate.substring(0, endDate.indexOf('/'))),
-                                ), onConfirm: (val) {
-                              endDate = DateFormat.d().format(val) +
-                                  "/" +
-                                  DateFormat.M().format(val) +
-                                  "/" +
-                                  DateFormat.y().format(val);
-                              setState(() {});
-                            });
-                          },
-                          child: Text(
-                            endDate,
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "End Time",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                    StatefulBuilder(
-                      builder: (BuildContext context, StateSetter setState) {
+                      StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState) {
                         return SizedBox(
                           width: double.infinity,
                           child: OutlinedButton(
@@ -470,35 +396,115 @@ class _EditOrDelete extends State<EditOrDelete> {
                                       2021,
                                       1,
                                       1,
-                                      int.parse(endTime.substring(0, 2)),
-                                      int.parse(endTime.substring(3, 5))),
+                                      int.parse(startTime.substring(0, 2)),
+                                      int.parse(startTime.substring(3, 5))),
                                   showSecondsColumn: false, onConfirm: (date) {
-                                endTime =
+                                startTime =
                                     DateFormat.Hms().format(date).substring(0, 5);
                                 setState(() {});
                               });
                             },
                             child: Text(
-                              endTime,
+                              startTime,
                             ),
                           ),
                         );
-                      },
-                    ),
-                  ],
-                ),
-                // Not needed if MySnackBar works well
-                // Text(
-                //   errorMessage,
-                //   style: TextStyle(
-                //     color: Colors.red,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-                // ),
-              ],
-            ),
-          )
-        ],
+                      }),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "End Date",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState) {
+                        return SizedBox(
+                          width: double.infinity,
+                          child: OutlinedButton(
+                            onPressed: () {
+                              DatePicker.showDatePicker(context,
+                                  currentTime: DateTime(
+                                    int.parse(endDate.substring(
+                                        endDate.lastIndexOf('/') + 1, endDate.length)),
+                                    int.parse(endDate.substring(
+                                        endDate.indexOf('/') + 1,
+                                        endDate.lastIndexOf('/'))),
+                                    int.parse(
+                                        endDate.substring(0, endDate.indexOf('/'))),
+                                  ), onConfirm: (val) {
+                                endDate = DateFormat.d().format(val) +
+                                    "/" +
+                                    DateFormat.M().format(val) +
+                                    "/" +
+                                    DateFormat.y().format(val);
+                                setState(() {});
+                              });
+                            },
+                            child: Text(
+                              endDate,
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "End Time",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                DatePicker.showTimePicker(context,
+                                    currentTime: DateTime(
+                                        2021,
+                                        1,
+                                        1,
+                                        int.parse(endTime.substring(0, 2)),
+                                        int.parse(endTime.substring(3, 5))),
+                                    showSecondsColumn: false, onConfirm: (date) {
+                                  endTime =
+                                      DateFormat.Hms().format(date).substring(0, 5);
+                                  setState(() {});
+                                });
+                              },
+                              child: Text(
+                                endTime,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  // Not needed if MySnackBar works well
+                  // Text(
+                  //   errorMessage,
+                  //   style: TextStyle(
+                  //     color: Colors.red,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

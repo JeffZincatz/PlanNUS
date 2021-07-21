@@ -89,128 +89,134 @@ class _SettingsState extends State<Settings> {
                     showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            title: Text("Change Password"),
-                            scrollable: true,
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    children: [
-                                      TextFormField(
-                                        key: ValueKey("enter-old-password"),
-                                        decoration: InputDecoration(
-                                          icon: Icon(Icons.lock),
-                                          hintText: 'Enter old password',
-                                          labelText: 'Old Password',
-                                          errorMaxLines: 3,
+                          return GestureDetector(
+                            onTap: () {
+                              // un-focus text form field when tapped outside
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: AlertDialog(
+                              title: Text("Change Password"),
+                              scrollable: true,
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Form(
+                                    key: _formKey,
+                                    child: Column(
+                                      children: [
+                                        TextFormField(
+                                          key: ValueKey("enter-old-password"),
+                                          decoration: InputDecoration(
+                                            icon: Icon(Icons.lock),
+                                            hintText: 'Enter old password',
+                                            labelText: 'Old Password',
+                                            errorMaxLines: 3,
+                                          ),
+                                          obscureText: true,
+                                          onChanged: (value) {
+                                            setState(() => passwordOld = value);
+                                          },
+                                          validator: Validate().validatePassword,
                                         ),
-                                        obscureText: true,
-                                        onChanged: (value) {
-                                          setState(() => passwordOld = value);
-                                        },
-                                        validator: Validate().validatePassword,
-                                      ),
-                                      TextFormField(
-                                        key: ValueKey("change-new-password"),
-                                        decoration: InputDecoration(
-                                          icon: Icon(Icons.lock),
-                                          hintText: 'Enter new password',
-                                          labelText: 'New Password',
-                                          errorMaxLines: 3,
+                                        TextFormField(
+                                          key: ValueKey("change-new-password"),
+                                          decoration: InputDecoration(
+                                            icon: Icon(Icons.lock),
+                                            hintText: 'Enter new password',
+                                            labelText: 'New Password',
+                                            errorMaxLines: 3,
+                                          ),
+                                          validator: Validate().validatePassword,
+                                          obscureText: true,
+                                          onChanged: (value) {
+                                            setState(() => password_1 = value);
+                                          },
                                         ),
-                                        validator: Validate().validatePassword,
-                                        obscureText: true,
-                                        onChanged: (value) {
-                                          setState(() => password_1 = value);
-                                        },
-                                      ),
-                                      TextFormField(
-                                        key: ValueKey("repeat-new-password"),
-                                        decoration: InputDecoration(
-                                          icon: Icon(Icons.lock),
-                                          hintText: 'Repeat new password',
-                                          labelText: 'Repeat New Password',
+                                        TextFormField(
+                                          key: ValueKey("repeat-new-password"),
+                                          decoration: InputDecoration(
+                                            icon: Icon(Icons.lock),
+                                            hintText: 'Repeat new password',
+                                            labelText: 'Repeat New Password',
+                                          ),
+                                          obscureText: true,
+                                          onChanged: (value) {
+                                            setState(() => password_2 = value);
+                                          },
+                                          validator: (value) =>
+                                              value != password_1
+                                                  ? "Passwords do not match"
+                                                  : null,
                                         ),
-                                        obscureText: true,
-                                        onChanged: (value) {
-                                          setState(() => password_2 = value);
-                                        },
-                                        validator: (value) =>
-                                            value != password_1
-                                                ? "Passwords do not match"
-                                                : null,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                    key: ValueKey(
+                                        "confirm-change-password-button"),
+                                    onPressed: () async {
+                                      if (_formKey.currentState.validate()) {
+                                        dynamic result = await _auth
+                                            .signInWithEmailAndPassword(
+                                                await _db.getEmail(),
+                                                passwordOld);
+
+                                        if (result != null) {
+                                          _auth
+                                              .changePassword(
+                                                  password: password_1)
+                                              .then((_) {
+                                            Navigator.pop(context);
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return AlertDialog(
+                                                    content: Text(
+                                                        "Your password has been changed successfully."),
+                                                    actions: [
+                                                      TextButton(
+                                                        child: Text("Confirm"),
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          });
+                                        } else {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                    "Failed to change password."),
+                                                content: Text(
+                                                    "Your old password could be incorrect."),
+                                                actions: [
+                                                  TextButton(
+                                                    child: Text("Ok"),
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+                                      }
+                                    },
+                                    child: Text("Confirm")),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text("Cancel")),
                               ],
                             ),
-                            actions: [
-                              TextButton(
-                                  key: ValueKey(
-                                      "confirm-change-password-button"),
-                                  onPressed: () async {
-                                    if (_formKey.currentState.validate()) {
-                                      dynamic result = await _auth
-                                          .signInWithEmailAndPassword(
-                                              await _db.getEmail(),
-                                              passwordOld);
-
-                                      if (result != null) {
-                                        _auth
-                                            .changePassword(
-                                                password: password_1)
-                                            .then((_) {
-                                          Navigator.pop(context);
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return AlertDialog(
-                                                  content: Text(
-                                                      "Your password has been changed successfully."),
-                                                  actions: [
-                                                    TextButton(
-                                                      child: Text("Confirm"),
-                                                      onPressed: () =>
-                                                          Navigator.pop(
-                                                              context),
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        });
-                                      } else {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                  "Failed to change password."),
-                                              content: Text(
-                                                  "Your old password could be incorrect."),
-                                              actions: [
-                                                TextButton(
-                                                  child: Text("Ok"),
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      }
-                                    }
-                                  },
-                                  child: Text("Confirm")),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("Cancel")),
-                            ],
                           );
                         });
                   }),
@@ -242,142 +248,149 @@ class _SettingsState extends State<Settings> {
                                   showDialog(
                                       context: context,
                                       builder: (context) {
-                                        return AlertDialog(
-                                          title: Text("Enter Password"),
-                                          scrollable: true,
-                                          content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Form(
-                                                key: _formKey,
-                                                child: Column(
-                                                  children: [
-                                                    TextFormField(
-                                                      key: ValueKey(
-                                                          "delete-password"),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        icon: Icon(Icons.lock),
-                                                        hintText:
-                                                            'Enter your password',
-                                                        labelText: 'Password',
-                                                        errorMaxLines: 3,
+                                        return GestureDetector(
+                                          onTap: () {
+                                            // un-focus text form field when tapped outside
+                                            FocusScope.of(context).unfocus();
+                                          },
+                                          child: AlertDialog(
+                                            title: Text("Enter Password"),
+                                            scrollable: true,
+                                            content: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Form(
+                                                  key: _formKey,
+                                                  child: Column(
+                                                    children: [
+                                                      TextFormField(
+                                                        key: ValueKey(
+                                                            "delete-password"),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          icon: Icon(Icons.lock),
+                                                          hintText:
+                                                              'Enter your password',
+                                                          labelText: 'Password',
+                                                          errorMaxLines: 3,
+                                                        ),
+                                                        validator: Validate()
+                                                            .validatePassword,
+                                                        obscureText: true,
+                                                        onChanged: (value) {
+                                                          setState(() =>
+                                                              passwordDelete_1 =
+                                                                  value);
+                                                        },
                                                       ),
-                                                      validator: Validate()
-                                                          .validatePassword,
-                                                      obscureText: true,
-                                                      onChanged: (value) {
-                                                        setState(() =>
-                                                            passwordDelete_1 =
-                                                                value);
-                                                      },
-                                                    ),
-                                                    TextFormField(
-                                                      key: ValueKey(
-                                                          "delete-repeat-password"),
-                                                      decoration:
-                                                          InputDecoration(
-                                                        icon: Icon(Icons.lock),
-                                                        hintText:
-                                                            'Repeat your password',
-                                                        labelText:
-                                                            'Repeat Password',
+                                                      TextFormField(
+                                                        key: ValueKey(
+                                                            "delete-repeat-password"),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          icon: Icon(Icons.lock),
+                                                          hintText:
+                                                              'Repeat your password',
+                                                          labelText:
+                                                              'Repeat Password',
+                                                        ),
+                                                        obscureText: true,
+                                                        onChanged: (value) {
+                                                          setState(() =>
+                                                              passwordDelete_2 =
+                                                                  value);
+                                                        },
+                                                        validator: (value) => value !=
+                                                                passwordDelete_1
+                                                            ? "Passwords do not match"
+                                                            : null,
                                                       ),
-                                                      obscureText: true,
-                                                      onChanged: (value) {
-                                                        setState(() =>
-                                                            passwordDelete_2 =
-                                                                value);
-                                                      },
-                                                      validator: (value) => value !=
-                                                              passwordDelete_1
-                                                          ? "Passwords do not match"
-                                                          : null,
-                                                    ),
-                                                  ],
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              key: ValueKey(
-                                                  "confirm-delete-account-button"),
-                                              child: Text(
-                                                "CONFIRM",
-                                                style: TextStyle(
-                                                    color: Colors.red[700]),
-                                              ),
-                                              onPressed: () async {
-                                                if (_formKey.currentState
-                                                    .validate()) {
-                                                  dynamic result = await _auth
-                                                      .signInWithEmailAndPassword(
-                                                          await _db.getEmail(),
-                                                          passwordDelete_1);
+                                              ],
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                key: ValueKey(
+                                                    "confirm-delete-account-button"),
+                                                child: Text(
+                                                  "CONFIRM",
+                                                  style: TextStyle(
+                                                      color: Colors.red[700]),
+                                                ),
+                                                onPressed: () async {
+                                                  if (_formKey.currentState
+                                                      .validate()) {
+                                                    dynamic result = await _auth
+                                                        .signInWithEmailAndPassword(
+                                                            await _db.getEmail(),
+                                                            passwordDelete_1);
 
-                                                  if (result != null) {
-                                                    // delete account here!
-                                                    await _db
-                                                        .deleteUserData()
-                                                        .then((_) async {
-                                                      // This line would actually delete user auth! Use with care.
-                                                      // await _auth
-                                                      //     .deleteUser();
+                                                    if (result != null) {
+                                                      // delete account here!
+                                                      await _db
+                                                          .deleteUserData()
+                                                          .then((_) async {
+                                                        // This line would actually delete user auth! Use with care.
+                                                        // TODO: un-comment the following lines when ready
+                                                        // await _auth
+                                                        //     .deleteUser();
 
-                                                      Navigator.pop(context);
+                                                        Navigator.pop(context);
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                  "Account deleted."),
+                                                              content: Text(
+                                                                  "Your account has been deleted successfully.\nThank you for using Planaholic!"),
+                                                              actions: [
+                                                                TextButton(
+                                                                    child: Text(
+                                                                        "Confirm"),
+                                                                    onPressed: () => Navigator.of(
+                                                                            context)
+                                                                        .popUntil(
+                                                                            (route) =>
+                                                                                route.isFirst)),
+                                                              ],
+                                                            );
+                                                          },
+                                                        );
+                                                      });
+                                                    } else {
                                                       showDialog(
                                                         context: context,
                                                         builder: (context) {
                                                           return AlertDialog(
                                                             title: Text(
-                                                                "Account deleted."),
+                                                                "Failed to delete account."),
                                                             content: Text(
-                                                                "Your account has been deleted successfully.\nThank you for using Planaholic!"),
+                                                                "Your password could be incorrect."),
                                                             actions: [
                                                               TextButton(
-                                                                  child: Text(
-                                                                      "Confirm"),
-                                                                  onPressed: () => Navigator.of(
-                                                                          context)
-                                                                      .popUntil(
-                                                                          (route) =>
-                                                                              route.isFirst)),
+                                                                child: Text("Ok"),
+                                                                onPressed: () =>
+                                                                    Navigator.pop(
+                                                                        context),
+                                                              ),
                                                             ],
                                                           );
                                                         },
                                                       );
-                                                    });
-                                                  } else {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) {
-                                                        return AlertDialog(
-                                                          title: Text(
-                                                              "Failed to delete account."),
-                                                          content: Text(
-                                                              "Your password could be incorrect."),
-                                                          actions: [
-                                                            TextButton(
-                                                              child: Text("Ok"),
-                                                              onPressed: () =>
-                                                                  Navigator.pop(
-                                                                      context),
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
+                                                    }
                                                   }
-                                                }
-                                              },
-                                            ),
-                                            TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
                                                 },
-                                                child: Text("Cancel")),
-                                          ],
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text("Cancel")),
+                                            ],
+                                          ),
                                         );
                                       });
                                 },
