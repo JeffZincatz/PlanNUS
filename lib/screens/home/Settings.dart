@@ -415,7 +415,7 @@ class _SettingsState extends State<Settings> {
                         return AlertDialog(
                           title: Text("Export All Activities"),
                           content: Text(
-                              "Do you want to export all of your activities as an .ics file?"),
+                              "Do you want to export all of your activities?\nAn .ics file will be save to your app directory (Android/data/com.bogoplan.planaholic/file)."),
                           actions: [
                             TextButton(
                                 onPressed: () async {
