@@ -90,7 +90,7 @@ class _BadgeShareDialogState extends State<BadgeShareDialog> {
                       onPressed: () {
                         SocialShare.shareTwitter(
                             "Badge obtained: ${widget.desc} \n"
-                                "I have done ${widget.no} ${activityOrActivities()} in ${widget.cat} category via Planaholic",
+                                "I have done ${widget.no} ${activityOrActivities()} in ${widget.cat} category via Planaholic. ",
                             hashtags: ["Planaholic", "BogoPlan", "GamifiedPlanner"],
                             url:"https://github.com/bernarduskrishna/Planaholic");
                       },

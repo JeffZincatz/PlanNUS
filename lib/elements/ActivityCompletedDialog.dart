@@ -144,7 +144,7 @@ class _ActivityCompletedDialogState extends State<ActivityCompletedDialog> {
                             "I just did an activity via Planaholic. \n"
                                 "Category: ${this.widget.event.category} \n"
                                 "Description: ${this.widget.event.description} \n"
-                                "Ended at ${widget.event.endTime.toString().substring(0, 16)}",
+                                "Ended at ${widget.event.endTime.toString().substring(0, 16)} ",
                             hashtags: ["Planaholic", "BogoPlan", "GamifiedPlanner"],
                             url:"https://github.com/bernarduskrishna/Planaholic");
                       },
