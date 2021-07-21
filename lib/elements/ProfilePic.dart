@@ -9,7 +9,7 @@ class ProfilePic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       width: radius * 2,
       height: radius * 2,
       decoration: BoxDecoration(
@@ -20,10 +20,11 @@ class ProfilePic extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-              spreadRadius: 5,
-              blurRadius: 15,
-              color: Colors.black.withOpacity(0.5),
-              offset: Offset(0, 10))
+            spreadRadius: 2,
+            blurRadius: 15,
+            color: Colors.black.withOpacity(0.5),
+            // offset: Offset(0, 10),
+          )
         ],
         shape: BoxShape.circle,
         image: DecorationImage(
@@ -34,4 +35,3 @@ class ProfilePic extends StatelessWidget {
     );
   }
 }
-

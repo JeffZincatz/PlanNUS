@@ -91,7 +91,7 @@ class _ProfileState extends State<Profile> {
                     builder: (context, snapshot) {
                       return snapshot.hasData
                           ? Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(screenHeight * 0.02),
                               child: Stack(children: [
                                 ProfilePic(
                                   image: snapshot.data,
