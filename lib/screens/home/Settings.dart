@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
+import 'package:ical/serializer.dart' as ICal;
 import 'package:path_provider/path_provider.dart';
-import 'package:planaholic/elements/ActivityCompletedDialog.dart';
-import 'package:planaholic/elements/BadgeShareDialog.dart';
-import 'package:planaholic/elements/BadgeShareTotalDialog.dart';
 import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/models/Event.dart';
@@ -13,7 +11,6 @@ import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
-import 'package:ical/serializer.dart' as ICal;
 import 'package:planaholic/services/DbNotifService.dart';
 import 'package:planaholic/services/NotifService.dart';
 

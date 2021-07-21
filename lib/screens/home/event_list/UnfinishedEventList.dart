@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:planaholic/services/DbNotifService.dart';
-import 'package:planaholic/services/NotifService.dart';
 import 'package:provider/provider.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/screens/home/home_elements/EventTile.dart';

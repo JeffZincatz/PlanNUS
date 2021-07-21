@@ -1,9 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:planaholic/models/Event.dart';
-import 'package:planaholic/util/TimeUtil.dart';
-import 'package:planaholic/util/StatsUtil.dart';
-import 'package:planaholic/services/DbService.dart';
 
 class DbNotifService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
