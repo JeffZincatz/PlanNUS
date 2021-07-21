@@ -51,7 +51,7 @@ class _SignInState extends State<SignIn> {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.2,
+                    height: MediaQuery.of(context).size.height * 0.1,
                     child: Center(
                       child: Text(
                         error,
@@ -85,6 +85,7 @@ class _SignInState extends State<SignIn> {
                             icon: Icon(Icons.lock),
                             hintText: 'Enter your password',
                             labelText: 'Password',
+                            errorMaxLines: 3,
                           ),
                           obscureText: true,
                           onChanged: (value) {
