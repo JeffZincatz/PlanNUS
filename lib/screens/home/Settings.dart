@@ -457,14 +457,14 @@ class _SettingsState extends State<Settings> {
                                 children: [
                                   Slider(
                                     value: notifyBefore.toDouble(),
-                                    min: 1,
+                                    min: 0,
                                     max: 60,
-                                    divisions: 60,
+                                    divisions: 12,
                                     onChanged: (val) => setState(
                                         () => notifyBefore = val.round()),
                                   ),
                                   Text(notifyBefore.toString() +
-                                      (notifyBefore == 1
+                                      (notifyBefore <= 1
                                           ? " minute before"
                                           : " minutes before")),
                                 ],
@@ -504,6 +504,10 @@ class _SettingsState extends State<Settings> {
                                       }
                                     }
                                     Navigator.pop(context);
+                                    MySnackBar.show(
+                                        context,
+                                        Text(
+                                            "Activity reminder timing updated successfully."));
                                   },
                                   child: Text("Confirm")),
                               TextButton(
