@@ -392,19 +392,7 @@ class DbService {
 
   Future getUserAttributes() async {
     try {
-      Map temp = {
-        "Intelligence": 50, // Studies
-        "Vitality": 50, // Fitness
-        "Spirit": 50, // Arts
-        "Charm": 50, // Social
-        "Resolve": 50, // completed/uncompleted
-      };
-
-      Map res = (await attr.get())["data"];
-      // res.forEach((key, value) {
-      //   temp[key] = (value / 10).round();
-      // });
-      return res;
+      return (await attr.get())["data"];
     } catch (error) {
       await initAttributes();
       return getUserAttributes();

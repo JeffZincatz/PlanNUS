@@ -4,11 +4,13 @@ import 'package:flutter/rendering.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:planaholic/elements/MySnackBar.dart';
+
 // import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/ProfilePic.dart';
 import 'package:planaholic/elements/PieCharOverview.dart';
 import 'package:planaholic/elements/BarChartWeekly.dart';
 import 'package:planaholic/services/DbService.dart';
+
 // import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/TimeUtil.dart';
@@ -23,6 +25,7 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   DbService _db = new DbService();
+
   // AuthService _auth = new AuthService();
 
   // edit username button
@@ -81,7 +84,7 @@ class _ProfileState extends State<Profile> {
               Text(
                 "My Profile",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: screenHeight * 0.036,
                 ),
               ),
               FutureBuilder(
@@ -136,7 +139,7 @@ class _ProfileState extends State<Profile> {
                   return Text(
                     "Level " + lvl,
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: screenHeight * 0.036,
                     ),
                   );
                 },
@@ -149,14 +152,13 @@ class _ProfileState extends State<Profile> {
                   ),
                   isEditing
                       ? Container(
-                          height: 50,
+                          height: screenHeight * 0.07,
                           width: screenWidth * 0.65,
-                          // color: Colors.red,
                           child: TextFormField(
                             key: ValueKey("nameField"),
                             initialValue: username,
                             style: TextStyle(
-                              fontSize: 24,
+                              fontSize: screenHeight * 0.036,
                             ),
                             textAlign: TextAlign.center,
                             decoration: InputDecoration(
@@ -182,7 +184,8 @@ class _ProfileState extends State<Profile> {
                               child: Text(
                                 username,
                                 style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
+                                    fontSize: screenHeight * 0.045,
+                                    fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -199,7 +202,8 @@ class _ProfileState extends State<Profile> {
                                 setState(() {
                                   isEditing = false;
                                 });
-                                MySnackBar.show(context, Text("Username updated successfully."));
+                                MySnackBar.show(context,
+                                    Text("Username updated successfully."));
                               },
                             ),
                             IconButton(
@@ -232,7 +236,7 @@ class _ProfileState extends State<Profile> {
                           snapshot.data,
                           style: TextStyle(
                             fontFamily: "monospace",
-                            fontSize: 16,
+                            fontSize: screenHeight * 0.024,
                             decoration: TextDecoration.underline,
                           ),
                         )
@@ -249,12 +253,7 @@ class _ProfileState extends State<Profile> {
                       builder: (context, snapshot) {
                         String currExp =
                             snapshot.hasData ? snapshot.data.toString() : "";
-                        return Text(
-                          "Current EXP: " + currExp,
-                          style: TextStyle(
-                              // fontSize: 12,
-                              ),
-                        );
+                        return Text("Current EXP: " + currExp);
                       },
                     ),
                     FutureBuilder(
@@ -262,12 +261,7 @@ class _ProfileState extends State<Profile> {
                       builder: (context, snapshot) {
                         String nextExp =
                             snapshot.hasData ? snapshot.data.toString() : "";
-                        return Text(
-                          "EXP to next lvl: " + nextExp,
-                          style: TextStyle(
-                              // fontSize: 12,
-                              ),
-                        );
+                        return Text("EXP to next lvl: " + nextExp);
                       },
                     ),
                   ],
@@ -480,50 +474,51 @@ class _ProfileState extends State<Profile> {
           SizedBox(
             height: 20,
           ),
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(Icons.camera),
-                      Text(
-                        "Camera",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <
+              Widget>[
+            TextButton(
+              child: Row(
+                children: [
+                  Icon(Icons.camera),
+                  Text(
+                    "Camera",
+                    style: TextStyle(fontSize: 20),
                   ),
-                  onPressed: () async {
-                    PickedFile pickedImage = await pickPhoto(ImageSource.camera);
-                    File croppedImage = await cropPhoto(pickedImage);
-                    _db.uploadProfilePic(croppedImage).then((_) {
-                      setState(() {});
-                      Navigator.pop(context);
-                      MySnackBar.show(context, Text("Profile picture updated successfully."));
-                    });
-                  },
-                ),
-                TextButton(
-                  child: Row(
-                    children: [
-                      Icon(Icons.image),
-                      Text(
-                        "Gallery",
-                        style: TextStyle(fontSize: 20),
-                      ),
-                    ],
+                ],
+              ),
+              onPressed: () async {
+                PickedFile pickedImage = await pickPhoto(ImageSource.camera);
+                File croppedImage = await cropPhoto(pickedImage);
+                _db.uploadProfilePic(croppedImage).then((_) {
+                  setState(() {});
+                  Navigator.pop(context);
+                  MySnackBar.show(
+                      context, Text("Profile picture updated successfully."));
+                });
+              },
+            ),
+            TextButton(
+              child: Row(
+                children: [
+                  Icon(Icons.image),
+                  Text(
+                    "Gallery",
+                    style: TextStyle(fontSize: 20),
                   ),
-                  onPressed: () async {
-                    PickedFile pickedImage = await pickPhoto(ImageSource.gallery);
-                    File croppedImage = await cropPhoto(pickedImage);
-                    _db.uploadProfilePic(croppedImage).then((_) {
-                      setState(() {});
-                      Navigator.pop(context);
-                      MySnackBar.show(context, Text("Profile picture updated successfully."));
-                    });
-                  },
-                ),
-              ])
+                ],
+              ),
+              onPressed: () async {
+                PickedFile pickedImage = await pickPhoto(ImageSource.gallery);
+                File croppedImage = await cropPhoto(pickedImage);
+                _db.uploadProfilePic(croppedImage).then((_) {
+                  setState(() {});
+                  Navigator.pop(context);
+                  MySnackBar.show(
+                      context, Text("Profile picture updated successfully."));
+                });
+              },
+            ),
+          ])
         ],
       ),
     );
