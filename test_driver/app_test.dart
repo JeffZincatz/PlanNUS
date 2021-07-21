@@ -230,8 +230,8 @@ void main() {
         final profilePage = find.text("My Profile");
         await driver.tap(profilePage);
 
-        final change_name = find.byValueKey("changeNameIcon");
-        await driver.tap(change_name);
+        final changeName = find.byValueKey("changeNameIcon");
+        await driver.tap(changeName);
 
         final field = find.byValueKey("nameField");
         await driver.tap(field);
