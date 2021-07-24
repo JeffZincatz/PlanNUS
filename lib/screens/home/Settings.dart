@@ -412,12 +412,12 @@ class _SettingsState extends State<Settings> {
               ),
               buildSettingOption(
                 context: context,
-                title: "Import ics file",
+                title: "Import iCalendar (ics)",
                 onTap: _importICS,
               ),
               buildSettingOption(
                 context: context,
-                title: "Export all activities as ics",
+                title: "Export as iCalendar (ics)",
                 onTap: () {
                   showDialog(
                       context: context,
@@ -622,12 +622,16 @@ class _SettingsState extends State<Settings> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: screenHeight * 0.024,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[800],
+            Container(
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: screenHeight * 0.024,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[800],
+                ),
+                maxLines: 3,
               ),
             ),
             Icon(
