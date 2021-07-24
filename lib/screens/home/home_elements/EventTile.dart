@@ -4,6 +4,7 @@ import 'package:planaholic/elements/ActivityCompletedDialog.dart';
 import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/screens/home/EditOrDelete.dart';
+import 'package:planaholic/util/PresetColors.dart';
 
 class EventTile extends StatelessWidget {
   final Event event;
@@ -119,7 +120,7 @@ class EventTile extends StatelessWidget {
         },
         style: ButtonStyle(
           foregroundColor:
-              MaterialStateColor.resolveWith((states) => Colors.black),
+              MaterialStateColor.resolveWith((states) => PresetColors.blackAccent),
         ),
         child: Column(
           children: [

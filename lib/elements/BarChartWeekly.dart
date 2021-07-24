@@ -59,7 +59,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                 bottomTitles: SideTitles(
                   showTitles: true,
                   getTextStyles: (value) => TextStyle(
-                    color: Colors.black,
+                    color: PresetColors.blackAccent,
                     fontSize: screenWidth / 38,
                   ),
                   // margin: 16,
@@ -93,7 +93,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                 topTitle: AxisTitle(
                   showTitle: true,
                   titleText: "Weekly Overview",
-                  textStyle: TextStyle(color: Colors.black, fontSize: 18),
+                  textStyle: TextStyle(fontSize: 18),
                   margin: 8.0,
                 ),
               ),
@@ -112,7 +112,7 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
                     return BarTooltipItem(
                       rod.y.round().toString(),
                       TextStyle(
-                        color: Colors.deepPurple,
+                        color: Color(0xFF1D1D1F),
                         fontWeight: FontWeight.bold,
                       ),
                     );

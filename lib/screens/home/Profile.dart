@@ -424,7 +424,7 @@ class _ProfileState extends State<Profile> {
                           padding: EdgeInsets.symmetric(vertical: 10.0),
                           child: Text(
                             "All Past Activities",
-                            style: TextStyle(color: Colors.black, fontSize: 18),
+                            style: TextStyle(color: PresetColors.blackAccent, fontSize: 18),
                           ),
                         ),
                         Center(
