@@ -353,10 +353,9 @@ class _SettingsState extends State<Settings> {
                                                       await _db
                                                           .deleteUserData()
                                                           .then((_) async {
-                                                        // This line would actually delete user auth! Use with care.
-                                                        // TODO: un-comment the following lines when ready
-                                                        // await _auth
-                                                        //     .deleteUser();
+                                                        // This line would actually delete user auth!
+                                                        await _auth
+                                                            .deleteUser();
 
                                                         Navigator.pop(context);
                                                         showDialog(
