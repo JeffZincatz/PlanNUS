@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:ical/serializer.dart' as ICal;
 import 'package:path_provider/path_provider.dart';
+import 'package:planaholic/elements/LoadingTransparent.dart';
 import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/elements/MySnackBar.dart';
 import 'package:planaholic/models/Event.dart';
@@ -116,7 +117,8 @@ class _SettingsState extends State<Settings> {
                                           onChanged: (value) {
                                             setState(() => passwordOld = value);
                                           },
-                                          validator: Validate().validatePassword,
+                                          validator:
+                                              Validate().validatePassword,
                                         ),
                                         TextFormField(
                                           key: ValueKey("change-new-password"),
@@ -126,7 +128,8 @@ class _SettingsState extends State<Settings> {
                                             labelText: 'New Password',
                                             errorMaxLines: 3,
                                           ),
-                                          validator: Validate().validatePassword,
+                                          validator:
+                                              Validate().validatePassword,
                                           obscureText: true,
                                           onChanged: (value) {
                                             setState(() => password_1 = value);
@@ -159,6 +162,16 @@ class _SettingsState extends State<Settings> {
                                         "confirm-change-password-button"),
                                     onPressed: () async {
                                       if (_formKey.currentState.validate()) {
+                                        // Loading
+                                        Navigator.push(
+                                          context,
+                                          PageRouteBuilder(
+                                            opaque: false, // set to false
+                                            pageBuilder: (_, __, ___) =>
+                                                LoadingTransparent(),
+                                          ),
+                                        );
+
                                         dynamic result = await _auth
                                             .signInWithEmailAndPassword(
                                                 await _db.getEmail(),
@@ -169,6 +182,9 @@ class _SettingsState extends State<Settings> {
                                               .changePassword(
                                                   password: password_1)
                                               .then((_) {
+                                            // stop loading
+                                            Navigator.pop(context);
+                                            // close form dialog
                                             Navigator.pop(context);
                                             showDialog(
                                                 context: context,
@@ -188,6 +204,8 @@ class _SettingsState extends State<Settings> {
                                                 });
                                           });
                                         } else {
+                                          // stop loading
+                                          Navigator.pop(context);
                                           showDialog(
                                             context: context,
                                             builder: (context) {
@@ -268,7 +286,8 @@ class _SettingsState extends State<Settings> {
                                                             "delete-password"),
                                                         decoration:
                                                             InputDecoration(
-                                                          icon: Icon(Icons.lock),
+                                                          icon:
+                                                              Icon(Icons.lock),
                                                           hintText:
                                                               'Enter your password',
                                                           labelText: 'Password',
@@ -288,7 +307,8 @@ class _SettingsState extends State<Settings> {
                                                             "delete-repeat-password"),
                                                         decoration:
                                                             InputDecoration(
-                                                          icon: Icon(Icons.lock),
+                                                          icon:
+                                                              Icon(Icons.lock),
                                                           hintText:
                                                               'Repeat your password',
                                                           labelText:
@@ -324,7 +344,8 @@ class _SettingsState extends State<Settings> {
                                                       .validate()) {
                                                     dynamic result = await _auth
                                                         .signInWithEmailAndPassword(
-                                                            await _db.getEmail(),
+                                                            await _db
+                                                                .getEmail(),
                                                             passwordDelete_1);
 
                                                     if (result != null) {
@@ -352,9 +373,8 @@ class _SettingsState extends State<Settings> {
                                                                         "Confirm"),
                                                                     onPressed: () => Navigator.of(
                                                                             context)
-                                                                        .popUntil(
-                                                                            (route) =>
-                                                                                route.isFirst)),
+                                                                        .popUntil((route) =>
+                                                                            route.isFirst)),
                                                               ],
                                                             );
                                                           },
@@ -371,7 +391,8 @@ class _SettingsState extends State<Settings> {
                                                                 "Your password could be incorrect."),
                                                             actions: [
                                                               TextButton(
-                                                                child: Text("Ok"),
+                                                                child:
+                                                                    Text("Ok"),
                                                                 onPressed: () =>
                                                                     Navigator.pop(
                                                                         context),
@@ -413,7 +434,10 @@ class _SettingsState extends State<Settings> {
               buildSettingOption(
                 context: context,
                 title: "Import iCalendar (ics)",
-                onTap: _importICS,
+                onTap: () async {
+                  _importICS().then((_) => MySnackBar.show(
+                      context, Text("Activity(s) imported successfully.")));
+                },
               ),
               buildSettingOption(
                 context: context,
@@ -429,8 +453,20 @@ class _SettingsState extends State<Settings> {
                           actions: [
                             TextButton(
                                 onPressed: () async {
+                                  // loading
+                                  Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      opaque: false, // set to false
+                                      pageBuilder: (_, __, ___) =>
+                                          LoadingTransparent(),
+                                    ),
+                                  );
                                   _generateEventIcs(await _db.getAllEvents())
                                       .then((filePath) {
+                                    // stop loading
+                                    Navigator.pop(context);
+                                    // close dialog
                                     Navigator.pop(context);
                                     MySnackBar.show(context,
                                         Text("Saved .ics file as $filePath."));
@@ -570,6 +606,7 @@ class _SettingsState extends State<Settings> {
                   ),
                 ),
               ),
+              // end of settings page
             ]),
           ),
         ],
