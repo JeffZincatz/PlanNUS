@@ -416,10 +416,31 @@ class DbService {
     }
   }
 
-  Future reduceAttributeTo80Percent(String attribute) async {
+  Future reduceAttributeTo80Percent(String category) async {
+
+    String catToAttr(String category) {
+      switch(category) {
+        case "Studies":
+          return "Intelligence";
+          break;
+        case "Social":
+          return "Charm";
+          break;
+        case "Arts":
+          return "Spirit";
+          break;
+        case "Fitness":
+          return "Vitality";
+          break;
+        default:
+          return null;
+      }
+    }
+
+    String attribute = catToAttr(category);
     Map attr = await getUserAttributes();
     int currentValue = attr[attribute];
-    await _setUserAttribute(attribute, (currentValue * 0.8).ceil());
+    await _setUserAttribute(category, (currentValue * 0.8).ceil());
   }
 
   Future getLastCheckTime() async {
