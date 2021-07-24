@@ -710,7 +710,7 @@ class _SettingsState extends State<Settings> {
           description: summary,
           startTime: startTime,
           endTime: endTime,
-          completed: false,
+          completed: true,
           passed: endTime.compareTo(DateTime.now()) == -1 ? true : false,
           difficulty: 5,
         );
