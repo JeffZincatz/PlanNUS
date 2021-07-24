@@ -31,7 +31,7 @@ class AuthService {
           email: email, password: password);
       return userCred.user;
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
@@ -51,7 +51,7 @@ class AuthService {
       });
       return userCred.user;
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
@@ -61,7 +61,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (error) {
-      print(error.toString()); //TODO: remove temp debug
+      // print(error);
       return null;
     }
   }

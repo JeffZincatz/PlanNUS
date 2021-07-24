@@ -44,7 +44,7 @@ class DbService {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["profilePic"];
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
@@ -54,7 +54,7 @@ class DbService {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["username"];
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
@@ -65,7 +65,7 @@ class DbService {
         "username": newName,
       });
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
@@ -75,7 +75,7 @@ class DbService {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["email"];
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
@@ -574,9 +574,10 @@ class DbService {
     return snapshot.exists;
   }
 
-  // TODO: Remove helper method
+
   /// Sync user stats from event collection, iteratively.
   /// This should only be called for existing users & used for debugging purposes.
+  @deprecated
   Future<void> syncUserStats() async {
     try {
       /// iteratively count from user events collection
@@ -648,7 +649,7 @@ class DbService {
 
       print("sync finished");
     } catch (error) {
-      print(error); // TODO: remove temp debug
+      // print(error);
       return null;
     }
   }
