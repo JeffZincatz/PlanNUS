@@ -278,7 +278,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
                                   setState(() => difficulty = val.round()),
                             ),
                           ),
-                          Expanded(flex: 1, child: Text(difficulty.toString())),
+                          // Expanded(flex: 1, child: Text(difficulty.toString())),
                         ],
                       ),
                     ],
