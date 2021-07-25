@@ -327,7 +327,7 @@ class _EditOrDelete extends State<EditOrDelete> {
                                   setState(() => difficulty = val.round()),
                             ),
                           ),
-                          Expanded(flex: 1, child: Text(difficulty.toString())),
+                          // Expanded(flex: 1, child: Text(difficulty.toString())),
                         ],
                       ),
                     ],
