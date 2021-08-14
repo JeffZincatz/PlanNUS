@@ -3,6 +3,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 
 void main() {
+  /// Testing the method to retrieve the duration of an event
   group("getEventHours", () {
     test("Event with same start and end time has 0 event hours", () {
       // Arrange
@@ -65,6 +66,7 @@ void main() {
     });
   });
 
+  /// Testing the method to find the first date of the week
   group("findFirstDateOfTheWeek", () {
     test("First date of a Monday at time 00:00:00.000 is itself", () {
       // Arrange
@@ -92,6 +94,7 @@ void main() {
     });
   });
 
+  /// Testing the method to determine whether two events are one week apart
   group("isAtLeastOneWeekApart", () {
     test("2 of the same date time are not at least 1 week apart", () {
       // Arrange
@@ -129,6 +132,7 @@ void main() {
     });
   });
 
+  /// Testing the method to determine whether two events are 3 days apart
   group("isAtLeastThreeDaysApart", () {
     test("2 of the same date time are not at least 3 days apart", () {
       // Arrange

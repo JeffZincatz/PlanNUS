@@ -6,6 +6,7 @@ import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/screens/home/EditOrDelete.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
+/// Abstraction for all event tiles at home page
 class EventTile extends StatelessWidget {
   final Event event;
 

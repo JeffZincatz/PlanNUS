@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planaholic/screens/home/achievements_elements/CategoryBadgeRowView.dart';
 
+/// Abstraction for ALL categoried badges
 class BadgesView extends StatefulWidget {
 
   final List<String> cat;

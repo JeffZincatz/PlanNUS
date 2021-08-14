@@ -4,6 +4,7 @@ import 'package:planaholic/elements/BadgeShareDialog.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
+/// Abstraction for each individual badge
 class IndividualBadge extends StatefulWidget {
   final String cat;
   final int no;

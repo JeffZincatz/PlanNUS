@@ -4,6 +4,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/screens/home/home_elements/EventTile.dart';
 import 'package:planaholic/screens/home/home_elements/EmptyCardWithText.dart';
 
+/// A list of events that have passed but have not been marked completed/uncompleted
 class MaybeFinishedEventList extends StatefulWidget {
   const MaybeFinishedEventList({Key key}) : super(key: key);
 

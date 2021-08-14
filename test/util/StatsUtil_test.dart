@@ -3,6 +3,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/StatsUtil.dart';
 
 void main() {
+  /// Testing the conversion from event to exp
   group("EventToExp", () {
     // roundToNearest5(<duration in hours> * <difficulty> * 3*e)
     test("Event with 0 duration give 0 Exp", () {
@@ -48,6 +49,7 @@ void main() {
     });
   });
 
+  /// Testing the amount of exp that is needed to level up
   group("expToNextLevel", () {
     // round(10 sqrt(1.5 x) - 2.5) * 10
     test("Exp needed for level 0 to level up is 100", () {
@@ -74,6 +76,7 @@ void main() {
     });
   });
 
+  /// Testing the conversion from event completed to attributes increase
   group("eventToAttributes", () {
     // round(duration * diff * sqrt(14))
     // add for each /4 if is Others category

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// An abstraction for an empty card if there is no event to show
 class EmptyCardWithText extends StatelessWidget {
   final String text;
 

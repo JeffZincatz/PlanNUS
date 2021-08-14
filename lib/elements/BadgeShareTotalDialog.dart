@@ -20,6 +20,7 @@ class _BadgeShareTotalDialogState extends State<BadgeShareTotalDialog> {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
 
+    /// A method to determine whether "activity" or "activities" should be used
     String activityOrActivities() {
       return widget.no > 1
           ? "activities"
