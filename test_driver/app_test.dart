@@ -3,6 +3,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:test/test.dart';
 
 void main() {
+  /// Integration testing to open Planaholic
   group('Planaholic', () {
     FlutterDriver driver;
 
@@ -16,6 +17,7 @@ void main() {
       driver.close();
     });
 
+    /// Integration testing to test the authentication
     group("Authenticate", () {
       // Authenticate
       final signInButton = find.byValueKey("sign-in-button");
@@ -199,6 +201,7 @@ void main() {
       });
     });
 
+    /// Integration testing for changing username and sharing
     group("Functionalities", () {
       // Authenticate first
       final signInButton = find.byValueKey("sign-in-button");

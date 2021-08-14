@@ -5,7 +5,9 @@ import 'package:planaholic/screens/Wrapper.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+/// A collection of method concerning notification services
 class NotifService {
+  /// Initialise the notification system
   static void initialise(BuildContext context) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -17,6 +19,7 @@ class NotifService {
       android: initializationSettingsAndroid,
     );
 
+    /// Helper function that selects a notification from a payload
     Future selectNotification(String payload) async {
       if (payload != null) {
         debugPrint('notification payload: $payload');
@@ -31,6 +34,7 @@ class NotifService {
         onSelectNotification: selectNotification);
   }
 
+  /// Dummy instant notification feature for simple testing
   static void notify() async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -47,6 +51,7 @@ class NotifService {
         payload: 'item x');
   }
 
+  /// Add a scheduled notification
   static Future<void> notifyScheduled(Event event, int id, int before) async {
     DateTime startTime = event.startTime.subtract(Duration(minutes: before));
     tz.initializeTimeZones();
@@ -69,6 +74,7 @@ class NotifService {
         UILocalNotificationDateInterpretation.absoluteTime);
   }
 
+  /// Change a scheduled notification
   static Future<void> changeSchedule(int id, Event event, int before) async {
     DateTime startTime = event.startTime.subtract(Duration(minutes: before));
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -92,12 +98,14 @@ class NotifService {
         UILocalNotificationDateInterpretation.absoluteTime);
   }
 
+  /// Delete a scheduled event
   static void deleteSchedule(int id) async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin.cancel(id);
   }
 
+  /// Delete ALL notifications
   static void deleteAll() async {
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();

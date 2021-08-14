@@ -6,6 +6,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/models/EventDataSource.dart';
 import 'package:planaholic/screens/home/home_elements/TaskWidget.dart';
 
+/// The abstraction for the calendar UI
 class Calendar2 extends StatefulWidget {
 
   final Function updateCurrentDate;

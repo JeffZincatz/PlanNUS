@@ -4,6 +4,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/screens/home/home_elements/EventTile.dart';
 import 'package:planaholic/screens/home/home_elements/EmptyCardWithText.dart';
 
+/// A list of all completed events
 class CompletedEventList extends StatefulWidget {
   const CompletedEventList({Key key}) : super(key: key);
 

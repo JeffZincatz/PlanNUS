@@ -3,7 +3,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:planaholic/models/EventDataSource.dart';
 
-
+/// Abstraction for the popup that shows all events of the day upon long press
 class TaskWidget extends StatefulWidget {
 
   final DateTime date;

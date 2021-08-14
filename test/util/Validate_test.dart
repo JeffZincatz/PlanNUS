@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:planaholic/util/Validate.dart';
 
 void main() {
+  /// Testing the method that validate the username
   group("validateUsername", () {
     test("Empty string: Username must not be empty", () {
       // Arrange
@@ -35,6 +36,7 @@ void main() {
     });
   });
 
+  /// Testing the method that validate the email
   group("validateEmail", () {
     // Currently, email is not validated using regex, only checked if empty
     // however, Firebase Auth would use email to sign up & send verification email
@@ -72,6 +74,7 @@ void main() {
     });
   });
 
+  /// Testing the method that validate the password
   group("validatePassword", () {
     test("Weak passwords: Password must have at least 8 characters, 1 uppercase letter, 1 lowercase letter and 1 special character.", () {
       // Arrange

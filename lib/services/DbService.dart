@@ -96,6 +96,7 @@ class DbService {
     return await events.add(event.toMap());
   }
 
+  /// Getting the list of event gotten from a snapshot (gotten from a stream)
   List<Event> _eventListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Event(
@@ -113,6 +114,7 @@ class DbService {
     }).toList();
   }
 
+  /// To get a stream of list of events from the database
   Stream<List<Event>> get eventsStream {
     return events.snapshots().map(_eventListFromSnapshot);
   }

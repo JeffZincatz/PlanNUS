@@ -4,6 +4,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:planaholic/elements/BadgeShareTotalDialog.dart';
 import 'package:planaholic/services/DbService.dart';
 
+/// Abstraction for the topmost row (total activities) badges
 class TotalActivitiesBadges extends StatefulWidget {
 
   final List<int> no = [1, 5, 15, 30, 60, 100];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planaholic/screens/home/achievements_elements/IndividualBadge.dart';
 
+/// Abstraction for each categoried badge row
 class CategoryBadgeRowView extends StatefulWidget {
 
   final List<int> no = [1, 5, 15, 30, 60, 100];

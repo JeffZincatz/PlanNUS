@@ -4,6 +4,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/screens/home/home_elements/EventTile.dart';
 import 'package:planaholic/screens/home/home_elements/EmptyCardWithText.dart';
 
+/// A list of events that are uncompleted
 class UncompletedPastEventList extends StatefulWidget {
   const UncompletedPastEventList({Key key}) : super(key: key);
 
