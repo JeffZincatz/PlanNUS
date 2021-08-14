@@ -6,80 +6,92 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 import 'package:planaholic/util/StatsUtil.dart';
 
+/// A collection of database service related methods
 class DbService {
+
+  /// firestore instance
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  /// user events collection reference
   final CollectionReference events = FirebaseFirestore.instance
       .collection("users")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .collection("events");
 
+  /// current user uuid
   String uuid = FirebaseAuth.instance.currentUser.uid;
 
+  /// user weekly statistics document reference
   DocumentReference weekly = FirebaseFirestore.instance
       .collection("users")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .collection("stats")
       .doc("weekly");
 
+  /// user counts statistics document reference
   DocumentReference counts = FirebaseFirestore.instance
       .collection("users")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .collection("stats")
       .doc("counts");
 
+  /// user level statistics document reference
   DocumentReference level = FirebaseFirestore.instance
       .collection("users")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .collection("stats")
       .doc("level");
 
+  /// user attribute statistics document reference
   DocumentReference attr = FirebaseFirestore.instance
       .collection("users")
       .doc(FirebaseAuth.instance.currentUser.uid)
       .collection("stats")
       .doc("attributes");
 
+  /// Get the current user profile picture address
   Future<String> getUserProfilePic() async {
     try {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["profilePic"];
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
+  /// Get current username
   Future<String> getUsername() async {
     try {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["username"];
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
+
+  /// Update current user username to [newName]
   Future<void> updateUsername(String newName) async {
     try {
       await _db.collection("users").doc(uuid).update({
         "username": newName,
       });
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
+  /// Get the current user email
   Future<String> getEmail() async {
     try {
       DocumentSnapshot snapshot = await _db.collection("users").doc(uuid).get();
       return snapshot["email"];
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
+  /// Add the new [event] to the user's event collection
   Future addNewEvent(Event event) async {
     return await events.add(event.toMap());
   }
@@ -105,6 +117,9 @@ class DbService {
     return events.snapshots().map(_eventListFromSnapshot);
   }
 
+  /// Mark the [event] as completed in database.
+  ///
+  /// Other related stats including levels and attributes are also updated.
   Future markCompleted(Event event) async {
     DocumentReference temp = events.doc(event.id);
 
@@ -166,6 +181,9 @@ class DbService {
     });
   }
 
+  /// Mark the [event] as uncompleted in database.
+  ///
+  /// Other related stats including levels and attributes are also updated.
   Future markUncompleted(Event event) async {
     DocumentReference temp = events.doc(event.id);
 
@@ -188,6 +206,7 @@ class DbService {
     });
   }
 
+  /// Edit the [old] event to [change]
   Future editEvent(Event old, Event change) async {
     return await events.doc(old.id).set({
       "category": change.category,
@@ -201,6 +220,7 @@ class DbService {
     });
   }
 
+  /// Edit the old event with [id] to [change]
   Future editEvent2(String id, Event change) async {
     return await events.doc(id).set({
       "category": change.category,
@@ -214,14 +234,17 @@ class DbService {
     });
   }
 
+  /// Sync the event [id] to its id field in database
   Future<void> syncEventId(String id) async {
     return await events.doc(id).update({"id": id});
   }
 
+  /// Delete the [event] from the database
   Future<void> delete(Event event) async {
     return await events.doc(event.id).delete();
   }
 
+  /// Count the number of completed events of the [category]
   Future<int> countCompletedEventByCategory(String category) async {
     try {
       DocumentSnapshot snapshot = await counts.get();
@@ -239,6 +262,7 @@ class DbService {
     }
   }
 
+  /// Get the counts of all passed events of the user
   Future<Map<String, int>> getAllPassedEventCount() async {
     return {
       "total": await countCompletedEventByCategory("total"),
@@ -251,6 +275,7 @@ class DbService {
     };
   }
 
+  /// Get the user's current level
   Future<int> getUserLevel() async {
     try {
       DocumentSnapshot snapshot = await level.get();
@@ -261,6 +286,7 @@ class DbService {
     }
   }
 
+  /// Set user level to [level]
   Future<int> _setUserLevel(int level) async {
     try {
       await DbService().level.set({"value": level}, SetOptions(merge: true));
@@ -271,12 +297,14 @@ class DbService {
     }
   }
 
+  /// Level up the user by 1
   Future<int> levelUp() async {
     int currentLevel = await getUserLevel();
     await setUserNextExp(StatsUtil.expToNextLevel(currentLevel + 1));
     return _setUserLevel(currentLevel + 1);
   }
 
+  /// Get the current EXP of the user
   Future<int> getUserCurrentExp() async {
     try {
       DocumentSnapshot snapshot = await level.get();
@@ -287,6 +315,7 @@ class DbService {
     }
   }
 
+  /// Set the current EXP of the user to [exp]
   Future<int> setUserCurrentExp(int exp) async {
     try {
       await level.set({"exp": exp}, SetOptions(merge: true));
@@ -297,6 +326,7 @@ class DbService {
     }
   }
 
+  /// Get the EXP needed for the user to reach the next level
   Future<int> getUserNextExp() async {
     try {
       return (await level.get())["next"];
@@ -306,6 +336,7 @@ class DbService {
     }
   }
 
+  /// Set the EXP needed for the user to reach the next level to [exp]
   Future<int> setUserNextExp(int exp) async {
     try {
       await level.set({"next": exp}, SetOptions(merge: true));
@@ -316,6 +347,9 @@ class DbService {
     }
   }
 
+  /// Add [exp] to the current user
+  ///
+  /// Level up the user accordingly until all [exp] are added.
   Future<void> _addExpBy(int exp) async {
     int currExp = await getUserCurrentExp();
     int currLevel = await getUserLevel();
@@ -331,8 +365,9 @@ class DbService {
     }
   }
 
-  /// Reset user level info
-  /// Use for initialising new/existing user level info
+  /// Initialise all user level information
+  ///
+  /// This is used to initialise new user level information.
   Future<void> initUserLevel() async {
     await level.set({
       "category": "level",
@@ -342,8 +377,9 @@ class DbService {
     });
   }
 
-  /// Reset user weekly stats.
-  /// Only use to initialise weekly db document.
+  /// Initialise user weekly stats
+  ///
+  /// This is use to initialise weekly counts document.
   Future<void> initWeekly() async {
     weekly.set({
       "thisMonday": TimeUtil.findFirstDateOfTheWeek(DateTime.now()),
@@ -358,6 +394,7 @@ class DbService {
     });
   }
 
+  /// Add a count of this [category] event to the weekly counts
   Future<void> addToWeekly(String category) async {
     return await weekly.set({
       "data": {
@@ -367,6 +404,7 @@ class DbService {
     }, SetOptions(merge: true));
   }
 
+  /// Get the weekly counts of the user
   Future getWeekly() async {
     try {
       return (await weekly.get())["data"];
@@ -376,6 +414,9 @@ class DbService {
     }
   }
 
+  /// Check and update the weekly counts of the user accordingly.
+  ///
+  /// Only initialised if it is the next week since last update.
   Future<bool> updateWeekly() async {
     try {
       DateTime thisMonday = (await weekly.get())["thisMonday"].toDate();
@@ -390,6 +431,7 @@ class DbService {
     }
   }
 
+  /// Get all user attributes
   Future getUserAttributes() async {
     try {
       return (await attr.get())["data"];
@@ -399,6 +441,7 @@ class DbService {
     }
   }
 
+  /// Set the user [attribute] value to [value]
   Future<Map<String, int>> _setUserAttribute(
       String attribute, int value) async {
     try {
@@ -416,6 +459,7 @@ class DbService {
     }
   }
 
+  /// Reduce user attribute of the [category] to its 80% value
   Future reduceAttributeTo80Percent(String category) async {
 
     String catToAttr(String category) {
@@ -443,6 +487,7 @@ class DbService {
     await _setUserAttribute(category, (currentValue * 0.8).ceil());
   }
 
+  /// Get the last check time for user attributes
   Future getLastCheckTime() async {
     try {
       return (await attr.get())["lastCheckTime"];
@@ -452,7 +497,7 @@ class DbService {
     }
   }
 
-  /// reset timestamp for the attribute to now
+  /// Reset time updated for the [attribute] to now
   Future refreshLastCheckTime(String attribute) async {
     try {
       return await attr.set({
@@ -464,6 +509,7 @@ class DbService {
     }
   }
 
+  /// Get the count of uncompleted events
   Future<int> getUncompletedCount() async {
     try {
       return (await counts.get())["uncompleted"];
@@ -473,7 +519,8 @@ class DbService {
     }
   }
 
-  /// Initialise user attributes.
+  /// Initialise all user attributes
+  ///
   /// All attributes range from 0 to 1000, 500 by default.
   /// When displayed, an attribute should be <value> ~/ 10.
   Future<void> initAttributes() async {
@@ -495,6 +542,7 @@ class DbService {
     });
   }
 
+  /// Initialised the counts of the user
   Future<void> initCounts() async {
     counts.set({
       "data": {
@@ -510,6 +558,8 @@ class DbService {
   }
 
   /// Pseudo-remove current user from Firebase auth.
+  ///
+  /// This is done by marking the user database as deleted.
   Future<void> deleteUserData() async {
     return FirebaseFirestore.instance
         .collection("users")
@@ -523,6 +573,7 @@ class DbService {
     //     .delete();
   }
 
+  /// Upload new user profile picture [profilePic]
   Future<void> uploadProfilePic(File profilePic) async {
     FirebaseStorage _storage = FirebaseStorage.instance;
 
@@ -536,6 +587,7 @@ class DbService {
     });
   }
 
+  /// Get a list of all events for exporting
   Future<List<Event>> getAllEvents() async {
     QuerySnapshot snapshot = await events.get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
@@ -556,101 +608,5 @@ class DbService {
     });
 
     return allEvents;
-  }
-
-  /*
-  Below are some debugging functions. They should not be used in any feature implementations.
-  They should be okay to be removed in the end.
-   */
-
-  Future<bool> userLevelExists() async {
-    DocumentSnapshot snapshot = await _db
-        .collection("users")
-        .doc(uuid)
-        .collection("stats")
-        .doc("level")
-        .get();
-
-    return snapshot.exists;
-  }
-
-
-  /// Sync user stats from event collection, iteratively.
-  /// This should only be called for existing users & used for debugging purposes.
-  @deprecated
-  Future<void> syncUserStats() async {
-    try {
-      /// iteratively count from user events collection
-      Function oldCountCompletedEventByCategory = (String category) async {
-        try {
-          QuerySnapshot snapshot = await _db
-              .collection("users")
-              .doc(uuid)
-              .collection("events")
-              .get();
-
-          int count = 0;
-          snapshot.docs.forEach((each) {
-            Map data = each.data();
-            if (data["category"] == category && data["completed"]) {
-              count++;
-            }
-          });
-          return count;
-        } catch (error) {
-          return null;
-        }
-      };
-
-      /// iteratively count from user events collection
-      Function oldCountTotal = () async {
-        try {
-          QuerySnapshot snapshot = await _db
-              .collection("users")
-              .doc(uuid)
-              .collection("events")
-              .get();
-
-          int count = 0;
-          snapshot.docs.forEach((each) {
-            Map data = each.data();
-            if (data["completed"]) {
-              count++;
-            }
-          });
-          return count;
-        } catch (error) {
-          return null;
-        }
-      };
-
-      CollectionReference stats =
-          _db.collection("users").doc(uuid).collection("stats");
-
-      List<String> categories = [
-        "Studies",
-        "Fitness",
-        "Arts",
-        "Social",
-        "Others"
-      ];
-
-      // writes into the new data structure
-      categories.forEach((element) async {
-        stats.doc("counts").set({
-          "data": {
-            element: await oldCountCompletedEventByCategory(element),
-          }
-        }, SetOptions(merge: true));
-      });
-      stats.doc("counts").set({
-        "total": await oldCountTotal(),
-      }, SetOptions(merge: true));
-
-      print("sync finished");
-    } catch (error) {
-      // print(error);
-      return null;
-    }
   }
 }
