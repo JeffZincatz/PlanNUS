@@ -1,42 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// A collection of authentication service related methods
 class AuthService {
-  // firebase auth instance
+  /// firebase auth instance
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // firestore instance
+  /// firestore instance
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // auth change user stream
+  /// auth change user stream
   Stream<User> get user {
     return _auth.authStateChanges();
   }
 
-  // sign in anonymously
-  @deprecated
-  Future signInAnon() async {
-    try {
-      UserCredential userCred = await _auth.signInAnonymously();
-      return userCred.user;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  // sign in with email and password
+  /// Sign in with [email] and [password]
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
       UserCredential userCred = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       return userCred.user;
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
-  // sign up with email and password
+  /// Sign up with [email] and [password]
   Future signUpWithEmailAndPassword(String username, String email, String password) async {
     try {
       UserCredential userCred = await _auth
@@ -51,39 +40,41 @@ class AuthService {
       });
       return userCred.user;
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
-  // sign out
+  /// Sign out of current user account
   Future<void> signOut() async {
     try {
       return await _auth.signOut();
     } catch (error) {
-      // print(error);
       return null;
     }
   }
 
-  // get current user
+  /// Get the current logged in user
   User getCurrentUser() {
     return _auth.currentUser;
   }
 
+  /// Send password reset email to [email]
   Future<void> sendPasswordResetEmail({String email}) async {
     return await _auth.sendPasswordResetEmail(email: email);
   }
 
-  /// change user password.
-  /// Note that this function does not validate for strong password.
+  /// Change user old password to [password]
+  ///
+  /// Note that this function does not validate for password strength.
+  /// Validation should be done by the form.
   Future<void> changePassword({String password}) async {
     return _auth.currentUser.updatePassword(password);
   }
 
-  /// Permanently remove current user from Firebase auth.
-  /// Requires recent sign in.
-  /// Use with care.
+  /// Permanently remove current user from Firebase auth
+  ///
+  /// It requires recent sign in.
+  /// Use with care as it removed the user auth information.
   Future deleteUser() async {
     return _auth.currentUser.delete();
   }
