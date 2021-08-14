@@ -4,6 +4,8 @@ import 'package:planaholic/models/Event.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:social_share/social_share.dart';
 
+
+/// The dialog widget shown upon completing an activity
 class ActivityCompletedDialog extends StatefulWidget {
   final Event event;
 
@@ -16,16 +18,19 @@ class ActivityCompletedDialog extends StatefulWidget {
 class _ActivityCompletedDialogState extends State<ActivityCompletedDialog> {
   DbService dbService = new DbService();
 
+  /// Get the [duration] formatted string
   String _printDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     return "${twoDigits(duration.inHours)}h ${twoDigitMinutes}m";
   }
 
+  /// Get the duration formatted string between datetime [one] and [two]
   String duration(DateTime one, DateTime two) {
     return _printDuration(one.difference(two));
   }
 
+  /// Determine badge choice by completed counts
   int whichBadge(int n) {
     return n < 5
         ? 1
