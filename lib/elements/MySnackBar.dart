@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+/// A class to show snack bar prompt
 class MySnackBar {
+
+  /// Show a customised snack bar prompt with the [content]
   static void show(BuildContext context, Widget content) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;

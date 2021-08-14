@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
+/// The app bar used for all home screens
 class MyAppBar extends AppBar {
 
   MyAppBar(context) : super(

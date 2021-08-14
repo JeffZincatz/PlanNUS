@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
+/// Circular profile picture widget
 class ProfilePic extends StatelessWidget {
   const ProfilePic({Key key, this.image, this.radius}) : super(key: key);
 

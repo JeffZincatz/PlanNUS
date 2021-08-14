@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
-/// weekly overview bar chart
+/// Weekly overview bar chart
 class BarChartWeekly extends StatefulWidget {
   const BarChartWeekly({Key key}) : super(key: key);
 
@@ -126,6 +126,10 @@ class _BarChartWeeklyState extends State<BarChartWeekly> {
     );
   }
 
+  /// Make bar chart group data with index [x], data value [y] and [max] value
+  ///
+  /// Default colour is preset blue.
+  /// Change according to category when used.
   BarChartGroupData makeGroupData(int x, int y, int max,
       {Color color = PresetColors.blue}) {
     return BarChartGroupData(

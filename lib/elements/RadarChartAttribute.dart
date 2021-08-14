@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planaholic/services/DbService.dart';
 import 'package:flutter_radar_chart/flutter_radar_chart.dart';
 
-/// weekly overview bar chart
+/// Weekly overview bar chart
 class RadarChartAttribute extends StatefulWidget {
   const RadarChartAttribute({Key key}) : super(key: key);
 

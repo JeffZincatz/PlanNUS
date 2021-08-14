@@ -3,7 +3,7 @@ import 'package:planaholic/services/DbService.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
-/// activity count overview pie chart
+/// Activity count overview pie chart
 class PieChartOverview extends StatefulWidget {
   const PieChartOverview({Key key}) : super(key: key);
 
@@ -71,6 +71,10 @@ class _PieChartOverviewState extends State<PieChartOverview> {
     );
   }
 
+  /// Make pie chart section data with [category] and [value]
+  ///
+  /// Default color is grey.
+  /// By default [category] title is shown.
   PieChartSectionData makeSectionData(String category, int value,
       {Color color = Colors.grey, bool showTitle = true}) {
     double screenWidth = MediaQuery.of(context).size.width;

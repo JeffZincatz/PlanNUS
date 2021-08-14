@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_social_content_share/flutter_social_content_share.dart';
 import 'package:social_share/social_share.dart';
 
+/// The dialog widget shown upon sharing a badge for total activities
 class BadgeShareTotalDialog extends StatefulWidget {
   final int no;
   final String desc;
