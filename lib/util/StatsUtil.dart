@@ -2,24 +2,31 @@ import 'package:planaholic/models/Event.dart';
 import 'TimeUtil.dart';
 import 'dart:math';
 
+/// A collection of user statistics related utility methods
 class StatsUtil {
 
-  // Event EXP calculation
-  // roundToNearest5(duration(hours) * difficulty * 3*e)
+  /// Calculate the EXP gained from an [event]
+  ///
+  /// The calculation uses the following formula:
+  /// roundToNearest5(duration(hours) * difficulty * 3*e)
   static int eventToExp(Event event) {
     double hours = TimeUtil.getEvenHours(event);
     return (hours * event.difficulty * 3 * e / 5).round() * 5;
   }
 
-  // EXP required for the next level
-  // round(10 sqrt(1.5 x) - 2.5) * 10
+  /// Calculate the EXP required for the next level of the [currentLvl]
+  ///
+  /// The calculation uses the following formula:
+  /// round(10 sqrt(1.5 x) - 2.5) * 10
   static int expToNextLevel(int currentLvl) {
     return (10 * sqrt(1.5 * (currentLvl + 1)) - 2.5).round() * 10;
   }
 
-  // Attribute points added to each category for an event
-  // round(duration * diff * sqrt(14))
-  // add for each /4 if is Others category
+  /// Calculate the resulted attribute point changes by an [event]
+  ///
+  /// The calculation uses the following formula:
+  /// round(duration * diff * sqrt(14))
+  /// Add points/4 for each attribute if [event] is Others category
   static Map<String, int> eventToAttributes(Event event) {
     String _catToAttr(String cat) {
       switch (cat) {

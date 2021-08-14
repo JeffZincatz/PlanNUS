@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// An assortment of some preset colors used for design.
 class PresetColors {
   static const Color background = Color.fromRGBO(237, 239, 252, 1);
   static const Color blue = Color.fromRGBO(33, 150, 243, 1);
