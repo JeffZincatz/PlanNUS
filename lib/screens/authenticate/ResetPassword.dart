@@ -4,9 +4,9 @@ import 'package:planaholic/elements/MyButtons.dart';
 import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/Validate.dart';
 import 'package:planaholic/services/AuthService.dart';
-
 import 'ResetPasswordSuccessful.dart';
 
+/// Reset password page
 class ResetPassword extends StatefulWidget {
   @override
   _ResetPasswordState createState() => _ResetPasswordState();

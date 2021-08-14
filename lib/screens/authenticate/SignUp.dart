@@ -8,6 +8,7 @@ import 'package:planaholic/util/Validate.dart';
 import 'package:planaholic/screens/authenticate/SignIn.dart';
 import 'package:planaholic/screens/authenticate/Verifying.dart';
 
+/// Sign up page
 class SignUp extends StatefulWidget {
   const SignUp({Key key}) : super(key: key);
 

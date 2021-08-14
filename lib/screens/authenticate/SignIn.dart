@@ -5,10 +5,10 @@ import 'package:planaholic/services/AuthService.dart';
 import 'package:planaholic/util/Validate.dart';
 import 'package:planaholic/elements/Loading.dart';
 import 'package:planaholic/elements/MyButtons.dart';
-
 import 'Verifying.dart';
 import 'ResetPassword.dart';
 
+/// Sign in page
 class SignIn extends StatefulWidget {
   const SignIn({Key key}) : super(key: key);
 

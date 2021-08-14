@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
+/// Authentication front page
 class Authenticate extends StatefulWidget {
   const Authenticate({Key key}) : super(key: key);
 
@@ -34,16 +35,6 @@ class _AuthenticateState extends State<Authenticate> {
                     "assets/images/Planaholic logo.png",
                     width: screenWidth * 0.7,
                   ),
-                  // Text(
-                  //   "Planaholic",
-                  //   style: TextStyle(
-                  //     fontFamily: "Lobster Two",
-                  //     fontSize: 54,
-                  //     fontStyle: FontStyle.italic,
-                  //     fontWeight: FontWeight.bold,
-                  //     letterSpacing: 1,
-                  //   ),
-                  // ),
                 ],
               ),
             ),

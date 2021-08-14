@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
+/// Reset password successful notification page
 class ResetPasswordSuccessful extends StatelessWidget {
 
   @override
