@@ -9,6 +9,7 @@ import 'package:planaholic/services/DbService.dart';
 import 'package:planaholic/services/NotifService.dart';
 import 'package:planaholic/util/PresetColors.dart';
 
+/// Edit or delete an event page
 class EditOrDelete extends StatefulWidget {
   final Event event;
 
@@ -19,6 +20,7 @@ class EditOrDelete extends StatefulWidget {
 }
 
 class _EditOrDelete extends State<EditOrDelete> {
+  /// Get the icon of the [category]
   Widget makeIcon(String category) {
     return category == "Studies"
         ? Icon(Icons.book)
@@ -31,6 +33,7 @@ class _EditOrDelete extends State<EditOrDelete> {
                     : Icon(Icons.thumb_up);
   }
 
+  /// Check if the [currentDate] is today
   bool today(DateTime currentDate) {
     return (currentDate.year == DateTime.now().year &&
         currentDate.month == DateTime.now().month &&
@@ -47,6 +50,7 @@ class _EditOrDelete extends State<EditOrDelete> {
   String startDate;
   String endDate;
 
+  /// Create the edit and delete actions icons
   List<Widget> buildEditingActions() {
     return [
       ElevatedButton.icon(

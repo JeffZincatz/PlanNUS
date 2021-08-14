@@ -10,6 +10,7 @@ import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/services/NotifService.dart';
 import 'package:planaholic/services/DbNotifService.dart';
 
+/// Event editing page
 class EventEditingPage extends StatefulWidget {
   final DateTime currentDate;
 
@@ -20,6 +21,7 @@ class EventEditingPage extends StatefulWidget {
 }
 
 class _EventEditingPageState extends State<EventEditingPage> {
+  /// Check if the [currentDate] is today
   bool today(DateTime currentDate) {
     return (currentDate.year == DateTime.now().year &&
         currentDate.month == DateTime.now().month &&
@@ -37,6 +39,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
   String startTime;
   String endTime;
 
+  /// Create the edit and delete actions icons
   List<Widget> buildEditingActions() {
     return [
       ElevatedButton.icon(
@@ -146,6 +149,7 @@ class _EventEditingPageState extends State<EventEditingPage> {
     ];
   }
 
+  /// Check if the [first] and [second] are the same day
   bool sameDay(DateTime first, DateTime second) {
     return (first.year == second.year &&
         first.month == second.month &&

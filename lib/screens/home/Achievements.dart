@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:planaholic/screens/home/achievements_elements/BadgesView.dart';
 import 'package:planaholic/screens/home/achievements_elements/TotalActivitiesBadges.dart';
 
+/// Achievements page
 class Achievements extends StatefulWidget {
 
   @override
