@@ -4,9 +4,9 @@ import 'package:planaholic/screens/home/Achievements.dart';
 import 'package:planaholic/screens/home/Home.dart';
 import 'package:planaholic/screens/home/Settings.dart';
 import 'package:planaholic/util/PresetColors.dart';
-
 import 'Profile.dart';
 
+/// Navigation wrapper for all pages
 class Navigation extends StatefulWidget {
   const Navigation({Key key}) : super(key: key);
 
@@ -25,6 +25,7 @@ class _NavigationState extends State<Navigation> {
     Settings(),
   ];
 
+  /// Update selected index to given [index]
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

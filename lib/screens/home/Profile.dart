@@ -12,6 +12,7 @@ import 'package:planaholic/util/PresetColors.dart';
 import 'package:planaholic/util/TimeUtil.dart';
 import 'package:planaholic/elements/RadarChartAttribute.dart';
 
+/// User profile page
 class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
 
@@ -455,6 +456,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  /// Create bottom sheet for upload profile picture
   Widget bottomSheet() {
     return Container(
       height: 100.0,
@@ -524,6 +526,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  /// Pick a photo file from an ImageSource [source]
   Future<PickedFile> pickPhoto(ImageSource source) async {
     final PickedFile pickedFile = await ImagePicker().getImage(
       source: source,
@@ -532,6 +535,7 @@ class _ProfileState extends State<Profile> {
     return pickedFile;
   }
 
+  /// Crop a [pickedImage] to a new file
   Future<File> cropPhoto(PickedFile pickedImage) async {
     return ImageCropper.cropImage(
       sourcePath: pickedImage.path,

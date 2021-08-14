@@ -15,6 +15,7 @@ import 'package:planaholic/util/Validate.dart';
 import 'package:planaholic/services/DbNotifService.dart';
 import 'package:planaholic/services/NotifService.dart';
 
+/// Settings page
 class Settings extends StatefulWidget {
   const Settings({Key key}) : super(key: key);
 
@@ -613,6 +614,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  /// Create a widget for setting category
   Widget buildSettingCategory(
       BuildContext context, IconData iconData, String title) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -646,6 +648,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  /// Create a widget for setting option
   GestureDetector buildSettingOption(
       {@required BuildContext context,
       @required String title,
@@ -680,6 +683,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
+  /// Import iCalendar ics file with file picker
   Future<void> _importICS() async {
     FilePickerResult result = await FilePicker.platform
         .pickFiles(type: FileType.custom, allowedExtensions: [
@@ -722,6 +726,7 @@ class _SettingsState extends State<Settings> {
     }
   }
 
+  /// Parse iCalendar time to dart DateTime
   DateTime _parseIcsTimeToDateTime(String dt) {
     int year = int.parse(dt.substring(0, 4));
     int month = int.parse(dt.substring(4, 6));
@@ -732,6 +737,7 @@ class _SettingsState extends State<Settings> {
     return new DateTime(year, month, day, hour, min);
   }
 
+  /// Generate an ics file from a list of [events]
   Future<String> _generateEventIcs(List<Event> events) async {
     ICal.ICalendar cal = ICal.ICalendar();
     events.forEach((event) {

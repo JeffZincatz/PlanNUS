@@ -12,6 +12,7 @@ import 'package:planaholic/models/Event.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+/// Home page with calendar and activities
 class Home extends StatefulWidget {
   const Home({Key key}) : super(key: key);
 
@@ -22,6 +23,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   DateTime currentDate = DateTime.now();
 
+  /// Update currentDate to [newDateTime]
   void updateCurrentDate(DateTime newDateTime) {
     currentDate = newDateTime;
   }
@@ -30,6 +32,7 @@ class _HomeState extends State<Home> {
 
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
+  /// Refresh page
   void _onRefresh() async{
     // DbNotifService().initialise();
     // DbNotifService().getAvailable();
